@@ -2,10 +2,7 @@
 .github
 .parcel-cache
 .idea
-sprint_1.code-workspace
-sprint_2.code-workspace
-sprint_3.code-workspace
-sprint_4.code-workspace
+yp.code-workspace
 
 node_modules
 dist
