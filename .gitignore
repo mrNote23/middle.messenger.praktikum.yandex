@@ -1,0 +1,9 @@
+.DS_Store
+.github
+.parcel-cache
+.idea
+sprint_1.code-workspace
+
+node_modules
+dist
+reference

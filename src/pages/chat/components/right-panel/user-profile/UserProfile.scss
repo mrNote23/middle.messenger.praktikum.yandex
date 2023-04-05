@@ -1,0 +1,32 @@
+.profile-body {
+	display: flex;
+	align-items: center;
+
+	.user-profile-info {
+		display: flex;
+		flex-direction: column;
+
+		.item {
+			border-bottom: 1px dotted var(--light-gray-color);
+			margin-bottom: 10px;
+			display: flex;
+			justify-content: space-between;
+			font-size: 14px;
+
+			@media screen and (max-width: 375px) {
+				font-size: 12px;
+			}
+
+			:first-child {
+				font-weight: bold;
+			}
+		}
+
+	}
+
+	//button {
+	//	margin-top: 15px;
+	//	width: 400px;
+	//}
+
+}
