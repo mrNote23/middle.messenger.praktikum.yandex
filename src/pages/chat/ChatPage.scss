@@ -1,0 +1,203 @@
+.chat {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	border-right: 1px solid var(--light-gray-color);
+	border-left: 1px solid var(--light-gray-color);
+	width: 100%;
+
+	&.show {
+		display: flex;
+		margin-left: 0;
+
+	}
+
+	@media screen and (max-width: 992px) {
+		display: none;
+
+	}
+
+	.chat-control {
+		background-color: white;
+		border-radius: 6px;
+		font-size: 14px;
+		padding: 10px;
+
+	}
+
+	.chat-body {
+		background-color: white;
+		height: 100%;
+		padding: 10px 20px 10px 10px;
+		overflow: auto;
+
+		.empty {
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			color: var(--dark-gray-color);
+
+		}
+	}
+
+	.chat-footer {
+		border-top: 1px solid var(--gray-color);
+		padding: 10px 30px;
+		box-shadow: 0 -8px 30px rgba(0, 0, 0, .05);
+		display: flex;
+		align-items: center;
+
+		.chat-form-buttons {
+			display: flex;
+			padding-left: 20px;
+
+			.attach-btn, .send-btn {
+				background: transparent;
+				width: 30px;
+				height: 30px;
+				border: 0;
+				cursor: pointer;
+			}
+
+			.send-btn {
+				margin-left: 20px;
+			}
+
+		}
+
+	}
+
+}
+
+.avatar {
+	margin-right: 1rem;
+	display: inline-block;
+	margin-bottom: 0;
+	height: 48px;
+	width: 48px;
+	border-radius: 50%;
+	position: relative;
+
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	&.avatar-small {
+		width: 32px;
+		height: 32px;
+		margin-right: 0;
+	}
+
+	&.avatar-group {
+
+		img {
+			border: 2px solid white;
+		}
+	}
+
+	.avatar-users {
+		border: 2px solid white;
+		font-size: 12px;
+		color: var(--light-gray-color);
+		background-color: var(--primary-color);
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	+ .avatar {
+		margin-left: -10px;
+	}
+
+}
+
+.profile {
+	height: 100%;
+	overflow: auto;
+
+
+	.profile-header {
+		width: 100%;
+		height: 73px;
+		position: absolute;
+		background-color: var(--bg-color);
+		padding: 10px 0 10px 20px;
+		display: flex;
+		border-bottom: 1px solid var(--gray-color);
+		align-items: center;
+
+		.back-btn {
+			cursor: pointer;
+			padding-right: 50px;
+			width: 30px;
+			height: 30px;
+
+			@media screen and (max-width: 992px) {
+				display: block;
+			}
+		}
+	}
+
+	.profile-body {
+		margin-top: 73px;
+		display: flex;
+		flex-direction: column;
+		background-color: white;
+		height: 100%;
+		padding: 10px 20px 10px 10px;
+		overflow: auto;
+		text-align: left;
+
+		@media screen and (max-width: 375px) {
+			h1 {
+				font-size: 18px;
+			}
+		}
+
+
+		.profile-avatar {
+			padding: 10px;
+			text-align: center;
+			width: 200px;
+			height: 200px;
+			margin: 0 auto 15px auto;
+
+			@media screen and (max-width: 400px) {
+				width: 100px;
+				height: 100px;
+			}
+
+			img {
+				border: 2px solid white;
+				cursor: pointer;
+				width: 100%;
+				height: 100%;
+				border-radius: 50%;
+
+			}
+
+			label {
+				cursor: pointer;
+				color: var(--primary-color);
+
+				&:hover {
+					color: var(--accent-color);
+				}
+			}
+		}
+
+		.profile-details {
+			margin: 0 auto;
+			width: 350px;
+			@media screen and (max-width: 375px) {
+				width: 250px;
+			}
+		}
+	}
+}
+
