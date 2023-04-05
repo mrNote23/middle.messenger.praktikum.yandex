@@ -1,3 +1,4 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/74a2810d-57bf-4131-a0a8-4972b88879a0/deploy-status)](https://app.netlify.com/sites/andreys/deploys)
 # CHAT
 
 #### Сервис обмена текстовыми сообщениями в сети в режиме реального времени. Данное веб-приложение позволяет неограниченному числу пользователей одновременно общаться между собой.
