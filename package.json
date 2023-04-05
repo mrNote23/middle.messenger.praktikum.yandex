@@ -38,7 +38,7 @@
 		"parcel":"^2.8.3",
 		"parcel-reporter-clean-dist":"^1.0.4",
 		"parcel-reporter-static-files-copy":"^1.5.0",
-		"parcel-transformer-mainhbs":"file:./local_modules/parcel-transformer-mainhbs"
+		"parcel-transformer-mainhbs":"file:./src/utils/parcel-transformer-mainhbs"
 	},
 	"dependencies":{
 		"express":"^4.18.2"
