@@ -13,7 +13,7 @@
 
 ## Текущий этап
 
-### Спринт 1 / 4 [(PR)](https)
+### Спринт 1 / 4 [(PR)](https://github.com/mrNote23/middle.messenger.praktikum.yandex/pull/2)
 
 - Верстка в соответствии с [макетом](https://ibb.co/x7V8WN7)
 - Полностью работает навигация по страницам и разделам
