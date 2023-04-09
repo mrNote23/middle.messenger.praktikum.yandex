@@ -1,19 +1,21 @@
-import { Dispatch, Extract } from "../../../../../core/State.js";
+import { Dispatch, Extract } from "../../../../../core/State.ts";
 import view from "./AdminProfile.hbs";
+import { OnMobile } from "../../../../../utils/on-mobile";
+import { Confirm } from "../../../../../ui/confirm/confirm";
+import { navigate } from "../../../../../main-router/MainRouter.ts";
+import { Component } from "../../../../../core/Component";
 import "./AdminProfile.scss";
-import { RenderTo } from "../../../../../core/RenderTo.js";
-import { OnMobile } from "../../../../../utils/on-mobile.js";
-import { Confirm } from "../../../../../ui/confirm/confirm.js";
-import { navigate } from "../../../../../main-router/MainRouter.js";
 
-export class AdminProfile extends HTMLElement {
+export class AdminProfile extends Component {
+  admin: {};
+
   constructor() {
-    super();
+    super(view);
   }
 
-  connectedCallback() {
+  connectedCallback(): void {
     this.admin = Extract("admin");
-    RenderTo(this, view, { ...this.admin }, [
+    this.render({ ...this.admin }, [
       {
         selector: "#back",
         event: "click",
@@ -32,29 +34,29 @@ export class AdminProfile extends HTMLElement {
     ]);
   }
 
-  updateProfile = (e) => {
+  updateProfile = (e: Event): void => {
     e.preventDefault();
     Confirm({ title: "Are you sure?", text: "Update profile?" }, this.btnBack);
   };
 
-  btnLogout = () => {
+  btnLogout = (): void => {
     Confirm({ title: "Are you sure?", text: "Exit from chat?" }, () => {
       navigate("/login");
     });
   };
 
-  btnBack = () => {
+  btnBack = (): void => {
     OnMobile.showLeftPanel();
-    if (window.prevLeftMode) {
-      Dispatch("leftMode", window.prevLeftMode);
-      window.prevLeftMode = null;
+    if (window["prevLeftMode"]) {
+      Dispatch("leftMode", window["prevLeftMode"]);
+      window["prevLeftMode"] = null;
     } else {
       Dispatch("leftMode", "chats");
     }
 
-    if (window.prevRightMode) {
-      Dispatch("rightMode", window.prevRightMode);
-      window.prevRightMode = null;
+    if (window["prevRightMode"]) {
+      Dispatch("rightMode", window["prevRightMode"]);
+      window["prevRightMode"] = null;
     } else {
       Dispatch("rightMode", "chat");
     }

@@ -1,4 +1,6 @@
-export const _chatMessages = [
+import { IChatMessage } from "../core/interfaces";
+
+export const _chatMessages: IChatMessage[] = [
   {
     chat_id: 0,
     messages: [

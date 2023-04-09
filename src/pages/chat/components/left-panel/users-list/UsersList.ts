@@ -1,37 +1,29 @@
 import view from "./UsersList.hbs";
-import {
-  Dispatch,
-  Extract,
-  Subscribe,
-  UnSubscribe,
-} from "../../../../../core/State.js";
-import { RenderTo } from "../../../../../core/RenderTo.js";
+import { Dispatch, Extract, Subscribe } from "../../../../../core/State.ts";
+import { OnMobile } from "../../../../../utils/on-mobile";
+import { Component } from "../../../../../core/Component";
+import { IChatUsers } from "../../../../../core/interfaces";
 import "./UsersList.scss";
-import { OnMobile } from "../../../../../utils/on-mobile.js";
 
-export class UsersList extends HTMLElement {
+export class UsersList extends Component {
+  list: IChatUsers[] = [];
+  rightMode: string | null = null;
+
   constructor() {
-    super();
-    this.subscriptions = [];
+    super(view);
   }
 
-  connectedCallback() {
+  connectedCallback(): void {
     this.list = Extract("chatUsers");
-    this.subscriptions.push(
-      Subscribe("rightMode", (val) => (this.rightMode = val))
-    );
-    RenderTo(this, view, { list: this.list }, [
+    this.subscriber = Subscribe("rightMode", (val) => (this.rightMode = val));
+    this.render({ list: this.list }, [
       { selector: "li.users-item", event: "click", cb: this.selectUser },
     ]);
   }
 
-  disconnectedCallback() {
-    this.subscriptions.forEach((elm) => UnSubscribe(elm));
-  }
-
-  selectUser = (e) => {
-    const item = e.target.closest("li");
-    const userId = item.id || null;
+  selectUser = (e): void => {
+    const item: Element = e.target.closest("li");
+    const userId: string | null = item.id || null;
     if (userId && !item.classList.contains("active")) {
       Dispatch("currentUser", this.list[userId.split("-")[1]]);
       if (this.rightMode !== "userProfile") {

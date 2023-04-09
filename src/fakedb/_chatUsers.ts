@@ -1,4 +1,6 @@
-export const _chatUsers = [
+import { IChatUsers } from "../core/interfaces";
+
+export const _chatUsers: IChatUsers[] = [
   {
     chat_id: 0,
     users: [

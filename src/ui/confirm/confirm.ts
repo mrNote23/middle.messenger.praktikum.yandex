@@ -1,22 +1,25 @@
 import view from "./confirm.hbs";
+import { ModalWindow } from "../../core/components/modal-window/ModalWindow";
 
-export const Confirm = (props, cb) => {
-  const mw = document.createElement("modal-window");
-  mw.title = props.title;
-  mw.innerHTML = view({ ...props });
-  document.body.appendChild(mw);
+type TConfirmProps = {
+  title: string;
+  [key: string]: any;
+};
+
+export const Confirm = (props: TConfirmProps, cb: object): void => {
+  const modalWindow = new ModalWindow(props.title, view({ ...props }));
 
   const submitForm = (e) => {
     e.preventDefault();
     e.target.removeEventListener("submit", submitForm);
-    mw.remove();
-    cb();
+    modalWindow.remove();
+    cb.call();
   };
 
   const resetForm = (e) => {
     e.preventDefault();
     e.target.removeEventListener("reset", resetForm);
-    mw.remove();
+    modalWindow.remove();
   };
 
   document

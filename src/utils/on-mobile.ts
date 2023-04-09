@@ -1,10 +1,10 @@
 export class OnMobile {
-  static showLeftPanel = () => {
+  static showLeftPanel = (): void => {
     document.getElementById("sidebar").classList.remove("hidden");
     document.getElementById("chat").classList.remove("show");
   };
 
-  static showRightPanel = () => {
+  static showRightPanel = (): void => {
     const backEnabled =
       window.getComputedStyle(document.querySelector(".sidebar-group")).zIndex >
       99;

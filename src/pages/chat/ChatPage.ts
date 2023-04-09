@@ -1,14 +1,14 @@
 import view from "./ChatPage.hbs";
-import { RenderTo } from "../../core/RenderTo.js";
-import { Store } from "../../core/State.js";
+import { Component } from "../../core/Component";
+import { Store } from "../../core/State";
 import "./ChatPage.scss";
 
-export class ChatPage extends HTMLElement {
+export class ChatPage extends Component {
   constructor() {
-    super();
+    super(view);
   }
 
-  connectedCallback() {
+  connectedCallback(): void {
     // admin info
     Store("admin", {
       id: 8,
@@ -27,8 +27,6 @@ export class ChatPage extends HTMLElement {
     Store("chatUsers", []); // пользователи текущего чата
     Store("leftMode", "chats"); // режим левой панели ( chats/users )
     Store("rightMode", "chat"); // режим правой панели (chat/adminProfile/userProfile/chatProfile)
-    RenderTo(this, view);
+    this.render();
   }
-
-  disconnectedCallback() {}
 }

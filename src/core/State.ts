@@ -1,14 +1,25 @@
-const storeHolder = {
+export type TStoreHolder = {
+  store: {};
+  storeNode: any;
+};
+
+export type TSubscriberItem = {
+  varName: string;
+  uuid: string;
+};
+
+const storeHolder: TStoreHolder = {
   store: {},
   storeNode: class {
-    value = 0;
+    value: any = 0;
+    subscribers: {};
 
     constructor(val = null) {
       this.value = val;
       this.subscribers = {};
     }
 
-    set setter(val) {
+    set setter(val: any) {
       let a = this.value;
       let b = val;
       // не совсем верно, но для данного случая пойдет
@@ -22,15 +33,15 @@ const storeHolder = {
       this.value = val;
     }
 
-    get getter() {
+    get getter(): any {
       return this.value;
     }
 
-    unSubscribe(uuid) {
+    unSubscribe(uuid: string): void {
       delete this.subscribers[uuid];
     }
 
-    subscribe(cb) {
+    subscribe(cb: object): string {
       let uuid = null;
       while (this.subscribers[uuid] || !uuid) {
         uuid = `${(~~(Math.random() * 1e8)).toString(16)}-${(~~(
@@ -39,11 +50,11 @@ const storeHolder = {
       }
 
       this.subscribers[uuid] = cb;
-      cb(this.value);
+      cb.call(this.value);
       return uuid;
     }
 
-    processSubscribers = (val) => {
+    processSubscribers = (val: any): void => {
       for (let uuid in this.subscribers) {
         this.subscribers[uuid](val);
       }
@@ -51,7 +62,7 @@ const storeHolder = {
   },
 };
 
-export const Extract = (varName) => {
+export const Extract = (varName: string): any => {
   if (varName && storeHolder.store[varName]) {
     return storeHolder.store[varName].value;
   } else {
@@ -59,7 +70,7 @@ export const Extract = (varName) => {
   }
 };
 
-export const Dispatch = (varName, val) => {
+export const Dispatch = (varName: string, val: any): void => {
   if (varName && storeHolder.store[varName]) {
     storeHolder.store[varName].setter = val;
   } else {
@@ -67,7 +78,7 @@ export const Dispatch = (varName, val) => {
   }
 };
 
-export const Subscribe = (varName, cb) => {
+export const Subscribe = (varName: string, cb: object): TSubscriberItem => {
   if (varName && storeHolder.store[varName]) {
     return { varName: varName, uuid: storeHolder.store[varName].subscribe(cb) };
   } else {
@@ -75,7 +86,7 @@ export const Subscribe = (varName, cb) => {
   }
 };
 
-export const UnSubscribe = (subs) => {
+export const UnSubscribe = (subs: TSubscriberItem): void => {
   const { varName, uuid } = { ...subs };
   if (varName && storeHolder.store[varName]) {
     storeHolder.store[varName].unSubscribe(uuid);
@@ -84,7 +95,10 @@ export const UnSubscribe = (subs) => {
   }
 };
 
-export const Store = (varName = null, val = null) => {
+export const Store = (
+  varName: string | null = null,
+  val: any = null
+): boolean => {
   if (!varName) {
     throw new Error(`Store.Store: wrong variable '${varName}'`);
   } else {
@@ -93,6 +107,6 @@ export const Store = (varName = null, val = null) => {
   }
 };
 
-export const ClearStore = () => {
+export const ClearStore = (): void => {
   storeHolder.store = {};
 };

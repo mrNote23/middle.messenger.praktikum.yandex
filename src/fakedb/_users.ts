@@ -1,4 +1,6 @@
-export const _users = [
+import { IUser } from "../core/interfaces";
+
+export const _users: IUser[] = [
   {
     id: 0,
     first_name: "Алена",

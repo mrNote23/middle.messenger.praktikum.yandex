@@ -1,4 +1,9 @@
-export const routes = [
+export type TRoute = {
+  path: string;
+  content: string;
+};
+
+export const routes: TRoute[] = [
   {
     path: "/",
     content: "<chat-page></chat-page>",

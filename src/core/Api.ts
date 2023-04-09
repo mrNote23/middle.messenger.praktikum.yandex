@@ -1,13 +1,14 @@
-import { _chats } from "../fakedb/_chats.js";
-import { _chatUsers } from "../fakedb/_chatUsers.js";
-import { _chatMessages } from "../fakedb/_chatMessages.js";
+import { _chats } from "../fakedb/_chats";
+import { _chatUsers } from "../fakedb/_chatUsers";
+import { _chatMessages } from "../fakedb/_chatMessages";
+import { IChat, IChatMessage, IChatUsers } from "./interfaces";
 
 class Api {
-  constructor() {
-    this.delay = 200;
-  }
+  delay: number = 200;
 
-  getChats = () => {
+  constructor() {}
+
+  getChats = (): Promise<IChat[]> => {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(_chats);
@@ -15,7 +16,7 @@ class Api {
     });
   };
 
-  getChatUsers = (chatId) => {
+  getChatUsers = (chatId: number): Promise<IChatUsers[]> => {
     const result = _chatUsers.filter((elm) => elm.chat_id === chatId);
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -24,7 +25,7 @@ class Api {
     });
   };
 
-  getChatMessages = (chatId) => {
+  getChatMessages = (chatId: number): Promise<IChatMessage[]> => {
     const result = _chatMessages.filter((elm) => elm.chat_id === chatId);
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -32,8 +33,6 @@ class Api {
       }, this.delay);
     });
   };
-
-  getChatInfo = (chat_id) => {};
 }
 
 export default new Api();

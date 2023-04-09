@@ -1,17 +1,20 @@
 import view from "./ChatProfile.hbs";
-import { Dispatch, Extract } from "../../../../../core/State.js";
-import { RenderTo } from "../../../../../core/RenderTo.js";
-import { Confirm } from "../../../../../ui/confirm/confirm.js";
+import { Dispatch, Extract } from "../../../../../core/State.ts";
+import { Confirm } from "../../../../../ui/confirm/confirm";
 import "./ChatProfile.scss";
+import { Component } from "../../../../../core/Component";
+import { IChat } from "../../../../../core/interfaces";
 
-export class ChatProfile extends HTMLElement {
+export class ChatProfile extends Component {
+  chat: IChat;
+
   constructor() {
-    super();
+    super(view);
   }
 
-  connectedCallback() {
+  connectedCallback(): void {
     this.chat = Extract("currentChat");
-    RenderTo(this, view, { ...this.chat }, [
+    this.render({ ...this.chat }, [
       {
         selector: "#back",
         event: "click",
@@ -37,21 +40,21 @@ export class ChatProfile extends HTMLElement {
     ]);
   }
 
-  renameChat = () => {
+  renameChat = (): void => {
     Confirm(
       { title: "Are you sure?", text: "Do you want to rename the chat?" },
       () => {}
     );
   };
 
-  clearChat = () => {
+  clearChat = (): void => {
     Confirm(
       { title: "Are you sure?", text: "Do you want to clear the chat?" },
       () => {}
     );
   };
 
-  deleteChat = () => {
+  deleteChat = (): void => {
     Confirm(
       { title: "Are you sure?", text: "Do you want to delete a chat?" },
       () => {}

@@ -1,36 +1,32 @@
 import view from "./LeftPanel.hbs";
-import { RenderTo } from "../../../../core/RenderTo.js";
+import { Component } from "../../../../core/Component";
+import { IChat } from "../../../../core/interfaces";
+import { Dispatch, Subscribe } from "../../../../core/State";
+import { OnMobile } from "../../../../utils/on-mobile";
+import { AddUser } from "../add-user/AddUser";
+import { AddChat } from "../add-chat/AddChat";
 import "./LeftPanel.scss";
-import { Dispatch, Subscribe, UnSubscribe } from "../../../../core/State.js";
-import { OnMobile } from "../../../../utils/on-mobile.js";
-import { AddUser } from "../add-user/AddUser.js";
-import { AddChat } from "../add-chat/AddChat.js";
 
-export class LeftPanel extends HTMLElement {
+export class LeftPanel extends Component {
+  currentChat: IChat | null = null;
+  leftMode: string | null = null;
+  rightMode: string | null = null;
+
   constructor() {
-    super();
-    this.subscriptions = [];
+    super(view);
   }
 
-  connectedCallback() {
+  connectedCallback(): void {
     this.currentChat = null;
 
-    this.subscriptions.push(
-      Subscribe("leftMode", (val) => (this.leftMode = val))
-    );
-    this.subscriptions.push(
-      Subscribe("rightMode", (val) => (this.rightMode = val))
-    );
+    this.subscriber = Subscribe("leftMode", (val) => (this.leftMode = val));
+    this.subscriber = Subscribe("rightMode", (val) => (this.rightMode = val));
 
-    this.subscriptions.push(
-      Subscribe("currentChat", (val) => {
-        this.currentChat = val;
-        val && document.getElementById("mode-users").classList.remove("d-none");
-      })
-    );
-    RenderTo(
-      this,
-      view,
+    this.subscriber = Subscribe("currentChat", (val) => {
+      this.currentChat = val;
+      val && document.getElementById("mode-users").classList.remove("d-none");
+    });
+    this.render(
       { chatSelected: this.currentChat !== null, mode: this.leftMode },
       [
         {
@@ -49,42 +45,38 @@ export class LeftPanel extends HTMLElement {
     );
   }
 
-  disconnectedCallback() {
-    this.subscriptions.forEach((elm) => UnSubscribe(elm));
-  }
-
-  addUserChat = () => {
+  addUserChat = (): void => {
     this.leftMode === "chats" ? AddChat() : AddUser();
   };
 
-  openAdminProfile = () => {
+  openAdminProfile = (): void => {
     if (this.rightMode !== "adminProfile") {
-      window.prevLeftMode = this.leftMode;
-      window.prevRightMode = this.rightMode;
+      window["prevLeftMode"] = this.leftMode;
+      window["prevRightMode"] = this.rightMode;
       Dispatch("rightMode", "adminProfile");
       this.rightMode = "adminProfile";
       OnMobile.showRightPanel();
     }
   };
 
-  setModeChats = (e) => {
+  setModeChats = (e: PointerEvent): void => {
     e.preventDefault();
     if (this.leftMode !== "chats") {
       Dispatch("leftMode", "chats");
       this.leftMode = "chats";
-      e.target.className = "active";
+      e.target["className"] = "active";
       document.getElementById("mode-users").className = "";
       document.getElementById("left-container").innerHTML =
         "<chats-list></chats-list>";
     }
   };
 
-  setModeUsers = (e) => {
+  setModeUsers = (e: PointerEvent): void => {
     e.preventDefault();
     if (this.leftMode !== "users") {
       Dispatch("leftMode", "users");
       this.leftMode = "users";
-      e.target.className = "active";
+      e.target["className"] = "active";
       document.getElementById("mode-chats").className = "";
       document.getElementById("left-container").innerHTML =
         "<users-list></users-list>";

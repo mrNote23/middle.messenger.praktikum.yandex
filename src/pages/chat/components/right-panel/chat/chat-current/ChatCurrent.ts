@@ -1,39 +1,34 @@
 import view from "./ChatCurrent.hbs";
-import {
-  Dispatch,
-  Subscribe,
-  UnSubscribe,
-} from "../../../../../../core/State.js";
-import { RenderTo } from "../../../../../../core/RenderTo.js";
-import { OnMobile } from "../../../../../../utils/on-mobile.js";
+import { Dispatch, Subscribe } from "../../../../../../core/State.ts";
+import { OnMobile } from "../../../../../../utils/on-mobile";
 import "./ChatCurrent.scss";
+import { Component } from "../../../../../../core/Component";
+import { IChat, IUser } from "../../../../../../core/interfaces";
 
-export class ChatCurrent extends HTMLElement {
+export class ChatCurrent extends Component {
+  chat: IChat | null = null;
+  usersAvatars: Array<string>;
+  usersCountAvatar: number | string = 0;
+  chatUsers: IUser[] = [];
+
   constructor() {
-    super();
-    this.subscriptions = [];
+    super(view);
   }
 
-  connectedCallback() {
+  connectedCallback(): void {
     this.chat = null;
     this.usersAvatars = [];
     this.usersCountAvatar = 0;
     this.chatUsers = [];
 
-    this.subscriptions.push(
-      Subscribe("chatUsers", (val) => {
-        this.chatUsers = val;
-        this.changeChat(this.chat);
-      })
-    );
-    this.subscriptions.push(Subscribe("currentChat", this.changeChat));
+    this.subscriber = Subscribe("chatUsers", (val) => {
+      this.chatUsers = val;
+      this.changeChat(this.chat);
+    });
+    this.subscriber = Subscribe("currentChat", this.changeChat);
   }
 
-  disconnectedCallback() {
-    this.subscriptions.forEach((elm) => UnSubscribe(elm));
-  }
-
-  changeChat = (chat) => {
+  changeChat = (chat: IChat | null): void => {
     this.chat = chat;
     this.usersAvatars = [];
 
@@ -44,17 +39,7 @@ export class ChatCurrent extends HTMLElement {
       Object.keys(this.chatUsers).length < 10
         ? Object.keys(this.chatUsers).length
         : "99+";
-    this.render();
-  };
-
-  openChatProfile = () => {
-    Dispatch("rightMode", "chatProfile");
-  };
-
-  render = () => {
-    RenderTo(
-      this,
-      view,
+    this.render(
       {
         ...this.chat,
         usersAvatars: this.usersAvatars,
@@ -70,5 +55,9 @@ export class ChatCurrent extends HTMLElement {
         },
       ]
     );
+  };
+
+  openChatProfile = (): void => {
+    Dispatch("rightMode", "chatProfile");
   };
 }
