@@ -2,7 +2,7 @@ import { Component } from "../../../../core/Component";
 import { Subscribe } from "../../../../core/State";
 
 const templates: { [key: string]: string } = {
-  chat: `<chat-current></chat-current>
+  chat: `<chat-current class="chat-header"></chat-current>
          <chat-body class="chat-body"></chat-body>
          <chat-sending class="chat-footer"></chat-sending>`,
   adminProfile: `<admin-profile class="profile"></admin-profile>`,

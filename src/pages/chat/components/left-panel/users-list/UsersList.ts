@@ -1,41 +1,34 @@
 import view from "./UsersList.hbs";
-import { Dispatch, Extract, Subscribe } from "../../../../../core/State.ts";
-import { OnMobile } from "../../../../../utils/on-mobile";
+import { Extract } from "../../../../../core/State.ts";
 import { Component } from "../../../../../core/Component";
 import { IChatUsers } from "../../../../../core/interfaces";
+import Chat from "../../../../../core/Chat";
 import "./UsersList.scss";
 
 export class UsersList extends Component {
-  list: IChatUsers[] = [];
-  rightMode: string | null = null;
+  usersList: IChatUsers[] = [];
 
   constructor() {
     super(view);
   }
 
   connectedCallback(): void {
-    this.list = Extract("chatUsers");
-    this.subscriber = Subscribe("rightMode", (val) => (this.rightMode = val));
-    this.render({ list: this.list }, [
+    this.usersList = Extract("chatUsers");
+    this.render({ list: this.usersList }, [
       { selector: "li.users-item", event: "click", cb: this.selectUser },
     ]);
   }
 
-  selectUser = (e): void => {
+  // выбор пользователя (клик по списку)
+  selectUser = <T>(e: T): void => {
     const item: Element = e.target.closest("li");
     const userId: string | null = item.id || null;
     if (userId && !item.classList.contains("active")) {
-      Dispatch("currentUser", this.list[userId.split("-")[1]]);
-      if (this.rightMode !== "userProfile") {
-        Dispatch("rightMode", "userProfile");
-        this.rightMode = "userProfile";
-      }
+      Chat.setCurrentUser(this.usersList[userId.split("-")[1]]);
       document
         .querySelectorAll("li.users-item.active")
         .forEach((elm) => elm.classList.remove("active"));
       item.classList.add("active");
     }
-
-    OnMobile.showRightPanel();
   };
 }

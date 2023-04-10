@@ -7,18 +7,18 @@ const helperDateConvert = (elm) => {
   let date = elm.getDate().toString();
   month = (month.length > 1 ? "" : "0") + month;
   date = (date.length > 1 ? "" : "0") + date;
-  return date + "-" + month + "-" + year;
+  return [date, month, year].join("-");
 };
 
 const helperIfeq = (a, b, options) => {
-  if (a == b) {
+  if (a === b) {
     return options.fn(this);
   }
   return options.inverse(this);
 };
 
 const helperIfnoteq = (a, b, options) => {
-  if (a != b) {
+  if (a !== b) {
     return options.fn(this);
   }
   return options.inverse(this);

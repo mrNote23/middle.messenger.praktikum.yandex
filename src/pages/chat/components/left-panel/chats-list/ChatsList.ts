@@ -5,47 +5,49 @@ import { OnMobile } from "../../../../../utils/on-mobile";
 import { Component } from "../../../../../core/Component";
 import { IChat } from "../../../../../core/interfaces";
 import "./ChatsList.scss";
+import Chat from "../../../../../core/Chat";
 
 export class ChatsList extends Component {
-  list: IChat[] = [];
-  rightMode: string | null = null;
+  chatsList: IChat[] = [];
+  currentChat: IChat | null = null;
 
   constructor() {
     super(view);
   }
 
   connectedCallback(): void {
-    this.list = [];
-    this.subscriber = Subscribe("rightMode", (val) => (this.rightMode = val));
-    this.loading();
-    this.fetchList();
+    // подписка на изменение текущего чата
+    this.subscriber = Subscribe(
+      "currentChat",
+      (val) => (this.currentChat = val)
+    );
+
+    // подписка на изменения списка чатов
+    this.subscriber = Subscribe("chatsList", (val) => {
+      this.chatsList = val;
+      if (!val.length) {
+        this.loading();
+        Chat.loadChatsList();
+      } else {
+        this.render(
+          { chatsList: this.chatsList, currentChatId: this.currentChat?.id },
+          [{ selector: "li.chats-item", event: "click", cb: this.selectChat }]
+        );
+      }
+    });
   }
 
-  fetchList = (): void => {
-    Api.getChats().then((res) => {
-      this.list = res;
-      this.render({ list: this.list }, [
-        { selector: "li.chats-item", event: "click", cb: this.selectChat },
-      ]);
-    });
-  };
-
-  selectChat = (e): void => {
+  // выбор чата (клик по списку)
+  selectChat = <T>(e: T): void => {
     const item: Element = e.target.closest("li");
     const chatId: string | null = item.id || null;
     if (chatId !== null && !item.classList.contains("active")) {
-      Dispatch("currentChat", this.list[chatId.split("-")[1]]);
-      if (this.rightMode !== "chat") {
-        Dispatch("rightMode", "chat");
-        this.rightMode = "chat";
-      }
+      Chat.setCurrentChat(this.chatsList[chatId.split("-")[1]]);
 
       document
         .querySelectorAll("li.chats-item.active")
         .forEach((elm) => elm.classList.remove("active"));
       item.classList.add("active");
     }
-
-    OnMobile.showRightPanel();
   };
 }

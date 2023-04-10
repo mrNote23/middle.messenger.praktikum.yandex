@@ -19,7 +19,8 @@ export class Component extends HTMLElement {
   }
 
   loading(): void {
-    this.innerHTML = '<div class="loader">Loading...</div>';
+    // this.innerHTML = '<div class="loader">Loading...</div>';
+    this.innerHTML = `<div class="loader"><div></div><div></div><div></div><div></div></div>`;
   }
 
   set subscriber(subs: TSubscriberItem) {
@@ -52,7 +53,6 @@ export class Component extends HTMLElement {
   };
 
   disconnectedCallback() {
-    console.log("disconnected");
     this.subscriptions.forEach((elm) => UnSubscribe(elm));
   }
 }

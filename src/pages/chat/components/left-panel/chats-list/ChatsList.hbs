@@ -1,7 +1,7 @@
 <div class="sidebar-body" id="chats-list">
 	<ul class="chats-list">
-		{{#each list}}
-			<li class="chats-item" id="chat-{{id}}">
+		{{#each chatsList}}
+			<li class="chats-item {{#ifeq id ../currentChatId}}active{{/ifeq}}" id="chat-{{id}}">
 				<div class="avatar">
 					<img class="rounded-circle" src="{{avatar}}" alt="">
 				</div>

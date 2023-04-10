@@ -8,7 +8,7 @@ export class LoginPage extends Component {
     super(view);
   }
 
-  loginProcess = (e: Event): void => {
+  loginProcess = <T>(e: T): void => {
     e.preventDefault();
     navigate("/");
   };

@@ -3,32 +3,44 @@ import { Dispatch, Subscribe } from "../../../../../core/State.ts";
 import { Confirm } from "../../../../../ui/confirm/confirm";
 import "./UserProfile.scss";
 import { Component } from "../../../../../core/Component";
-import { IUser } from "../../../../../core/interfaces";
+import { IChat, IUser } from "../../../../../core/interfaces";
 
 export class UserProfile extends Component {
   user: IUser;
+  currentChat: IChat;
 
   constructor() {
     super(view);
   }
 
   connectedCallback(): void {
+    this.subscriber = Subscribe(
+      "currentChat",
+      (val) => (this.currentChat = val)
+    );
     this.subscriber = Subscribe("currentUser", (val) => {
       this.user = val;
-      this.render({ ...this.user }, [
+      this.render(
         {
-          selector: "#back",
-          event: "click",
-          cb: () => {
-            Dispatch("rightMode", "chat");
+          ...this.user,
+          chatTitle: this.currentChat.title,
+          chatAvatar: this.currentChat.avatar,
+        },
+        [
+          {
+            selector: "#back",
+            event: "click",
+            cb: () => {
+              Dispatch("rightMode", "chat");
+            },
           },
-        },
-        {
-          selector: "#user-delete",
-          event: "click",
-          cb: this.deleteUser,
-        },
-      ]);
+          {
+            selector: "#user-delete",
+            event: "click",
+            cb: this.deleteUser,
+          },
+        ]
+      );
     });
   }
 

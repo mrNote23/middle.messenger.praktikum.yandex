@@ -6,17 +6,17 @@ type TConfirmProps = {
   [key: string]: any;
 };
 
-export const Confirm = (props: TConfirmProps, cb: object): void => {
+export const Confirm = (props: TConfirmProps, cb: () => void): void => {
   const modalWindow = new ModalWindow(props.title, view({ ...props }));
 
-  const submitForm = (e) => {
+  const submitForm = <T>(e: T) => {
     e.preventDefault();
     e.target.removeEventListener("submit", submitForm);
     modalWindow.remove();
-    cb.call();
+    cb();
   };
 
-  const resetForm = (e) => {
+  const resetForm = <T>(e: T) => {
     e.preventDefault();
     e.target.removeEventListener("reset", resetForm);
     modalWindow.remove();

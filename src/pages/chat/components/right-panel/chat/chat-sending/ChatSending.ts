@@ -1,6 +1,6 @@
 import view from "./ChatSending.hbs";
 import { Component } from "../../../../../../core/Component";
-import "./ChatSending.scss";
+import { Subscribe } from "../../../../../../core/State";
 
 export class ChatSending extends Component {
   constructor() {
@@ -8,6 +8,12 @@ export class ChatSending extends Component {
   }
 
   connectedCallback(): void {
-    this.render();
+    this.subscriber = Subscribe("currentChat", (val) => {
+      if (val && val !== "loading") {
+        this.render();
+      } else {
+        this.innerHTML = "";
+      }
+    });
   }
 }

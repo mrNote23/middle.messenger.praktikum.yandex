@@ -23,7 +23,7 @@ const storeHolder: TStoreHolder = {
       let a = this.value;
       let b = val;
       // не совсем верно, но для данного случая пойдет
-      if (typeof val === "object") {
+      if (typeof val === "object" || typeof val === "array") {
         a = JSON.stringify(a);
         b = JSON.stringify(b);
       }
@@ -41,7 +41,7 @@ const storeHolder: TStoreHolder = {
       delete this.subscribers[uuid];
     }
 
-    subscribe(cb: object): string {
+    subscribe(cb: (value: any) => void): string {
       let uuid = null;
       while (this.subscribers[uuid] || !uuid) {
         uuid = `${(~~(Math.random() * 1e8)).toString(16)}-${(~~(
@@ -50,7 +50,7 @@ const storeHolder: TStoreHolder = {
       }
 
       this.subscribers[uuid] = cb;
-      cb.call(this.value);
+      cb(this.value);
       return uuid;
     }
 

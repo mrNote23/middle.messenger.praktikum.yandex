@@ -17,14 +17,13 @@ export class LeftPanel extends Component {
   }
 
   connectedCallback(): void {
-    this.currentChat = null;
-
     this.subscriber = Subscribe("leftMode", (val) => (this.leftMode = val));
     this.subscriber = Subscribe("rightMode", (val) => (this.rightMode = val));
 
     this.subscriber = Subscribe("currentChat", (val) => {
       this.currentChat = val;
-      val && document.getElementById("mode-users").classList.remove("d-none");
+      this.currentChat &&
+        document.getElementById("mode-users").classList.remove("d-none");
     });
     this.render(
       { chatSelected: this.currentChat !== null, mode: this.leftMode },
@@ -54,29 +53,27 @@ export class LeftPanel extends Component {
       window["prevLeftMode"] = this.leftMode;
       window["prevRightMode"] = this.rightMode;
       Dispatch("rightMode", "adminProfile");
-      this.rightMode = "adminProfile";
       OnMobile.showRightPanel();
     }
   };
 
-  setModeChats = (e: PointerEvent): void => {
+  setModeChats = <T>(e: T): void => {
     e.preventDefault();
     if (this.leftMode !== "chats") {
       Dispatch("leftMode", "chats");
-      this.leftMode = "chats";
-      e.target["className"] = "active";
+      Dispatch("rightMode", "chat");
+      e.target.className = "active";
       document.getElementById("mode-users").className = "";
       document.getElementById("left-container").innerHTML =
         "<chats-list></chats-list>";
     }
   };
 
-  setModeUsers = (e: PointerEvent): void => {
+  setModeUsers = <T>(e: T): void => {
     e.preventDefault();
     if (this.leftMode !== "users") {
       Dispatch("leftMode", "users");
-      this.leftMode = "users";
-      e.target["className"] = "active";
+      e.target.className = "active";
       document.getElementById("mode-chats").className = "";
       document.getElementById("left-container").innerHTML =
         "<users-list></users-list>";

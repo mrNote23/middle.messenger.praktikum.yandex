@@ -15,23 +15,23 @@ import { ChatPage } from "../pages/chat/ChatPage";
 import { LeftPanel } from "../pages/chat/components/left-panel/LeftPanel";
 import { RightPanel } from "../pages/chat/components/right-panel/RightPanel";
 
-customElements.define("modal-window", ModalWindowComponent);
+window.customElements.define("modal-window", ModalWindowComponent);
 
-customElements.define("chats-list", ChatsList);
-customElements.define("users-list", UsersList);
-customElements.define("chat-current", ChatCurrent);
-customElements.define("chat-body", ChatBody);
-customElements.define("chat-sending", ChatSending);
+window.customElements.define("chats-list", ChatsList);
+window.customElements.define("users-list", UsersList);
+window.customElements.define("chat-current", ChatCurrent);
+window.customElements.define("chat-body", ChatBody);
+window.customElements.define("chat-sending", ChatSending);
 
-customElements.define("admin-profile", AdminProfile);
-customElements.define("user-profile", UserProfile);
-customElements.define("chat-profile", ChatProfile);
+window.customElements.define("admin-profile", AdminProfile);
+window.customElements.define("user-profile", UserProfile);
+window.customElements.define("chat-profile", ChatProfile);
 
-customElements.define("main-router", MainRouter);
-customElements.define("login-page", LoginPage);
-customElements.define("register-page", RegisterPage);
-customElements.define("error-page", ErrorPage);
+window.customElements.define("main-router", MainRouter);
+window.customElements.define("login-page", LoginPage);
+window.customElements.define("register-page", RegisterPage);
+window.customElements.define("error-page", ErrorPage);
 
-customElements.define("chat-page", ChatPage);
-customElements.define("left-panel", LeftPanel);
-customElements.define("right-panel", RightPanel);
+window.customElements.define("chat-page", ChatPage);
+window.customElements.define("left-panel", LeftPanel);
+window.customElements.define("right-panel", RightPanel);

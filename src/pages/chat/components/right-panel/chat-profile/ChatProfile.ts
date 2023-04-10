@@ -1,8 +1,8 @@
 import view from "./ChatProfile.hbs";
-import { Dispatch, Extract } from "../../../../../core/State.ts";
+import { Dispatch, Extract, Subscribe } from "../../../../../core/State.ts";
 import { Confirm } from "../../../../../ui/confirm/confirm";
-import "./ChatProfile.scss";
 import { Component } from "../../../../../core/Component";
+import "./ChatProfile.scss";
 import { IChat } from "../../../../../core/interfaces";
 
 export class ChatProfile extends Component {
@@ -13,37 +13,54 @@ export class ChatProfile extends Component {
   }
 
   connectedCallback(): void {
-    this.chat = Extract("currentChat");
-    this.render({ ...this.chat }, [
-      {
-        selector: "#back",
-        event: "click",
-        cb: () => {
-          Dispatch("rightMode", "chat");
+    this.subscriber = Subscribe("currentChat", (val) => {
+      this.chat = val;
+      this.render({ ...this.chat }, [
+        {
+          selector: "#back",
+          event: "click",
+          cb: () => {
+            Dispatch("rightMode", "chat");
+          },
         },
-      },
-      {
-        selector: "#chat-rename",
-        event: "click",
-        cb: this.renameChat,
-      },
-      {
-        selector: "#chat-clear",
-        event: "click",
-        cb: this.clearChat,
-      },
-      {
-        selector: "#chat-delete",
-        event: "click",
-        cb: this.deleteChat,
-      },
-    ]);
+        {
+          selector: "#chat-rename",
+          event: "click",
+          cb: this.renameChat,
+        },
+        {
+          selector: "#chat-clear",
+          event: "click",
+          cb: this.clearChat,
+        },
+        {
+          selector: "#chat-delete",
+          event: "click",
+          cb: this.deleteChat,
+        },
+      ]);
+    });
   }
 
   renameChat = (): void => {
     Confirm(
       { title: "Are you sure?", text: "Do you want to rename the chat?" },
-      () => {}
+      () => {
+        Dispatch(
+          "chatsList",
+          Extract("chatsList").map((elm) => {
+            if (elm.id === this.chat.id) {
+              return { ...elm, title: "New Title" };
+            } else {
+              return elm;
+            }
+          })
+        );
+        Dispatch("currentChat", {
+          ...Extract("currentChat"),
+          title: "New Title",
+        });
+      }
     );
   };
 

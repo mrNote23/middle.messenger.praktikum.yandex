@@ -5,7 +5,7 @@ import { ModalWindow } from "../../../../core/components/modal-window/ModalWindo
 export const AddUser = (): void => {
   const modalWindow = new ModalWindow("Add user", view());
 
-  const submitForm = (e: SubmitEvent): void => {
+  const submitForm = <T>(e: T): void => {
     console.log(e);
     e.preventDefault();
     e.target.removeEventListener("submit", submitForm);

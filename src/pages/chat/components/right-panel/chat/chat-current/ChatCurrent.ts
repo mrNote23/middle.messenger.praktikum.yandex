@@ -1,9 +1,9 @@
 import view from "./ChatCurrent.hbs";
-import { Dispatch, Subscribe } from "../../../../../../core/State.ts";
+import { Dispatch, Extract, Subscribe } from "../../../../../../core/State.ts";
 import { OnMobile } from "../../../../../../utils/on-mobile";
-import "./ChatCurrent.scss";
 import { Component } from "../../../../../../core/Component";
 import { IChat, IUser } from "../../../../../../core/interfaces";
+import "./ChatCurrent.scss";
 
 export class ChatCurrent extends Component {
   chat: IChat | null = null;
@@ -21,40 +21,40 @@ export class ChatCurrent extends Component {
     this.usersCountAvatar = 0;
     this.chatUsers = [];
 
-    this.subscriber = Subscribe("chatUsers", (val) => {
-      this.chatUsers = val;
-      this.changeChat(this.chat);
-    });
-    this.subscriber = Subscribe("currentChat", this.changeChat);
+    this.subscriber = Subscribe("currentChat", this.chatChanged);
   }
 
-  changeChat = (chat: IChat | null): void => {
-    this.chat = chat;
-    this.usersAvatars = [];
-
-    Object.values(this.chatUsers)
-      .slice(3)
-      .forEach((u) => this.usersAvatars.push(u.avatar));
-    this.usersCountAvatar =
-      Object.keys(this.chatUsers).length < 10
-        ? Object.keys(this.chatUsers).length
-        : "99+";
-    this.render(
-      {
-        ...this.chat,
-        usersAvatars: this.usersAvatars,
-        usersCountAvatar: this.usersCountAvatar,
-        showAvatars: this.usersAvatars.length > 0,
-      },
-      [
-        { selector: "#back", event: "click", cb: OnMobile.showLeftPanel },
+  chatChanged = (chat: IChat | "loading"): void => {
+    if (chat === "loading") {
+      this.loading();
+    } else {
+      this.chat = chat;
+      this.usersAvatars = [];
+      this.chatUsers = Extract("chatUsers");
+      Object.values(this.chatUsers)
+        .slice(3)
+        .forEach((u) => this.usersAvatars.push(u.avatar));
+      this.usersCountAvatar =
+        Object.keys(this.chatUsers).length < 10
+          ? Object.keys(this.chatUsers).length
+          : "99+";
+      this.render(
         {
-          selector: "#chat-profile-btn",
-          event: "click",
-          cb: this.openChatProfile,
+          ...this.chat,
+          usersAvatars: this.usersAvatars,
+          usersCountAvatar: this.usersCountAvatar,
+          showAvatars: this.usersAvatars.length > 0,
         },
-      ]
-    );
+        [
+          { selector: "#back", event: "click", cb: OnMobile.showLeftPanel },
+          {
+            selector: "#chat-profile-btn",
+            event: "click",
+            cb: this.openChatProfile,
+          },
+        ]
+      );
+    }
   };
 
   openChatProfile = (): void => {

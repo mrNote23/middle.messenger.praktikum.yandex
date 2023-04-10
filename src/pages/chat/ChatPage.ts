@@ -22,9 +22,12 @@ export class ChatPage extends Component {
       role: "admin",
     });
 
-    Store("currentChat"); // текущий чат
-    Store("currentUser"); // текущий пользователь чата
-    Store("chatUsers", []); // пользователи текущего чата
+    Store("chatsList", []); // Список чатов (IChat[])
+    Store("currentChat", null); // текущий чат (IChat)
+    Store("currentUser", null); // текущий пользователь чата (IUser)
+    Store("chatUsers", []); // пользователи текущего чата (IUser[])
+    Store("chatMessages", null); // сообщения текущего чата
+
     Store("leftMode", "chats"); // режим левой панели ( chats/users )
     Store("rightMode", "chat"); // режим правой панели (chat/adminProfile/userProfile/chatProfile)
     this.render();

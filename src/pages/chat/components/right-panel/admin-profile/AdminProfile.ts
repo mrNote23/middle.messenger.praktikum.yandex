@@ -4,7 +4,6 @@ import { OnMobile } from "../../../../../utils/on-mobile";
 import { Confirm } from "../../../../../ui/confirm/confirm";
 import { navigate } from "../../../../../main-router/MainRouter.ts";
 import { Component } from "../../../../../core/Component";
-import "./AdminProfile.scss";
 
 export class AdminProfile extends Component {
   admin: {};
@@ -34,7 +33,7 @@ export class AdminProfile extends Component {
     ]);
   }
 
-  updateProfile = (e: Event): void => {
+  updateProfile = <T>(e: T): void => {
     e.preventDefault();
     Confirm({ title: "Are you sure?", text: "Update profile?" }, this.btnBack);
   };

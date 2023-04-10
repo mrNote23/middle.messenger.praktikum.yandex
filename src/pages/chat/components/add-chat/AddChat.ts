@@ -5,7 +5,7 @@ import { ModalWindow } from "../../../../core/components/modal-window/ModalWindo
 export const AddChat = (): void => {
   const modalWindow = new ModalWindow("Add new chat", view());
 
-  const submitForm = (e: SubmitEvent): void => {
+  const submitForm = <T>(e: T): void => {
     e.preventDefault();
     e.target.removeEventListener("submit", submitForm);
     modalWindow.remove();

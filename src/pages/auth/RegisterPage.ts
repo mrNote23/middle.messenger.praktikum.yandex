@@ -8,7 +8,7 @@ export class RegisterPage extends Component {
     super(view);
   }
 
-  registerProcess = (e: Event): void => {
+  registerProcess = <T>(e: T): void => {
     e.preventDefault();
     navigate("/");
   };
