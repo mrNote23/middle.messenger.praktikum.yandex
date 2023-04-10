@@ -4,6 +4,7 @@ import { OnMobile } from "../../../../../utils/on-mobile";
 import { Confirm } from "../../../../../ui/confirm/confirm";
 import { navigate } from "../../../../../main-router/MainRouter.ts";
 import { Component } from "../../../../../core/Component";
+import { ADMIN, LEFTMODE, RIGHTMODE, STATES } from "../../../../../core/Chat";
 
 export class AdminProfile extends Component {
   admin: {};
@@ -13,7 +14,7 @@ export class AdminProfile extends Component {
   }
 
   connectedCallback(): void {
-    this.admin = Extract("admin");
+    this.admin = Extract(ADMIN);
     this.render({ ...this.admin }, [
       {
         selector: "#back",
@@ -47,17 +48,17 @@ export class AdminProfile extends Component {
   btnBack = (): void => {
     OnMobile.showLeftPanel();
     if (window["prevLeftMode"]) {
-      Dispatch("leftMode", window["prevLeftMode"]);
+      Dispatch(STATES.LEFT_MODE, window["prevLeftMode"]);
       window["prevLeftMode"] = null;
     } else {
-      Dispatch("leftMode", "chats");
+      Dispatch(STATES.LEFT_MODE, LEFTMODE.CHATS);
     }
 
     if (window["prevRightMode"]) {
-      Dispatch("rightMode", window["prevRightMode"]);
+      Dispatch(STATES.RIGHT_MODE, window["prevRightMode"]);
       window["prevRightMode"] = null;
     } else {
-      Dispatch("rightMode", "chat");
+      Dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
     }
   };
 }

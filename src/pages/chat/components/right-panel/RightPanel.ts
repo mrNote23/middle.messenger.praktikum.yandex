@@ -1,5 +1,6 @@
 import { Component } from "../../../../core/Component";
 import { Subscribe } from "../../../../core/State";
+import { STATES } from "../../../../core/Chat";
 
 const templates: { [key: string]: string } = {
   chat: `<chat-current class="chat-header"></chat-current>
@@ -16,7 +17,7 @@ export class RightPanel extends Component {
   }
 
   connectedCallback(): void {
-    this.subscriber = Subscribe("rightMode", (val) => {
+    this.subscriber = Subscribe(STATES.RIGHT_MODE, (val) => {
       this.innerHTML = templates[val];
     });
   }

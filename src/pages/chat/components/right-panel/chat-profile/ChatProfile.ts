@@ -4,6 +4,7 @@ import { Confirm } from "../../../../../ui/confirm/confirm";
 import { Component } from "../../../../../core/Component";
 import "./ChatProfile.scss";
 import { IChat } from "../../../../../core/interfaces";
+import { RIGHTMODE, STATES } from "../../../../../core/Chat";
 
 export class ChatProfile extends Component {
   chat: IChat;
@@ -13,14 +14,14 @@ export class ChatProfile extends Component {
   }
 
   connectedCallback(): void {
-    this.subscriber = Subscribe("currentChat", (val) => {
+    this.subscriber = Subscribe(STATES.CURRENT_CHAT, (val) => {
       this.chat = val;
       this.render({ ...this.chat }, [
         {
           selector: "#back",
           event: "click",
           cb: () => {
-            Dispatch("rightMode", "chat");
+            Dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
           },
         },
         {
@@ -47,8 +48,8 @@ export class ChatProfile extends Component {
       { title: "Are you sure?", text: "Do you want to rename the chat?" },
       () => {
         Dispatch(
-          "chatsList",
-          Extract("chatsList").map((elm) => {
+          STATES.CHATS_LIST,
+          Extract(STATES.CHATS_LIST).map((elm) => {
             if (elm.id === this.chat.id) {
               return { ...elm, title: "New Title" };
             } else {
@@ -56,8 +57,8 @@ export class ChatProfile extends Component {
             }
           })
         );
-        Dispatch("currentChat", {
-          ...Extract("currentChat"),
+        Dispatch(STATES.CURRENT_CHAT, {
+          ...Extract(STATES.CURRENT_CHAT),
           title: "New Title",
         });
       }

@@ -3,6 +3,7 @@ import { Extract, Subscribe } from "../../../../../../core/State.ts";
 import { Component } from "../../../../../../core/Component";
 import "./ChatBody.scss";
 import { IChat } from "../../../../../../core/interfaces";
+import { ADMIN, STATES } from "../../../../../../core/Chat";
 
 export class ChatBody extends Component {
   constructor() {
@@ -10,7 +11,7 @@ export class ChatBody extends Component {
   }
 
   connectedCallback(): void {
-    this.subscriber = Subscribe("currentChat", this.chatChanged);
+    this.subscriber = Subscribe(STATES.CURRENT_CHAT, this.chatChanged);
   }
 
   chatChanged = (chat: IChat | "loading"): void => {
@@ -18,9 +19,9 @@ export class ChatBody extends Component {
       this.loading();
     } else {
       this.render({
-        messages: Extract("chatMessages"),
-        adminId: Extract("admin").id,
-        notSelected: !Extract("chatMessages"),
+        messages: Extract(STATES.CHAT_MESSAGES),
+        adminId: Extract(ADMIN).id,
+        notSelected: !Extract(STATES.CHAT_MESSAGES),
       });
     }
   };

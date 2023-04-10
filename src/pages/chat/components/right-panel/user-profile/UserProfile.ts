@@ -4,6 +4,7 @@ import { Confirm } from "../../../../../ui/confirm/confirm";
 import "./UserProfile.scss";
 import { Component } from "../../../../../core/Component";
 import { IChat, IUser } from "../../../../../core/interfaces";
+import { RIGHTMODE, STATES } from "../../../../../core/Chat";
 
 export class UserProfile extends Component {
   user: IUser;
@@ -15,10 +16,10 @@ export class UserProfile extends Component {
 
   connectedCallback(): void {
     this.subscriber = Subscribe(
-      "currentChat",
+      STATES.CURRENT_CHAT,
       (val) => (this.currentChat = val)
     );
-    this.subscriber = Subscribe("currentUser", (val) => {
+    this.subscriber = Subscribe(STATES.CURRENT_USER, (val) => {
       this.user = val;
       this.render(
         {
@@ -31,7 +32,7 @@ export class UserProfile extends Component {
             selector: "#back",
             event: "click",
             cb: () => {
-              Dispatch("rightMode", "chat");
+              Dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
             },
           },
           {
