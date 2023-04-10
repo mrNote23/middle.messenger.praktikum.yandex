@@ -62,6 +62,8 @@ export class Component extends HTMLElement {
               if (this[eventCallback]) {
                 itemNode[`on${eventName}`] = this[eventCallback];
               }
+              // удалим атрибут event-* для красоты
+              itemNode.removeAttribute(itemNode.attributes[key].nodeName);
             }
           }
         }
