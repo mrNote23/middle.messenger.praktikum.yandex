@@ -15,23 +15,7 @@ export class AdminProfile extends Component {
 
   connectedCallback(): void {
     this.admin = Extract(ADMIN);
-    this.render({ ...this.admin }, [
-      {
-        selector: "#back",
-        event: "click",
-        cb: this.btnBack,
-      },
-      {
-        selector: "#admin-profile-form",
-        event: "submit",
-        cb: this.updateProfile,
-      },
-      {
-        selector: "#logout",
-        event: "click",
-        cb: this.btnLogout,
-      },
-    ]);
+    this.render({ ...this.admin });
   }
 
   updateProfile = <T>(e: T): void => {

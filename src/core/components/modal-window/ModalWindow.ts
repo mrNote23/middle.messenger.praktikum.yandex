@@ -23,18 +23,14 @@ export class ModalWindowComponent extends Component {
   }
 
   connectedCallback() {
-    this.render(
-      {
-        title: this.getAttribute("title"),
-        content: this.innerHTML,
-      },
-      [
-        { selector: document, event: "keyup", cb: this.pressEscape },
-        { selector: ".modal-content", event: "click", cb: this.clickAway },
-        { selector: ".close-modal", event: "click", cb: this.closeModal },
-      ]
-    );
+    this.render({
+      title: this.getAttribute("title"),
+      content: this.innerHTML,
+    });
+    document.addEventListener("keyup", this.pressEscape);
   }
+
+  disconnectedCallback() {}
 
   clickAway = (e: MouseEvent): void => {
     if (e?.target["className"] === "modal-content") {

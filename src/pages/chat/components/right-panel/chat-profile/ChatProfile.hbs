@@ -1,5 +1,5 @@
 <div class="profile-header">
-	<div id="back" class="back-btn">
+	<div id="back" class="back-btn" event-click="[[backBtn]]">
 		<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
 			<g data-name="Layer 2">
 				<g data-name="arrowhead-left">
@@ -29,9 +29,9 @@
 	<div class="profile-details">
 		<h1 class="text-center">{{title}}</h1>
 		<div class="profile-buttons pt-2">
-			<button id="chat-rename" class="btn w-100">Rename chat</button>
-			<button id="chat-clear" class="btn w-100">Clear chat</button>
-			<button id="chat-delete" class="btn outline w-100">Delete chat</button>
+			<button id="chat-rename" class="btn w-100" event-click="[[renameChat]]">Rename chat</button>
+			<button id="chat-clear" class="btn w-100" event-click="[[clearChat]]">Clear chat</button>
+			<button id="chat-delete" class="btn outline w-100" event-click="[[deleteChat]]">Delete chat</button>
 		</div>
 	</div>
 </div>

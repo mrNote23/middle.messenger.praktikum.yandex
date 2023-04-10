@@ -29,10 +29,10 @@ export class ChatsList extends Component {
         this.loading();
         Chat.loadChatsList();
       } else {
-        this.render(
-          { chatsList: this.chatsList, currentChatId: this.currentChat?.id },
-          [{ selector: "li.chats-item", event: "click", cb: this.selectChat }]
-        );
+        this.render({
+          chatsList: this.chatsList,
+          currentChatId: this.currentChat?.id,
+        });
       }
     });
   }

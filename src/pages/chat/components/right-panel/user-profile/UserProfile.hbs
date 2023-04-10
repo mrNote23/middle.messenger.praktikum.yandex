@@ -1,5 +1,5 @@
 <div class="profile-header">
-	<div id="back" class="back-btn">
+	<div id="back" class="back-btn" event-click="[[backBtn]]">
 		<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
 			<g data-name="Layer 2">
 				<g data-name="arrowhead-left">
@@ -54,7 +54,7 @@
 		</div>
 
 		<div class="pt-1 pb-1">
-			<button id="user-delete" class="btn outline w-100">Delete user</button>
+			<button id="user-delete" class="btn outline w-100" event-click="[[deleteUser]]">Delete user</button>
 		</div>
 	</div>
 

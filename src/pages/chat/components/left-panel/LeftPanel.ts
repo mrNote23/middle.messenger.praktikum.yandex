@@ -32,23 +32,10 @@ export class LeftPanel extends Component {
       this.currentChat &&
         document.getElementById("mode-users").classList.remove("d-none");
     });
-    this.render(
-      { chatSelected: this.currentChat !== null, mode: this.leftMode },
-      [
-        {
-          selector: "#open-admin-profile",
-          event: "click",
-          cb: this.openAdminProfile,
-        },
-        { selector: "#mode-chats", event: "click", cb: this.setModeChats },
-        { selector: "#mode-users", event: "click", cb: this.setModeUsers },
-        {
-          selector: "#add-btn",
-          event: "click",
-          cb: this.addUserChat,
-        },
-      ]
-    );
+    this.render({
+      chatSelected: this.currentChat !== null,
+      mode: this.leftMode,
+    });
   }
 
   addUserChat = (): void => {
@@ -71,8 +58,9 @@ export class LeftPanel extends Component {
       Dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
       e.target.className = "active";
       document.getElementById("mode-users").className = "";
-      document.getElementById("left-container").innerHTML =
-        "<chats-list></chats-list>";
+      document.getElementById(
+        "left-container"
+      ).innerHTML = `<chats-list class="sidebar-body" id="chats-list"></chats-list>`;
     }
   };
 
@@ -82,8 +70,9 @@ export class LeftPanel extends Component {
       Dispatch(STATES.LEFT_MODE, LEFTMODE.USERS);
       e.target.className = "active";
       document.getElementById("mode-chats").className = "";
-      document.getElementById("left-container").innerHTML =
-        "<users-list></users-list>";
+      document.getElementById(
+        "left-container"
+      ).innerHTML = `<users-list class="sidebar-body" id="users-list"></users-list>`;
     }
   };
 }
