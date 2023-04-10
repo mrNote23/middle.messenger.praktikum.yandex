@@ -2,7 +2,7 @@ import view from "./UsersList.hbs";
 import { Extract } from "../../../../../core/State.ts";
 import { Component } from "../../../../../core/Component";
 import { IChatUsers } from "../../../../../core/interfaces";
-import Chat from "../../../../../core/Chat";
+import Chat, { STATES } from "../../../../../core/Chat";
 import "./UsersList.scss";
 
 export class UsersList extends Component {
@@ -13,7 +13,7 @@ export class UsersList extends Component {
   }
 
   connectedCallback(): void {
-    this.usersList = Extract("chatUsers");
+    this.usersList = Extract(STATES.CHAT_USERS);
     this.render({ list: this.usersList }, [
       { selector: "li.users-item", event: "click", cb: this.selectUser },
     ]);

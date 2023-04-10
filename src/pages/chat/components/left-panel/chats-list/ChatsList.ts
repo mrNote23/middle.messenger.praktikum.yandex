@@ -5,7 +5,7 @@ import { OnMobile } from "../../../../../utils/on-mobile";
 import { Component } from "../../../../../core/Component";
 import { IChat } from "../../../../../core/interfaces";
 import "./ChatsList.scss";
-import Chat from "../../../../../core/Chat";
+import Chat, { STATES } from "../../../../../core/Chat";
 
 export class ChatsList extends Component {
   chatsList: IChat[] = [];
@@ -18,12 +18,12 @@ export class ChatsList extends Component {
   connectedCallback(): void {
     // подписка на изменение текущего чата
     this.subscriber = Subscribe(
-      "currentChat",
+      STATES.CURRENT_CHAT,
       (val) => (this.currentChat = val)
     );
 
     // подписка на изменения списка чатов
-    this.subscriber = Subscribe("chatsList", (val) => {
+    this.subscriber = Subscribe(STATES.CHATS_LIST, (val) => {
       this.chatsList = val;
       if (!val.length) {
         this.loading();

@@ -6,6 +6,7 @@ import { OnMobile } from "../../../../utils/on-mobile";
 import { AddUser } from "../add-user/AddUser";
 import { AddChat } from "../add-chat/AddChat";
 import "./LeftPanel.scss";
+import { LEFTMODE, RIGHTMODE, STATES } from "../../../../core/Chat";
 
 export class LeftPanel extends Component {
   currentChat: IChat | null = null;
@@ -17,10 +18,16 @@ export class LeftPanel extends Component {
   }
 
   connectedCallback(): void {
-    this.subscriber = Subscribe("leftMode", (val) => (this.leftMode = val));
-    this.subscriber = Subscribe("rightMode", (val) => (this.rightMode = val));
+    this.subscriber = Subscribe(
+      STATES.LEFT_MODE,
+      (val) => (this.leftMode = val)
+    );
+    this.subscriber = Subscribe(
+      STATES.RIGHT_MODE,
+      (val) => (this.rightMode = val)
+    );
 
-    this.subscriber = Subscribe("currentChat", (val) => {
+    this.subscriber = Subscribe(STATES.CURRENT_CHAT, (val) => {
       this.currentChat = val;
       this.currentChat &&
         document.getElementById("mode-users").classList.remove("d-none");
@@ -45,23 +52,23 @@ export class LeftPanel extends Component {
   }
 
   addUserChat = (): void => {
-    this.leftMode === "chats" ? AddChat() : AddUser();
+    this.leftMode === LEFTMODE.CHATS ? AddChat() : AddUser();
   };
 
   openAdminProfile = (): void => {
-    if (this.rightMode !== "adminProfile") {
+    if (this.rightMode !== RIGHTMODE.ADMIN_PROFILE) {
       window["prevLeftMode"] = this.leftMode;
       window["prevRightMode"] = this.rightMode;
-      Dispatch("rightMode", "adminProfile");
+      Dispatch(STATES.RIGHT_MODE, RIGHTMODE.ADMIN_PROFILE);
       OnMobile.showRightPanel();
     }
   };
 
   setModeChats = <T>(e: T): void => {
     e.preventDefault();
-    if (this.leftMode !== "chats") {
-      Dispatch("leftMode", "chats");
-      Dispatch("rightMode", "chat");
+    if (this.leftMode !== LEFTMODE.CHATS) {
+      Dispatch(STATES.LEFT_MODE, LEFTMODE.CHATS);
+      Dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
       e.target.className = "active";
       document.getElementById("mode-users").className = "";
       document.getElementById("left-container").innerHTML =
@@ -71,8 +78,8 @@ export class LeftPanel extends Component {
 
   setModeUsers = <T>(e: T): void => {
     e.preventDefault();
-    if (this.leftMode !== "users") {
-      Dispatch("leftMode", "users");
+    if (this.leftMode !== LEFTMODE.USERS) {
+      Dispatch(STATES.LEFT_MODE, LEFTMODE.USERS);
       e.target.className = "active";
       document.getElementById("mode-chats").className = "";
       document.getElementById("left-container").innerHTML =

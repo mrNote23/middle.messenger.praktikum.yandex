@@ -4,6 +4,7 @@ import { OnMobile } from "../../../../../../utils/on-mobile";
 import { Component } from "../../../../../../core/Component";
 import { IChat, IUser } from "../../../../../../core/interfaces";
 import "./ChatCurrent.scss";
+import { RIGHTMODE, STATES } from "../../../../../../core/Chat";
 
 export class ChatCurrent extends Component {
   chat: IChat | null = null;
@@ -21,7 +22,7 @@ export class ChatCurrent extends Component {
     this.usersCountAvatar = 0;
     this.chatUsers = [];
 
-    this.subscriber = Subscribe("currentChat", this.chatChanged);
+    this.subscriber = Subscribe(STATES.CURRENT_CHAT, this.chatChanged);
   }
 
   chatChanged = (chat: IChat | "loading"): void => {
@@ -30,7 +31,7 @@ export class ChatCurrent extends Component {
     } else {
       this.chat = chat;
       this.usersAvatars = [];
-      this.chatUsers = Extract("chatUsers");
+      this.chatUsers = Extract(STATES.CHAT_USERS);
       Object.values(this.chatUsers)
         .slice(3)
         .forEach((u) => this.usersAvatars.push(u.avatar));
@@ -58,6 +59,6 @@ export class ChatCurrent extends Component {
   };
 
   openChatProfile = (): void => {
-    Dispatch("rightMode", "chatProfile");
+    Dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT_PROFILE);
   };
 }
