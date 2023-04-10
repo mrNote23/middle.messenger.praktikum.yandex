@@ -21,29 +21,17 @@ export class UserProfile extends Component {
     );
     this.subscriber = Subscribe(STATES.CURRENT_USER, (val) => {
       this.user = val;
-      this.render(
-        {
-          ...this.user,
-          chatTitle: this.currentChat.title,
-          chatAvatar: this.currentChat.avatar,
-        },
-        [
-          {
-            selector: "#back",
-            event: "click",
-            cb: () => {
-              Dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
-            },
-          },
-          {
-            selector: "#user-delete",
-            event: "click",
-            cb: this.deleteUser,
-          },
-        ]
-      );
+      this.render({
+        ...this.user,
+        chatTitle: this.currentChat.title,
+        chatAvatar: this.currentChat.avatar,
+      });
     });
   }
+
+  backBtn = () => {
+    Dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
+  };
 
   deleteUser = (): void => {
     Confirm(

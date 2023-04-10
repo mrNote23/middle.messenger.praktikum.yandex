@@ -39,23 +39,17 @@ export class ChatCurrent extends Component {
         Object.keys(this.chatUsers).length < 10
           ? Object.keys(this.chatUsers).length
           : "99+";
-      this.render(
-        {
-          ...this.chat,
-          usersAvatars: this.usersAvatars,
-          usersCountAvatar: this.usersCountAvatar,
-          showAvatars: this.usersAvatars.length > 0,
-        },
-        [
-          { selector: "#back", event: "click", cb: OnMobile.showLeftPanel },
-          {
-            selector: "#chat-profile-btn",
-            event: "click",
-            cb: this.openChatProfile,
-          },
-        ]
-      );
+      this.render({
+        ...this.chat,
+        usersAvatars: this.usersAvatars,
+        usersCountAvatar: this.usersCountAvatar,
+        showAvatars: this.usersAvatars.length > 0,
+      });
     }
+  };
+
+  showLeftPanel = () => {
+    OnMobile.showLeftPanel();
   };
 
   openChatProfile = (): void => {

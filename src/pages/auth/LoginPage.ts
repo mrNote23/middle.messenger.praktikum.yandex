@@ -14,8 +14,6 @@ export class LoginPage extends Component {
   };
 
   connectedCallback(): void {
-    this.render({}, [
-      { selector: "#login-form", event: "submit", cb: this.loginProcess },
-    ]);
+    this.render();
   }
 }

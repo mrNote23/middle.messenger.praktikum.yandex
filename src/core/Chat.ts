@@ -18,6 +18,7 @@ import { ErrorPage } from "../pages/misc/ErrorPage";
 import { ChatPage } from "../pages/chat/ChatPage";
 import { LeftPanel } from "../pages/chat/components/left-panel/LeftPanel";
 import { RightPanel } from "../pages/chat/components/right-panel/RightPanel";
+import { MainButton } from "../ui/MainButton";
 
 export enum STATES {
   CHATS_LIST = "chatsList",
@@ -65,6 +66,8 @@ class Chat {
     window.customElements.define("chat-page", ChatPage);
     window.customElements.define("left-panel", LeftPanel);
     window.customElements.define("right-panel", RightPanel);
+
+    window.customElements.define("main-button", MainButton);
   }
 
   start = () => {

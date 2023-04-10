@@ -16,32 +16,13 @@ export class ChatProfile extends Component {
   connectedCallback(): void {
     this.subscriber = Subscribe(STATES.CURRENT_CHAT, (val) => {
       this.chat = val;
-      this.render({ ...this.chat }, [
-        {
-          selector: "#back",
-          event: "click",
-          cb: () => {
-            Dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
-          },
-        },
-        {
-          selector: "#chat-rename",
-          event: "click",
-          cb: this.renameChat,
-        },
-        {
-          selector: "#chat-clear",
-          event: "click",
-          cb: this.clearChat,
-        },
-        {
-          selector: "#chat-delete",
-          event: "click",
-          cb: this.deleteChat,
-        },
-      ]);
+      this.render({ ...this.chat });
     });
   }
+
+  backBtn = () => {
+    Dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
+  };
 
   renameChat = (): void => {
     Confirm(

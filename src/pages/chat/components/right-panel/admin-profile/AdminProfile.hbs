@@ -1,5 +1,5 @@
 <div class="profile-header">
-	<div id="back" class="back-btn">
+	<div id="back" class="back-btn" event-click="[[btnBack]]">
 		<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
 			<g data-name="Layer 2">
 				<g data-name="arrowhead-left">
@@ -28,7 +28,7 @@
 	</div>
 
 	<div class="profile-details">
-		<form id="admin-profile-form">
+		<form id="admin-profile-form" event-submit="[[updateProfile]]">
 			<div class="mb-1">
 				<label>First name</label>
 				<input class="form-control" type="text" name="first_name"
@@ -77,7 +77,7 @@
 				</div>
 			</div>
 		</form>
-		<button id="logout" class="btn outline w-100">Logout</button>
+		<button id="logout" class="btn outline w-100" event-click="[[btnLogout]]">Logout</button>
 	</div>
 
 </div>

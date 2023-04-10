@@ -6,22 +6,22 @@ export type TRoute = {
 export const routes: TRoute[] = [
   {
     path: "/",
-    content: "<chat-page></chat-page>",
+    content: `<chat-page class="wrapper"></chat-page>`,
   },
   {
     path: "/login",
-    content: "<login-page></login-page>",
+    content: `<login-page class="wrapper"></login-page>`,
   },
   {
     path: "/register",
-    content: "<register-page></register-page>",
+    content: `<register-page class="wrapper"></register-page>`,
   },
   {
     path: "/404",
-    content: "<error-page>404</error-page>",
+    content: `<error-page class="wrapper">404</error-page>`,
   },
   {
     path: "/500",
-    content: "<error-page>500</error-page>",
+    content: `<error-page class="wrapper">500</error-page>`,
   },
 ];

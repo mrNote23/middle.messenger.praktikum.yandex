@@ -14,9 +14,7 @@ export class UsersList extends Component {
 
   connectedCallback(): void {
     this.usersList = Extract(STATES.CHAT_USERS);
-    this.render({ list: this.usersList }, [
-      { selector: "li.users-item", event: "click", cb: this.selectUser },
-    ]);
+    this.render({ list: this.usersList });
   }
 
   // выбор пользователя (клик по списку)
