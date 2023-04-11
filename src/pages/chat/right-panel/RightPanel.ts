@@ -3,9 +3,9 @@ import { Subscribe } from "../../../core/State";
 import { STATES } from "../../../core/Chat";
 
 const templates: { [key: string]: string } = {
-  chat: `<chat-current class="chat-header"></chat-current>
+  chat: `<chat-header class="chat-header"></chat-header>
          <chat-body class="chat-body"></chat-body>
-         <chat-sending class="chat-footer"></chat-sending>`,
+         <chat-footer class="chat-footer"></chat-footer>`,
   adminProfile: `<admin-profile class="profile"></admin-profile>`,
   userProfile: `<user-profile class="profile"></user-profile>`,
   chatProfile: `<chat-profile class="profile"></chat-profile>`,
