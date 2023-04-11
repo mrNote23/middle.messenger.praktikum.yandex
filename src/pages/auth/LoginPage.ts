@@ -1,15 +1,22 @@
 import view from "./LoginPage.hbs";
 import { Component } from "../../core/Component";
-import { navigate } from "../../ui/main-router/MainRouter";
 import "./auth.scss";
 import { FormValidator } from "../../core/FormValidator";
+import Chat from "../../core/Chat";
+import { navigate } from "../../ui/main-router/MainRouter";
 
 const formFields = {
   login: {
-    rules: [],
+    required: true,
+    minLength: 3,
+    maxLength: 20,
+    message: "3 to 20 characters, letters, numbers, '-'",
   },
   password: {
-    rules: [],
+    required: true,
+    minLength: 8,
+    maxLength: 40,
+    message: "8 to 40 characters",
   },
 };
 
@@ -18,20 +25,14 @@ export class LoginPage extends Component {
 
   constructor() {
     super(view);
-    this.formValidator = new FormValidator(formFields);
   }
-
-  validateField = (e) => {
-    this.formValidator.event(e);
-  };
-
-  submitForm = <T>(e: T): void => {
-    e.preventDefault();
-
-    // navigate("/");
-  };
 
   connectedCallback(): void {
     this.render();
+    this.formValidator = new FormValidator(
+      this.getElementsByTagName("form")[0],
+      formFields,
+      Chat.login
+    );
   }
 }

@@ -11,7 +11,7 @@ import { ChatFooter } from "../pages/chat/right-panel/chat/chat-footer/ChatFoote
 import { AdminProfile } from "../pages/chat/right-panel/admin-profile/AdminProfile";
 import { UserProfile } from "../pages/chat/right-panel/user-profile/UserProfile";
 import { ChatProfile } from "../pages/chat/right-panel/chat-profile/ChatProfile";
-import { MainRouter } from "../ui/main-router/MainRouter";
+import { MainRouter, navigate } from "../ui/main-router/MainRouter";
 import { LoginPage } from "../pages/auth/LoginPage";
 import { RegisterPage } from "../pages/auth/RegisterPage";
 import { ErrorPage } from "../pages/misc/ErrorPage";
@@ -92,6 +92,17 @@ class Chat {
 
     window.document.getElementById("root").innerHTML =
       "<main-router></main-router>";
+  };
+
+  // логин пользователя
+  login = <T>(props: T): void => {
+    console.log(props);
+    navigate("/");
+  };
+  // регистрация пользователя
+  register = <T>(props: T): void => {
+    console.log(props);
+    navigate("/");
   };
 
   // загрузка списка чатов

@@ -6,7 +6,7 @@
 			</a>
 		</div>
 		<div class="auth-body">
-			<form event-submit="[[submitForm]]">
+			<form novalidate>
 				<div class="mb-1">
 					<!--					<label for="login">Login</label>-->
 					<input
@@ -15,8 +15,6 @@
 							name="login"
 							placeholder="Login"
 							autofocus
-							event-keydown="[[validateField]]"
-
 					/>
 				</div>
 
@@ -27,7 +25,6 @@
 							type="password"
 							name="password"
 							placeholder="Password"
-							event-keydown="[[validateField]]"
 					/>
 				</div>
 				<div class="auth-error">Неверный логин или пароль</div>

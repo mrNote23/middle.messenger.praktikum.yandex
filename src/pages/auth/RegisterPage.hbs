@@ -6,7 +6,7 @@
 			</a>
 		</div>
 		<div class="auth-body">
-			<form event-submit="[[submitForm]]">
+			<form novalidate>
 				<div class="mb-1">
 					<!--					<label for="first_name">First name</label>-->
 					<input
@@ -15,7 +15,6 @@
 							name="first_name"
 							placeholder="First name"
 							autofocus
-							event-keyup="[[onKeyup]]"
 					/>
 				</div>
 				<div class="mb-1">
