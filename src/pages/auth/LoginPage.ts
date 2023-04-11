@@ -1,6 +1,6 @@
 import view from "./LoginPage.hbs";
 import { Component } from "../../core/Component";
-import { navigate } from "../../main-router/MainRouter";
+import { navigate } from "../../ui/main-router/MainRouter";
 import "./auth.scss";
 
 export class LoginPage extends Component {

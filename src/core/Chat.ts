@@ -2,23 +2,22 @@ import Api from "./Api";
 import { Dispatch, Extract, Store } from "./State";
 import { IChat, IChatMessage, IChatUsers, IUser } from "./interfaces";
 import { OnMobile } from "../utils/on-mobile";
-import { ModalWindowComponent } from "./components/modal-window/ModalWindow";
-import { ChatsList } from "../pages/chat/components/left-panel/chats-list/ChatsList";
-import { UsersList } from "../pages/chat/components/left-panel/users-list/UsersList";
-import { ChatCurrent } from "../pages/chat/components/right-panel/chat/chat-current/ChatCurrent";
-import { ChatBody } from "../pages/chat/components/right-panel/chat/chat-body/ChatBody";
-import { ChatSending } from "../pages/chat/components/right-panel/chat/chat-sending/ChatSending";
-import { AdminProfile } from "../pages/chat/components/right-panel/admin-profile/AdminProfile";
-import { UserProfile } from "../pages/chat/components/right-panel/user-profile/UserProfile";
-import { ChatProfile } from "../pages/chat/components/right-panel/chat-profile/ChatProfile";
-import { MainRouter } from "../main-router/MainRouter";
+import { ModalWindowComponent } from "../ui/modal-window/ModalWindow";
+import { ChatsList } from "../pages/chat/left-panel/chats-list/ChatsList";
+import { UsersList } from "../pages/chat/left-panel/users-list/UsersList";
+import { ChatHeader } from "../pages/chat/right-panel/chat/chat-header/ChatHeader";
+import { ChatBody } from "../pages/chat/right-panel/chat/chat-body/ChatBody";
+import { ChatFooter } from "../pages/chat/right-panel/chat/chat-footer/ChatFooter";
+import { AdminProfile } from "../pages/chat/right-panel/admin-profile/AdminProfile";
+import { UserProfile } from "../pages/chat/right-panel/user-profile/UserProfile";
+import { ChatProfile } from "../pages/chat/right-panel/chat-profile/ChatProfile";
+import { MainRouter } from "../ui/main-router/MainRouter";
 import { LoginPage } from "../pages/auth/LoginPage";
 import { RegisterPage } from "../pages/auth/RegisterPage";
 import { ErrorPage } from "../pages/misc/ErrorPage";
 import { ChatPage } from "../pages/chat/ChatPage";
-import { LeftPanel } from "../pages/chat/components/left-panel/LeftPanel";
-import { RightPanel } from "../pages/chat/components/right-panel/RightPanel";
-import { MainButton } from "../ui/MainButton";
+import { LeftPanel } from "../pages/chat/left-panel/LeftPanel";
+import { RightPanel } from "../pages/chat/right-panel/RightPanel";
 
 export enum STATES {
   CHATS_LIST = "chatsList",
@@ -50,9 +49,9 @@ class Chat {
 
     window.customElements.define("chats-list", ChatsList);
     window.customElements.define("users-list", UsersList);
-    window.customElements.define("chat-current", ChatCurrent);
+    window.customElements.define("chat-current", ChatHeader);
     window.customElements.define("chat-body", ChatBody);
-    window.customElements.define("chat-sending", ChatSending);
+    window.customElements.define("chat-sending", ChatFooter);
 
     window.customElements.define("admin-profile", AdminProfile);
     window.customElements.define("user-profile", UserProfile);
@@ -66,8 +65,6 @@ class Chat {
     window.customElements.define("chat-page", ChatPage);
     window.customElements.define("left-panel", LeftPanel);
     window.customElements.define("right-panel", RightPanel);
-
-    window.customElements.define("main-button", MainButton);
   }
 
   start = () => {
