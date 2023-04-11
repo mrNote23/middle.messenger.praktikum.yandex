@@ -2,6 +2,7 @@
 .github
 .parcel-cache
 .idea
+.git_token
 yp.code-workspace
 
 node_modules
