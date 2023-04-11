@@ -8,14 +8,16 @@ export class RegisterPage extends Component {
     super(view);
   }
 
-  registerProcess = <T>(e: T): void => {
+  onKeyup = (e) => {
+    console.log(e);
+    console.log(e.target.form.elements);
+  };
+  submitForm = <T>(e: T): void => {
     e.preventDefault();
     navigate("/");
   };
 
   connectedCallback(): void {
-    this.render({}, [
-      { selector: "#register-form", event: "submit", cb: this.registerProcess },
-    ]);
+    this.render({});
   }
 }

@@ -83,11 +83,13 @@ label {
 }
 
 .form-control {
-	border-radius: 6px;
+	//border-radius: 6px;
 	display: block;
 	width: 100%;
-	border: 1px solid var(--gray-color);
-	background-color: var(--light-gray-color);
+	border: 0;
+	border-bottom: 2px solid var(--gray-color);
+	//border: 1px solid var(--gray-color);
+	//background-color: var(--light-gray-color);
 	height: 38px;
 	padding: 10px;
 	font-size: 12px;
@@ -104,7 +106,8 @@ label {
 }
 
 .form-control:focus {
-	border: 1px solid var(--gray-color);
+	//border: 1px solid var(--gray-color);
+	border-bottom: 2px solid var(--primary-color);
 	background-color: white;
 }
 
