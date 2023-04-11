@@ -12,7 +12,7 @@ body {
 	margin: 0;
 	padding: 0;
 	background-color: var(--bg-color);
-	font-family: 'Lato', sans-serif;
+	font-family: Lato, sans-serif;
 	font-size: 12px;
 	overflow-x: hidden;
 }
@@ -43,7 +43,6 @@ label {
 	vertical-align: middle;
 	margin-right: auto;
 	margin-left: auto;
-
 	max-width: 1200px;
 
 	.container {
@@ -55,20 +54,20 @@ label {
 	}
 }
 
-
 .card {
 	text-align: left;
 	display: inline-block;
 	background-color: white;
 	border: 0;
 	border-radius: 6px;
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 8px 24px rgb(0 0 0 / 10%);
 }
 
 .card-modal {
 	width: 500px;
 	margin: 0 auto;
 	background-color: white;
+
 	@media screen and (max-width: 576px) {
 		width: 350px;
 	}
@@ -76,11 +75,11 @@ label {
 
 .logo-image {
 	width: 150px;
+
 	@media screen and (max-width: 992px) {
 		width: 100px;
 		margin-left: 10px;
 	}
-
 }
 
 .form-control {
@@ -98,7 +97,6 @@ label {
 		padding: 5px;
 		height: 28px;
 	}
-
 }
 
 .form-control::placeholder {
@@ -114,7 +112,6 @@ label {
 	border: 1px solid var(--danger-color);
 }
 
-
 .btn {
 	font-size: 12px;
 	padding: 9px 14px;
@@ -126,7 +123,6 @@ label {
 	box-shadow: none;
 	margin: 7px auto 10px;
 	color: white;
-	font-size: 12px;
 	text-align: center;
 
 	&.outline {
@@ -140,7 +136,6 @@ label {
 		color: white;
 	}
 }
-
 
 a.btn:hover, a.btn:active, a.btn:focus {
 	text-decoration: none;

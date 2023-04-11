@@ -1,7 +1,7 @@
 {{#if notSelected}}
 	<div class="empty">Please select another chat or create new</div>
 {{else}}
-	{{#each chat}}
+	{{#each messages}}
 		{{#ifeq user_id ../adminId}}
 			<div class="message-body message-right">
 				<div class="message-content">

@@ -1,5 +1,5 @@
 <div class="profile-header">
-	<div id="back" class="back-btn">
+	<div id="back" class="back-btn" event-click="[[backBtn]]">
 		<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
 			<g data-name="Layer 2">
 				<g data-name="arrowhead-left">
@@ -13,10 +13,11 @@
 		</svg>
 	</div>
 	<div class="avatar">
-		<img class="rounded-circle" src="{{avatar}}" alt="">
+		<img class="rounded-circle" src="{{chatAvatar}}" alt="">
 	</div>
-	<div>
-		<h2>Users's profile</h2>
+	<div class="text-left">
+		<h2 class="m-0">{{chatTitle}}</h2>
+		<h3 class="m-0">User's profile</h3>
 	</div>
 </div>
 <div class="profile-body">
@@ -53,7 +54,7 @@
 		</div>
 
 		<div class="pt-1 pb-1">
-			<button id="user-delete" class="btn outline w-100">Delete user</button>
+			<button id="user-delete" class="btn outline w-100" event-click="[[deleteUser]]">Delete user</button>
 		</div>
 	</div>
 

@@ -1,51 +1,49 @@
-<div class="chat-header">
-	{{#if title}}
-		<div class="chat-details">
-			<div id="back" class="chat-back-btn">
-				<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
-					<g data-name="Layer 2">
-						<g data-name="arrowhead-left">
-							<rect width="30" height="30" transform="rotate(90 12 12)" opacity="0"/>
-							<path fill="#680a83"
-								  d="M11.64 5.23a1 1 0 0 0-1.41.13l-5 6a1 1 0 0 0 0 1.27l4.83 6a1 1 0 0 0 .78.37 1 1 0 0 0 .78-1.63L7.29 12l4.48-5.37a1 1 0 0 0-.13-1.4z"/>
-							<path fill="#680a83"
-								  d="M14.29 12l4.48-5.37a1 1 0 0 0-1.54-1.28l-5 6a1 1 0 0 0 0 1.27l4.83 6a1 1 0 0 0 .78.37 1 1 0 0 0 .78-1.63z"/>
-						</g>
+{{#if title}}
+	<div class="chat-details">
+		<div id="back" class="chat-back-btn" event-click="[[showLeftPanel]]">
+			<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+				<g data-name="Layer 2">
+					<g data-name="arrowhead-left">
+						<rect width="30" height="30" transform="rotate(90 12 12)" opacity="0"/>
+						<path fill="#680a83"
+							  d="M11.64 5.23a1 1 0 0 0-1.41.13l-5 6a1 1 0 0 0 0 1.27l4.83 6a1 1 0 0 0 .78.37 1 1 0 0 0 .78-1.63L7.29 12l4.48-5.37a1 1 0 0 0-.13-1.4z"/>
+						<path fill="#680a83"
+							  d="M14.29 12l4.48-5.37a1 1 0 0 0-1.54-1.28l-5 6a1 1 0 0 0 0 1.27l4.83 6a1 1 0 0 0 .78.37 1 1 0 0 0 .78-1.63z"/>
 					</g>
-				</svg>
-			</div>
-			<div class="avatar">
-				<img class="rounded-circle" src="{{avatar}}" alt="">
-			</div>
-			<div>
-				<h2>{{title}}</h2>
-			</div>
+				</g>
+			</svg>
 		</div>
-		{{#if showAvatars}}
-			<div class="chat-users-avatars">
-				{{#each usersAvatars}}
-					<div class="avatar avatar-small avatar-group">
-						<img class="rounded-circle" src="{{this}}" alt="">
-					</div>
-				{{/each}}
+		<div class="avatar">
+			<img class="rounded-circle" src="{{avatar}}" alt="">
+		</div>
+		<div class="text-left">
+			<h2>{{title}}</h2>
+		</div>
+	</div>
+	{{#if showAvatars}}
+		<div class="chat-users-avatars">
+			{{#each usersAvatars}}
 				<div class="avatar avatar-small avatar-group">
-					<span class="avatar-users rounded-circle">{{usersCountAvatar}}</span>
+					<img class="rounded-circle" src="{{this}}" alt="">
 				</div>
+			{{/each}}
+			<div class="avatar avatar-small avatar-group">
+				<span class="avatar-users rounded-circle">{{usersCountAvatar}}</span>
 			</div>
-		{{/if}}
-		<div class="chat-profile-btn">
-			<button id="chat-profile-btn">
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-					 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-					 class="feather feather-settings">
-					<circle cx="12" cy="12" r="3"></circle>
-					<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-				</svg>
-			</button>
-		</div>
-	{{else}}
-		<div class="text-center w-100 p-2">
-			<h2>No active chat</h2>
 		</div>
 	{{/if}}
-</div>
+	<div class="chat-profile-btn">
+		<button id="chat-profile-btn" event-click="[[openChatProfile]]">
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+				 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+				 class="feather feather-settings">
+				<circle cx="12" cy="12" r="3"></circle>
+				<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+			</svg>
+		</button>
+	</div>
+{{else}}
+	<div class="text-center w-100 p-2">
+		<h2>No active chat</h2>
+	</div>
+{{/if}}
