@@ -52,7 +52,7 @@ const formFields: TFormValidatorConfig = {
 };
 
 export class RegisterPage extends Component {
-  formValidator: any;
+  formValidator: {};
 
   constructor() {
     super(view);

@@ -18,6 +18,8 @@ import { ErrorPage } from "../pages/misc/ErrorPage";
 import { ChatPage } from "../pages/chat/ChatPage";
 import { LeftPanel } from "../pages/chat/left-panel/LeftPanel";
 import { RightPanel } from "../pages/chat/right-panel/RightPanel";
+import { SearchComponent } from "../pages/chat/left-panel/search-component/SearchComponent";
+import { HeaderComponent } from "../pages/chat/left-panel/header-component/HeaderComponent";
 
 export enum STATES {
   CHATS_LIST = "chatsList",
@@ -47,11 +49,14 @@ class Chat {
   constructor() {
     window.customElements.define("modal-window", ModalWindowComponent);
 
+    window.customElements.define("header-component", HeaderComponent);
+    window.customElements.define("search-component", SearchComponent);
     window.customElements.define("chats-list", ChatsList);
     window.customElements.define("users-list", UsersList);
-    window.customElements.define("chat-current", ChatHeader);
+
+    window.customElements.define("chat-header", ChatHeader);
     window.customElements.define("chat-body", ChatBody);
-    window.customElements.define("chat-sending", ChatFooter);
+    window.customElements.define("chat-footer", ChatFooter);
 
     window.customElements.define("admin-profile", AdminProfile);
     window.customElements.define("user-profile", UserProfile);

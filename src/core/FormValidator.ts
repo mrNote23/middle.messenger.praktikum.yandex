@@ -29,12 +29,12 @@ export class FormValidator {
         let spanError = document.createElement("div");
         spanError.textContent = this.config[field].message;
         spanError.className = "error-message";
-        this.form[field].parentNode.insertBefore(spanError, this.form["field"]);
+        this.form[field].parentNode.insertBefore(spanError, this.form[field]);
         this.form[field].showError = function () {
-          this.nextSibling.nextSibling.style.display = "block";
+          this.previousSibling.style.display = "block";
         };
         this.form[field].hideError = function () {
-          this.nextSibling.nextSibling.style.display = "none";
+          this.previousSibling.style.display = "none";
         };
 
         this.form[field].addEventListener("blur", function () {

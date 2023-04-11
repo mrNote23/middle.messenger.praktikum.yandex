@@ -47,11 +47,6 @@ a, a:hover, a:focus {
 	text-decoration: none;
 }
 
-label {
-	display: inline-block;
-	margin-bottom: 0.25rem;
-	color: var(--dark-gray-color);
-}
 
 .wrapper {
 	display: table;
@@ -98,6 +93,30 @@ label {
 	}
 }
 
+
+label {
+	display: inline-block;
+	margin-bottom: 0.25rem;
+	color: var(--dark-gray-color);
+}
+
+.placeholder {
+	left: 10px;
+	top: 18px;
+	color: var(--gray-color);
+	line-height: 14px;
+	pointer-events: none;
+	position: absolute;
+	transform-origin: 0 50%;
+	transition: transform 200ms, color 200ms;
+}
+
+.input-container {
+	position: relative;
+	width: 100%;
+	padding-top: 10px;
+}
+
 .form-control {
 	display: block;
 	width: 100%;
@@ -105,11 +124,31 @@ label {
 	border-bottom: 2px solid var(--gray-color);
 	padding: 5px;
 	margin-bottom: 15px;
-	font-size: 12px;
+	font-size: 14px;
+	border-radius: 6px;
+	height: 30px;
+
+	&::placeholder {
+		color: var(--gray-color)
+	}
 
 	&:focus {
 		border-bottom: 2px solid var(--primary-color);
 		background-color: white;
+	}
+
+	&:focus ~ .placeholder,
+	&:not(:placeholder-shown) ~ .placeholder {
+		transform: translateY(-20px) translateX(-5px) scale(0.75);
+		color: var(--gray-color)
+	}
+
+	&:not(:placeholder-shown) ~ .placeholder {
+		color: var(--primary-color);
+	}
+
+	&:focus ~ .placeholder {
+		color: var(--primary-color);
 	}
 
 	&.error {
@@ -126,15 +165,14 @@ label {
 	}
 }
 
-.form-control::placeholder {
-	color: var(--gray-color);
-}
-
 .error-message {
+	position: absolute;
+	top: 43px;
 	display: none;
 	width: 100%;
 	color: var(--danger-color);
-	margin-top: -10px;
+	text-align: right;
+	font-size: 10px;
 }
 
 .btn {
