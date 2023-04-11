@@ -1,0 +1,14 @@
+<ul class="users-list">
+	{{#each list}}
+		<li class="users-item" event-click="[[selectUser]]" id="user-{{id}}">
+			<div class="avatar">
+				<img class="rounded-circle" src="{{avatar}}" alt="">
+			</div>
+			<div class="users-item-body">
+				<div class="users-item-info">
+					<h2 class="user-display-name">{{display_name}}</h2>
+				</div>
+			</div>
+		</li>
+	{{/each}}
+</ul>
