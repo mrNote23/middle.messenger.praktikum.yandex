@@ -1,5 +1,5 @@
 import view from "./confirm.hbs";
-import { ModalWindow } from "../../core/components/modal-window/ModalWindow";
+import { ModalWindow } from "../modal-window/ModalWindow";
 
 type TConfirmProps = {
   title: string;

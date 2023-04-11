@@ -6,17 +6,26 @@
 			</a>
 		</div>
 		<div class="auth-body">
-			<form event-submit="[[loginProcess]]">
+			<form novalidate>
 				<div class="mb-1">
-					<label for="login">Login</label>
-					<input class="form-control " type="text" name="login" placeholder="JohnD"
+					<!--					<label for="login">Login</label>-->
+					<input
+							class="form-control"
+							type="text"
+							name="login"
+							placeholder="Login"
+							autofocus
 					/>
 				</div>
 
 				<div class="mb-2">
-					<label for="password">Password</label>
-					<input class="form-control " type="password" name="password"
-						   placeholder="Password"/>
+					<!--					<label for="password">Password</label>-->
+					<input
+							class="form-control"
+							type="password"
+							name="password"
+							placeholder="Password"
+					/>
 				</div>
 				<div class="auth-error">Неверный логин или пароль</div>
 				<div class="pt-1 pb-1">
@@ -25,7 +34,7 @@
 						<span class="register-link">
 								Don’t have an account?
 								<a class="router-link" href="/register">Register</a>
-							</span>
+						</span>
 					</div>
 				</div>
 			</form>
