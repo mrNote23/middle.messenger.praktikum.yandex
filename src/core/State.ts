@@ -1,7 +1,6 @@
 type TStoreHolder = {
   store: object;
-  /* eslint-disable */
-  storeNode: any;
+  storeNode: unknown;
 };
 
 export type TSubscriberItem = {

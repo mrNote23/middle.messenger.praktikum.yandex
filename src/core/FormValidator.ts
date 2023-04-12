@@ -20,8 +20,7 @@ export type TFormValidatorConfig = {
     match?: MATCH; // тип поля для валидации
     message?: string; // сообщение при неверном вводе
     compare?: string; // имя поля для сравнения (например для подтверждения пароля)
-    /* eslint-disable */
-    filter?: any; // регулярное выражение, удалится все, что описано
+    filter?: unknown; // регулярное выражение, удалится все, что описано
   };
 };
 
@@ -31,19 +30,24 @@ export class FormValidator {
     private config: TFormValidatorConfig,
     private cb: <T>(props: T) => T
   ) {
+    // если нет формы, то Error
     if (!form) {
       throw new Error("FormValidator: form does not exist");
     }
-    for (const field in config) {
+    // проверка, что все поля описанные в конфиге, есть в форме
+    for (const field in this.config) {
       if (!this.form[field]) {
         throw new Error(
           `FormValidator: the form does not contain a field - ${field}`
         );
       } else {
+        // создадим span для вывода сообщений об ошибках ввода
         const spanError = document.createElement("div");
         spanError.textContent = this.config[field].message;
         spanError.className = "error-message";
+        // прикрепим его перед каждым элементом формы
         this.form[field].parentNode.insertBefore(spanError, this.form[field]);
+        // создадим для элементов формы методы включения и выключения спана
         this.form[field].showError = function () {
           this.previousSibling.style.display = "block";
         };
@@ -51,14 +55,13 @@ export class FormValidator {
           this.previousSibling.style.display = "none";
         };
 
-        this.form[field].addEventListener("blur", function () {
-          this.hideError();
-        });
-        this.form[field].addEventListener("focus", function () {
-          this.classList.contains("error") && this.showError();
-        });
+        // так надо чтобы потом можно было снять обработчики
+        this.form[field].addEventListener("blur", this.hideError);
+        this.form[field].addEventListener("focus", this.showError);
 
+        // обработчик события input
         this.form[field].addEventListener("input", this.onChange);
+
         if (config[field].required) {
           this.form[field].valid = !!this.form[field].value.length;
         } else {
@@ -66,8 +69,17 @@ export class FormValidator {
         }
       }
     }
+    // на форму тоже обработчики submit и reset
     this.form.addEventListener("submit", this.formSubmit);
     this.form.addEventListener("reset", this.formReset);
+  }
+
+  hideError<T>(e: T): void {
+    e.target.hideError();
+  }
+
+  showError<T>(e: T): void {
+    e.target.showError();
   }
 
   formReset = <T>(e: T): void => {
@@ -173,5 +185,15 @@ export class FormValidator {
         field.classList.add("success");
       }
     }
+  };
+
+  removeListeners = () => {
+    for (const field in this.config) {
+      this.form[field].removeEventListener("blur", this.hideError);
+      this.form[field].removeEventListener("focus", this.showError);
+      this.form[field].removeEventListener("input", this.onChange);
+    }
+    this.form.removeEventListener("submit", this.formSubmit);
+    this.form.removeEventListener("reset", this.formReset);
   };
 }

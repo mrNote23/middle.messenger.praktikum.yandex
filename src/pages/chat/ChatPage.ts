@@ -15,12 +15,14 @@ export class ChatPage extends Component {
   }
 
   connectedCallback(): void {
-    if (!State.extract(ADMIN)) {
-      setTimeout(() => {
-        ChatApp.navigate("/login");
-      }, 0);
-    } else {
-      this.render();
-    }
+    // TODO: Временно разрешен вход без авторизации
+    this.render();
+    // if (!State.extract(ADMIN)) {
+    //   setTimeout(() => {
+    //     ChatApp.navigate("/login");
+    //   }, 0);
+    // } else {
+    //   this.render();
+    // }
   }
 }

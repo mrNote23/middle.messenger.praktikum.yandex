@@ -36,6 +36,7 @@ class ChatApp {
   }
 
   start = () => {
+    // инициализация состояний
     State.store(STATES.CHATS_LIST, []); // Список чатов (IChat[])
     State.store(STATES.CURRENT_CHAT, null); // текущий чат (IChat)
     State.store(STATES.CURRENT_USER, null); // текущий пользователь чата (IUser)
@@ -45,8 +46,22 @@ class ChatApp {
     State.store(STATES.LEFT_MODE, LEFTMODE.CHATS); // режим левой панели ( chats/users )
     State.store(STATES.RIGHT_MODE, RIGHTMODE.CHAT); // режим правой панели (chat/adminProfile/userProfile/chatProfile)
 
-    window.document.getElementById("root").innerHTML =
-      "<main-router></main-router>";
+    // TODO: Потом убрать
+    State.store(ADMIN, {
+      id: 8,
+      first_name: "Андрей",
+      second_name: "Суворов",
+      display_name: "Andrey.S",
+      login: "andrey.s",
+      email: "andrey.s@email.com",
+      phone: "89223332218",
+      avatar: "/images/avatars/avatar-8.jpg",
+      role: "admin",
+    });
+
+    window.document.getElementById(
+      "root"
+    ).innerHTML = `<main-router></main-router>`;
   };
 
   // навигация на url

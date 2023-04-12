@@ -11,8 +11,7 @@
 import State, { TSubscriberItem } from "./State";
 
 type TComponentParams = {
-  /* eslint-disable */
-  [key: string]: any;
+  [key: string]: unknown;
 } | null;
 
 export class Component extends HTMLElement {
