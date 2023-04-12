@@ -1,13 +1,27 @@
+/*
+  Валидация форм
+  form - форма
+  config - параметры валидации для полей
+  cb - callBack функция вызывается при успешном submit
+ */
+
+export enum MATCH {
+  PHONE = "phone", // телефон в формате +78217348374, '+' - не обязателен
+  EMAIL = -"email", // стандартный email
+  PASSWORD = "password", // символы в разных регистрах и цифры
+}
+
 export type TFormValidatorConfig = {
   [key: string]: {
-    required?: boolean;
-    firstUC?: boolean;
-    minLength?: number;
-    maxLength?: number;
-    match?: string;
-    message?: string;
-    compare?: string;
-    filter?: any;
+    required?: boolean; // true - обязательное поле
+    firstUC?: boolean; // true - первая буква станет заглавной
+    minLength?: number; // минимальная длина
+    maxLength?: number; // максимальная длина (автоматическая обрезка)
+    match?: MATCH; // тип поля для валидации
+    message?: string; // сообщение при неверном вводе
+    compare?: string; // имя поля для сравнения (например для подтверждения пароля)
+    /* eslint-disable */
+    filter?: any; // регулярное выражение, удалится все, что описано
   };
 };
 
@@ -15,19 +29,19 @@ export class FormValidator {
   constructor(
     private form: object,
     private config: TFormValidatorConfig,
-    private cb: (props: any) => any
+    private cb: <T>(props: T) => T
   ) {
     if (!form) {
       throw new Error("FormValidator: form does not exist");
     }
 
-    for (let field in config) {
+    for (const field in config) {
       if (!this.form[field]) {
         throw new Error(
           `FormValidator: the form does not contain a field - ${field}`
         );
       } else {
-        let spanError = document.createElement("div");
+        const spanError = document.createElement("div");
         spanError.textContent = this.config[field].message;
         spanError.className = "error-message";
         this.form[field].parentNode.insertBefore(spanError, this.form[field]);
@@ -47,7 +61,7 @@ export class FormValidator {
 
         this.form[field].addEventListener("input", this.onChange);
         if (config[field].required) {
-          this.form[field].valid = this.form[field].value.length ? true : false;
+          this.form[field].valid = !!this.form[field].value.length;
         } else {
           this.form[field].valid = true;
         }
@@ -64,9 +78,9 @@ export class FormValidator {
 
   formSubmit = <T>(e: T): void => {
     e.preventDefault();
-    let valid: boolean = true;
+    let valid = true;
     const result: object = {};
-    for (let field in this.config) {
+    for (const field in this.config) {
       result[field] = this.form[field].value;
       if (!this.form[field].valid) {
         this.form[field].classList.add("error");
@@ -79,7 +93,7 @@ export class FormValidator {
   };
 
   onChange = <T>(e: T): void => {
-    let field = e.target;
+    const field = e.target;
     let error = false;
 
     // Первая буква должна быть заглавной
@@ -125,7 +139,7 @@ export class FormValidator {
     if (this.config[field.name].match) {
       const match = this.config[field.name].match;
       switch (true) {
-        case match === "email":
+        case match === MATCH.EMAIL:
           if (
             !field.value.match(
               /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -134,12 +148,13 @@ export class FormValidator {
             error = true;
           }
           break;
-        case match === "password":
+        case match === MATCH.PASSWORD:
           if (!field.value.match(/^(?=.*\d)(?=.*[A-Z])\S+$/m)) {
             error = true;
           }
           break;
-        case match === "phone":
+        case match === MATCH.PHONE:
+          console.log(field.value);
           if (!field.value.match(/^(?:\+|\d)[0-9]*$/m)) {
             error = true;
           }

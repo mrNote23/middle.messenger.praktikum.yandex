@@ -1,10 +1,10 @@
 import view from "./ChatProfile.hbs";
-import { Dispatch, Extract, Subscribe } from "../../../../core/State.ts";
+import State from "../../../../core/State";
 import { Confirm } from "../../../../ui/confirm/confirm";
 import { Component } from "../../../../core/Component";
 import "./ChatProfile.scss";
 import { IChat } from "../../../../core/interfaces";
-import { RIGHTMODE, STATES } from "../../../../core/Chat";
+import { RIGHTMODE, STATES } from "../../../../core/ChatApp";
 import { RenameChat } from "./rename-chat/RenameChat";
 
 export class ChatProfile extends Component {
@@ -15,14 +15,14 @@ export class ChatProfile extends Component {
   }
 
   connectedCallback(): void {
-    this.subscriber = Subscribe(STATES.CURRENT_CHAT, (val) => {
+    this.subscriber = State.subscribe(STATES.CURRENT_CHAT, (val) => {
       this.chat = val;
       this.render({ ...this.chat });
     });
   }
 
   backBtn = () => {
-    Dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
+    State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
   };
 
   renameChat = (): void => {

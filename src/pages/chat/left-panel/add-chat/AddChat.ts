@@ -9,6 +9,7 @@ import {
 const formFields: TFormValidatorConfig = {
   chat_name: {
     required: true,
+    firstUC: true,
     minLength: 10,
     maxLength: 50,
     filter: /[^а-яa-z0-9\-\s]+/gi,

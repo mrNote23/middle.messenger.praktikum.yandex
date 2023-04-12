@@ -8,9 +8,12 @@
   у создаваемого компонента должен присутствовать обработчик с именем handlerClick, handlerMouseOver
 */
 
-import { TSubscriberItem, UnSubscribe } from "./State";
+import State, { TSubscriberItem } from "./State";
 
-type TComponentParams = { [key: string]: any } | {} | null;
+type TComponentParams = {
+  /* eslint-disable */
+  [key: string]: any;
+} | null;
 
 export class Component extends HTMLElement {
   subscriptions: TSubscriberItem[] = [];
@@ -25,7 +28,8 @@ export class Component extends HTMLElement {
 
   // анимация на время загрузки данных для компонента
   loading(): void {
-    this.innerHTML = `<div class="loader"><div></div><div></div><div></div><div></div></div>`;
+    this.innerHTML =
+      "<div class='loader'><div></div><div></div><div></div><div></div></div>";
   }
 
   // добавление подписчика в стэк
@@ -47,17 +51,14 @@ export class Component extends HTMLElement {
     if (node.childNodes) {
       node.childNodes.forEach((itemNode) => {
         if (itemNode.nodeType === 1 && itemNode.attributes) {
-          for (let key in itemNode.attributes) {
+          for (const key in itemNode.attributes) {
             if (
               itemNode.attributes[key].nodeName &&
-              itemNode.attributes[key].nodeName.match(/^event\-(\w)+$/gi)
+              itemNode.attributes[key].nodeName.match(/^event-(\w)+$/gi)
             ) {
               const [eventName, eventCallback] = [
                 itemNode.attributes[key].nodeName.split("-")[1],
-                itemNode.attributes[key].nodeValue.replace(
-                  /(\[\[)|(\]\])/g,
-                  ""
-                ),
+                itemNode.attributes[key].nodeValue.replace(/(\[\[)|(]])/g, ""),
               ];
               if (this[eventCallback]) {
                 itemNode[`on${eventName}`] = this[eventCallback];
@@ -74,6 +75,6 @@ export class Component extends HTMLElement {
 
   // отписка при отключении компонента от DOM
   disconnectedCallback() {
-    this.subscriptions.forEach((elm) => UnSubscribe(elm));
+    this.subscriptions.forEach((elm) => State.unsubscribe(elm));
   }
 }

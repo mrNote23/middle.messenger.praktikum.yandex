@@ -5,7 +5,7 @@ import "./ModalWindow.scss";
 export class ModalWindow {
   node: HTMLElement;
 
-  constructor(title: string, content: string = "") {
+  constructor(title = "", content = "") {
     this.node = document.createElement("modal-window");
     this.node.title = title;
     this.node.innerHTML = content;
@@ -29,8 +29,6 @@ export class ModalWindowComponent extends Component {
     });
     document.addEventListener("keyup", this.pressEscape);
   }
-
-  disconnectedCallback() {}
 
   clickAway = (e: MouseEvent): void => {
     if (e?.target["className"] === "modal-content") {

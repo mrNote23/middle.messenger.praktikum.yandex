@@ -1,11 +1,9 @@
 import view from "./ChatsList.hbs";
-import { Dispatch, Subscribe } from "../../../../core/State.ts";
-import Api from "../../../../core/Api";
-import { OnMobile } from "../../../../utils/on-mobile";
+import State from "../../../../core/State";
 import { Component } from "../../../../core/Component";
 import { IChat } from "../../../../core/interfaces";
+import Chat, { STATES } from "../../../../core/ChatApp";
 import "./ChatsList.scss";
-import Chat, { STATES } from "../../../../core/Chat";
 
 export class ChatsList extends Component {
   chatsList: IChat[] = [];
@@ -17,13 +15,13 @@ export class ChatsList extends Component {
 
   connectedCallback(): void {
     // подписка на изменение текущего чата
-    this.subscriber = Subscribe(
+    this.subscriber = State.subscribe(
       STATES.CURRENT_CHAT,
       (val) => (this.currentChat = val)
     );
 
     // подписка на изменения списка чатов
-    this.subscriber = Subscribe(STATES.CHATS_LIST, (val) => {
+    this.subscriber = State.subscribe(STATES.CHATS_LIST, (val) => {
       this.chatsList = val;
       if (!val.length) {
         this.loading();
@@ -31,7 +29,7 @@ export class ChatsList extends Component {
       } else {
         this.render({
           chatsList: this.chatsList,
-          currentChatId: this.currentChat?.id,
+          currentChatId: this.currentChat ? this.currentChat.id : null,
         });
       }
     });

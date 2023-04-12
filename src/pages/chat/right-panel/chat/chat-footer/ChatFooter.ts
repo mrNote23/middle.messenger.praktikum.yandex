@@ -1,11 +1,11 @@
 import view from "./ChatFooter.hbs";
 import { Component } from "../../../../../core/Component";
-import { Subscribe } from "../../../../../core/State";
-import { STATES } from "../../../../../core/Chat";
+import State from "../../../../../core/State";
+import { STATES } from "../../../../../core/ChatApp";
 import "./ChatFooter.scss";
 
 export class ChatFooter extends Component {
-  message: string = "";
+  message = "";
 
   constructor() {
     super(view);
@@ -21,14 +21,16 @@ export class ChatFooter extends Component {
       console.log(`Message: ${this.message}`);
       this.message = "";
       this.render();
+      this.getElementsByTagName("input")[0].focus();
     }
   };
 
   connectedCallback(): void {
-    this.subscriber = Subscribe(STATES.CURRENT_CHAT, (val) => {
+    this.subscriber = State.subscribe(STATES.CURRENT_CHAT, (val) => {
       if (val && val !== "loading") {
         this.style.display = "flex";
         this.render({ message: this.message });
+        this.getElementsByTagName("input")[0].focus();
       } else {
         this.style.display = "none";
       }

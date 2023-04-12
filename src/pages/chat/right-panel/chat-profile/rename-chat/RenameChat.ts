@@ -5,8 +5,8 @@ import {
   FormValidator,
   TFormValidatorConfig,
 } from "../../../../../core/FormValidator";
-import { Dispatch, Extract } from "../../../../../core/State";
-import { STATES } from "../../../../../core/Chat";
+import State from "../../../../../core/State";
+import { STATES } from "../../../../../core/ChatApp";
 
 const formFields: TFormValidatorConfig = {
   chat_name: {
@@ -19,7 +19,7 @@ const formFields: TFormValidatorConfig = {
 };
 
 export const RenameChat = (): void => {
-  const currentChat = Extract(STATES.CURRENT_CHAT);
+  const currentChat = State.extract(STATES.CURRENT_CHAT);
 
   const modalWindow = new ModalWindow(
     "Rename chat",
@@ -33,9 +33,9 @@ export const RenameChat = (): void => {
       if (props && props.chat_name !== currentChat.title) {
         console.log(props);
 
-        Dispatch(
+        State.dispatch(
           STATES.CHATS_LIST,
-          Extract(STATES.CHATS_LIST).map((elm) => {
+          State.extract(STATES.CHATS_LIST).map((elm) => {
             if (elm.id === currentChat.id) {
               return { ...elm, title: props.chat_name };
             } else {
@@ -43,8 +43,8 @@ export const RenameChat = (): void => {
             }
           })
         );
-        Dispatch(STATES.CURRENT_CHAT, {
-          ...Extract(STATES.CURRENT_CHAT),
+        State.dispatch(STATES.CURRENT_CHAT, {
+          ...State.extract(STATES.CURRENT_CHAT),
           title: props.chat_name,
         });
       }

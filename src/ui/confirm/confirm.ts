@@ -3,7 +3,7 @@ import { ModalWindow } from "../modal-window/ModalWindow";
 
 type TConfirmProps = {
   title: string;
-  [key: string]: any;
+  [key: string]: string;
 };
 
 export const Confirm = (props: TConfirmProps, cb: () => void): void => {
