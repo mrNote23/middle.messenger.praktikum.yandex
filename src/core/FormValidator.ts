@@ -7,7 +7,7 @@
 
 export enum MATCH {
   PHONE = "phone", // телефон в формате +78217348374, '+' - не обязателен
-  EMAIL = -"email", // стандартный email
+  EMAIL = "email", // стандартный email
   PASSWORD = "password", // символы в разных регистрах и цифры
 }
 
@@ -34,7 +34,6 @@ export class FormValidator {
     if (!form) {
       throw new Error("FormValidator: form does not exist");
     }
-
     for (const field in config) {
       if (!this.form[field]) {
         throw new Error(
@@ -154,7 +153,6 @@ export class FormValidator {
           }
           break;
         case match === MATCH.PHONE:
-          console.log(field.value);
           if (!field.value.match(/^(?:\+|\d)[0-9]*$/m)) {
             error = true;
           }
