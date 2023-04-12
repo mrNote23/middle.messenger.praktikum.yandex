@@ -1,6 +1,7 @@
-const helperDateConvert = (elm) => {
-  if (typeof elm === "string") {
-    elm = new Date(elm);
+const helperDateConvert = (param) => {
+  let elm = param;
+  if (typeof param === "string") {
+    elm = new Date(param);
   }
   const year = elm.getFullYear().toString().substring(2);
   let month = (elm.getMonth() + 1).toString();

@@ -9,7 +9,7 @@ type TOptions = {
   method: METHODS;
   timeout?: number;
   headers?: Array<object>;
-  data?: any;
+  data?: object;
 };
 
 export class HTTPTransport {
@@ -20,16 +20,15 @@ export class HTTPTransport {
       timeout: 1000,
     }
   ): Promise<TResponse> => {
-    let { method, data, headers, timeout } = options;
+    const { method, data, headers, timeout } = options;
 
-    headers = headers ? headers : [];
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
 
       if (method === METHODS.GET) {
         if (data) {
           url = `${url}?${Object.entries(data)
-            .map(([key, value]: [key: string, value: any]): string => {
+            .map(([key, value]: [key: string, value: string]): string => {
               return `${key}=${value}`;
             })
             .join("&")}`;
@@ -53,7 +52,7 @@ export class HTTPTransport {
       xhr.onload = () => {
         let response;
         if (
-          ~xhr?.getResponseHeader("Content-Type")?.indexOf("application/json")!
+          !xhr?.getResponseHeader("Content-Type")?.indexOf("application/json")
         ) {
           response = JSON.parse(xhr.response);
         } else {

@@ -1,16 +1,16 @@
 import view from "./ChatHeader.hbs";
-import { Dispatch, Extract, Subscribe } from "../../../../../core/State.ts";
+import State from "../../../../../core/State";
 import { OnMobile } from "../../../../../utils/on-mobile";
 import { Component } from "../../../../../core/Component";
 import { IChat, IUser } from "../../../../../core/interfaces";
 import "./ChatHeader.scss";
-import { RIGHTMODE, STATES } from "../../../../../core/Chat";
+import { RIGHTMODE, STATES } from "../../../../../core/ChatApp";
 
 export class ChatHeader extends Component {
   chat: IChat | null = null;
   usersAvatars: Array<string>;
   usersCountAvatar: number | string = 0;
-  chatUsers: IUser[] = [];
+  chatUsers: IUser[] | null = [];
 
   constructor() {
     super(view);
@@ -22,7 +22,7 @@ export class ChatHeader extends Component {
     this.usersCountAvatar = 0;
     this.chatUsers = [];
 
-    this.subscriber = Subscribe(STATES.CURRENT_CHAT, this.chatChanged);
+    this.subscriber = State.subscribe(STATES.CURRENT_CHAT, this.chatChanged);
   }
 
   chatChanged = (chat: IChat | "loading"): void => {
@@ -31,7 +31,7 @@ export class ChatHeader extends Component {
     } else {
       this.chat = chat;
       this.usersAvatars = [];
-      this.chatUsers = Extract(STATES.CHAT_USERS);
+      this.chatUsers = State.extract(STATES.CHAT_USERS);
       Object.values(this.chatUsers)
         .slice(3)
         .forEach((u) => this.usersAvatars.push(u.avatar));
@@ -53,6 +53,6 @@ export class ChatHeader extends Component {
   };
 
   openChatProfile = (): void => {
-    Dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT_PROFILE);
+    State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT_PROFILE);
   };
 }

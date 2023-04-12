@@ -4,9 +4,7 @@ import { _chatMessages } from "../fakedb/_chatMessages";
 import { IChat, IChatMessage, IChatUsers } from "./interfaces";
 
 class Api {
-  delay: number = 200;
-
-  constructor() {}
+  delay = 200;
 
   getChats = (): Promise<IChat[]> => {
     return new Promise((resolve) => {

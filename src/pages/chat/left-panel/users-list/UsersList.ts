@@ -1,19 +1,19 @@
 import view from "./UsersList.hbs";
-import { Extract } from "../../../../core/State.ts";
+import State from "../../../../core/State";
 import { Component } from "../../../../core/Component";
 import { IChatUsers } from "../../../../core/interfaces";
-import Chat, { STATES } from "../../../../core/Chat";
+import Chat, { STATES } from "../../../../core/ChatApp";
 import "./UsersList.scss";
 
 export class UsersList extends Component {
-  usersList: IChatUsers[] = [];
+  usersList: IChatUsers[] | null = [];
 
   constructor() {
     super(view);
   }
 
   connectedCallback(): void {
-    this.usersList = Extract(STATES.CHAT_USERS);
+    this.usersList = State.extract(STATES.CHAT_USERS);
     this.render({ list: this.usersList });
   }
 
@@ -22,7 +22,9 @@ export class UsersList extends Component {
     const item: Element = e.target.closest("li");
     const userId: string | null = item.id || null;
     if (userId && !item.classList.contains("active")) {
-      Chat.setCurrentUser(this.usersList[userId.split("-")[1]]);
+      if (this.usersList) {
+        Chat.setCurrentUser(this.usersList[userId.split("-")[1]]);
+      }
       document
         .querySelectorAll("li.users-item.active")
         .forEach((elm) => elm.classList.remove("active"));

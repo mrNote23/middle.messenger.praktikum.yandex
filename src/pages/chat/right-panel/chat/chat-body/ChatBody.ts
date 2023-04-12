@@ -1,9 +1,9 @@
 import view from "./ChatBody.hbs";
-import { Extract, Subscribe } from "../../../../../core/State.ts";
+import State from "../../../../../core/State";
 import { Component } from "../../../../../core/Component";
 import "./ChatBody.scss";
 import { IChat } from "../../../../../core/interfaces";
-import { ADMIN, STATES } from "../../../../../core/Chat";
+import { ADMIN, STATES } from "../../../../../core/ChatApp";
 
 export class ChatBody extends Component {
   constructor() {
@@ -11,7 +11,7 @@ export class ChatBody extends Component {
   }
 
   connectedCallback(): void {
-    this.subscriber = Subscribe(STATES.CURRENT_CHAT, this.chatChanged);
+    this.subscriber = State.subscribe(STATES.CURRENT_CHAT, this.chatChanged);
   }
 
   chatChanged = (chat: IChat | "loading"): void => {
@@ -19,9 +19,9 @@ export class ChatBody extends Component {
       this.loading();
     } else {
       this.render({
-        messages: Extract(STATES.CHAT_MESSAGES),
-        adminId: Extract(ADMIN).id,
-        notSelected: !Extract(STATES.CHAT_MESSAGES),
+        messages: State.extract(STATES.CHAT_MESSAGES),
+        adminId: State.extract(ADMIN).id,
+        notSelected: !State.extract(STATES.CHAT_MESSAGES),
       });
     }
   };

@@ -1,7 +1,11 @@
 import view from "./RegisterPage.hbs";
 import { Component } from "../../core/Component";
-import { FormValidator, TFormValidatorConfig } from "../../core/FormValidator";
-import Chat from "../../core/Chat";
+import {
+  FormValidator,
+  MATCH,
+  TFormValidatorConfig,
+} from "../../core/FormValidator";
+import Chat from "../../core/ChatApp";
 import "./auth.scss";
 
 const formFields: TFormValidatorConfig = {
@@ -9,23 +13,26 @@ const formFields: TFormValidatorConfig = {
     required: true,
     firstUC: true,
     maxLength: 50,
+    filter: /[^а-яa-z-]+/gi,
     message: "letters only (no spaces) or '-'",
   },
   second_name: {
     required: true,
     firstUC: true,
     maxLength: 50,
+    filter: /[^а-яa-z-]+/gi,
     message: "letters only (no spaces) or '-'",
   },
   login: {
     required: true,
     minLength: 3,
     maxLength: 20,
+    filter: /[^а-яa-z0-9-]+/gi,
     message: "3 to 20 characters, letters, numbers, '-'",
   },
   email: {
     required: true,
-    match: "email",
+    match: MATCH.EMAIL,
     maxLength: 50,
     message: "correct email address (ivan@mail.ru)",
   },
@@ -33,12 +40,13 @@ const formFields: TFormValidatorConfig = {
     required: true,
     minLength: 10,
     maxLength: 15,
-    match: "phone",
+    match: MATCH.PHONE,
+    filter: /[^+0-9]+/gi,
     message: "phone number in the format +79615432367",
   },
   password: {
     required: true,
-    match: "password",
+    match: MATCH.PASSWORD,
     minLength: 8,
     maxLength: 40,
     message: "8 to 40 characters must contains uppercase letters and numbers",
@@ -52,15 +60,13 @@ const formFields: TFormValidatorConfig = {
 };
 
 export class RegisterPage extends Component {
-  formValidator: any;
-
   constructor() {
     super(view);
   }
 
   connectedCallback(): void {
     this.render();
-    this.formValidator = new FormValidator(
+    new FormValidator(
       this.getElementsByTagName("form")[0],
       formFields,
       Chat.register

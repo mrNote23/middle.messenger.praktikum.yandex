@@ -1,18 +1,28 @@
-<form id="add-user-form">
-	<div class="mb-1">
-		<label for="phone">Phone number</label>
-		<input class="form-control" type="text" name="phone"
-			   placeholder="+7 123 123-123-12"/>
+<form novalidate id="add-user-form">
+	<div class="mb-1 input-container">
+		<input
+				class="form-control"
+				type="text"
+				name="phone"
+				id="phone"
+				placeholder=" "
+		/>
+		<label for="phone" class="placeholder">Phone number</label>
 	</div>
-	<div class="mb-2">
-		<label for="email">Email</label>
-		<input class="form-control" type="email" name="email"
-			   placeholder="john@doe.com"/>
+	<div class="mb-2 input-container">
+		<input
+				class="form-control"
+				type="email"
+				name="email"
+				id="email"
+				placeholder=" "
+		/>
+		<label for="email" class="placeholder">Email</label>
 	</div>
 
 	<div class="buttons">
-		<button class="btn" type="submit">Submit</button>
-		<button class="btn outline">Not now</button>
+		<button class="btn" type="submit">Add</button>
+		<button class="btn outline" type="reset">Not now</button>
 	</div>
 </form>
 
