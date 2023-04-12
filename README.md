@@ -9,7 +9,7 @@
 Доступно на [Netlify](https://andreys.netlify.app/)
 
 <a href="https://andreys.netlify.app/" target="_blank" rel="noopener noreferrer">
- <img src="https://i.ibb.co/2kXYxTk/desktop-chat.jpg" alt="chat application" width="70%" draggable="false" >
+ <img src="https://i.ibb.co/2kXYxTk/desktop-chat.jpg" alt="chat application" draggable="false" >
 </a>
 
 ## Текущий этап
@@ -19,7 +19,7 @@
 - Верстка в соответствии с [макетом](https://ibb.co/x7V8WN7)
 - Полностью работает навигация по страницам и разделам
 
-### Спринт 2 /4 [(PR)](https://github.com/mrNote23/middle.messenger.praktikum.yandex/pull/3)
+### Спринт 2 / 4 [(PR)](https://github.com/mrNote23/middle.messenger.praktikum.yandex/pull/3)
 
 - Подключен TypeScript
 - Добавлены компоненты
@@ -31,12 +31,14 @@
 ## СТЭК
 
 - HTML
-- Javascript
 - Typescript
+- Javascript
 - Handlebars
 - Parcel
 - SASS
 - PostCSS
+- ESLint
+- StyleLint
 
 ## Установка и запуск приложения
 
