@@ -1,0 +1,22 @@
+.chats-search-control {
+	background-color: white;
+	padding-left: 40px;
+	font-size: 22px;
+	height: 40px;
+}
+
+.search-chat {
+	position: relative;
+	margin: -15px 15px 0;
+
+	@media screen and (max-width: 992px) {
+		margin-top: 15px;
+	}
+
+	span {
+		color: var(--primary-color);
+		position: absolute;
+		left: 7px;
+		top: 18px;
+	}
+}

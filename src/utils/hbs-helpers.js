@@ -1,24 +1,25 @@
-const helperDateConvert = (elm) => {
-  if (typeof elm === "string") {
-    elm = new Date(elm);
+const helperDateConvert = (param) => {
+  let elm = param;
+  if (typeof param === "string") {
+    elm = new Date(param);
   }
   const year = elm.getFullYear().toString().substring(2);
   let month = (elm.getMonth() + 1).toString();
   let date = elm.getDate().toString();
   month = (month.length > 1 ? "" : "0") + month;
   date = (date.length > 1 ? "" : "0") + date;
-  return date + "-" + month + "-" + year;
+  return [date, month, year].join("-");
 };
 
 const helperIfeq = (a, b, options) => {
-  if (a == b) {
+  if (a === b) {
     return options.fn(this);
   }
   return options.inverse(this);
 };
 
 const helperIfnoteq = (a, b, options) => {
-  if (a != b) {
+  if (a !== b) {
     return options.fn(this);
   }
   return options.inverse(this);

@@ -9,26 +9,16 @@
 	&.show {
 		display: flex;
 		margin-left: 0;
-
 	}
 
 	@media screen and (max-width: 992px) {
 		display: none;
-
-	}
-
-	.chat-control {
-		background-color: white;
-		border-radius: 6px;
-		font-size: 14px;
-		padding: 10px;
-
 	}
 
 	.chat-body {
 		background-color: white;
 		height: 100%;
-		padding: 10px 20px 10px 10px;
+		padding: 10px 20px;
 		overflow: auto;
 
 		.empty {
@@ -44,30 +34,10 @@
 	.chat-footer {
 		border-top: 1px solid var(--gray-color);
 		padding: 10px 30px;
-		box-shadow: 0 -8px 30px rgba(0, 0, 0, .05);
+		box-shadow: 0 -8px 30px rgb(0 0 0 / 5%);
 		display: flex;
 		align-items: center;
-
-		.chat-form-buttons {
-			display: flex;
-			padding-left: 20px;
-
-			.attach-btn, .send-btn {
-				background: transparent;
-				width: 30px;
-				height: 30px;
-				border: 0;
-				cursor: pointer;
-			}
-
-			.send-btn {
-				margin-left: 20px;
-			}
-
-		}
-
 	}
-
 }
 
 .avatar {
@@ -92,7 +62,6 @@
 	}
 
 	&.avatar-group {
-
 		img {
 			border: 2px solid white;
 		}
@@ -165,7 +134,7 @@
 			text-align: center;
 			width: 200px;
 			height: 200px;
-			margin: 0 auto 15px auto;
+			margin: 0 auto 15px;
 
 			@media screen and (max-width: 400px) {
 				width: 100px;
@@ -194,6 +163,7 @@
 		.profile-details {
 			margin: 0 auto;
 			width: 350px;
+
 			@media screen and (max-width: 375px) {
 				width: 250px;
 			}

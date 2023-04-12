@@ -1,7 +1,5 @@
-import "./core/ce-defines.js";
-import "./assets/css";
+// https://github.com/Yandex-Practicum/tests-second-floor
+import "./assets/scss/index.ts";
+import Chat from "./core/ChatApp.ts";
 
-document.getElementById("root").innerHTML = "<main-router></main-router>";
-
-// TODO: Нарисовать прототипы
-// TODO: Сделать Readme на GitHub
+Chat.start();

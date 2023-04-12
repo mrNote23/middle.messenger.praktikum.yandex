@@ -1,63 +1,97 @@
-<div class="wrapper">
-	<div class="container d-table-cell vertical-align-middle">
-		<div class="card card-auth">
-			<div class="auth-header">
-				<a class="router-link" href="/">
-					<img class="logo-image" src="/images/logo.png" alt="">
-				</a>
-			</div>
-			<div class="auth-body">
-				<form id="register-form">
-					<div class="mb-1">
-						<label for="first_name">First name</label>
-						<input class="form-control " type="text" name="first_name"
-							   placeholder="John"/>
-					</div>
-					<div class="mb-1">
-						<label for="second_name">Second name</label>
-						<input class="form-control " type="text" name="second_name"
-							   placeholder="Doe"/>
-					</div>
-					<div class="mb-1">
-						<label for="login">Login</label>
-						<input class="form-control " type="text" name="login"
-							   placeholder="JohnD"/>
-					</div>
-					<div class="mb-1">
-						<label for="email">Email</label>
-						<input class="form-control " type="email" name="email"
-							   placeholder="john@doe.com"/>
-					</div>
-					<div class="mb-1">
-						<label for="phone">Phone number</label>
-						<input class="form-control " type="text" name="phone"
-							   placeholder="+7 123 123-123-12"/>
-					</div>
-					<div class="mb-1">
-						<label for="password">Password</label>
-						<input class="form-control " type="password" name="password"
-							   placeholder="Password"/>
-					</div>
-					<div class="mb-2">
-						<label for="confirm_password">Confirm password</label>
-						<input class="form-control " type="password" name="confirm_password"
-							   placeholder="Password"/>
-					</div>
+<div class="container d-table-cell vertical-align-middle">
+	<div class="card card-auth">
+		<div class="auth-header">
+			<a class="router-link" href="/">
+				<img class="logo-image" src="/images/logo.png" alt="">
+			</a>
+		</div>
+		<div class="auth-body">
+			<form novalidate>
+				<div class="mb-1 input-container">
+					<input
+							class="form-control"
+							type="text"
+							name="first_name"
+							id="first_name"
+							placeholder=" "
+							autofocus
+					/>
+					<label for="first_name" class="placeholder">First name</label>
+				</div>
+				<div class="mb-1 input-container">
+					<input
+							class="form-control"
+							type="text"
+							name="second_name"
+							id="second_name"
+							placeholder=" "
+					/>
+					<label for="second_name" class="placeholder">Second name</label>
+				</div>
+				<div class="mb-1 input-container">
+					<input
+							class="form-control"
+							type="text"
+							name="login"
+							id="login"
+							placeholder=" "
+					/>
+					<label for="login" class="placeholder">Login</label>
+				</div>
+				<div class="mb-1 input-container">
+					<input
+							class="form-control"
+							type="email"
+							name="email"
+							id="email"
+							placeholder=" "
+					/>
+					<label for="email" class="placeholder">Email</label>
+				</div>
+				<div class="mb-1 input-container">
+					<input
+							class="form-control"
+							type="text"
+							name="phone"
+							id="phone"
+							placeholder=" "
+					/>
+					<label for="phone" class="placeholder">Phone number</label>
+				</div>
+				<div class="mb-1 input-container">
+					<input
+							class="form-control"
+							type="password"
+							name="password"
+							id="password"
+							placeholder=" "
+					/>
+					<label for="password" class="placeholder">Password</label>
+				</div>
+				<div class="mb-2 input-container">
+					<input
+							class="form-control"
+							type="password"
+							name="confirm_password"
+							id="confirm_password"
+							placeholder=" "
+					/>
+					<label for="confirm_password" class="placeholder">Confirm password</label>
+				</div>
 
-					<div class="auth-error">Error</div>
-					<div class="pt-1 pb-1">
-						<div class="text-center">
-							<button class="btn d-block w-100" type="submit">Register</button>
-							<span class="register-link">
+				<div class="auth-error">Error</div>
+				<div class="pt-1 pb-1">
+					<div class="text-center">
+						<button class="btn d-block w-100" type="submit">Register</button>
+						<span class="register-link">
 								Already have an account?
 								<a class="router-link" href="/login">Sing in</a>
-							</span>
-						</div>
+						</span>
 					</div>
-				</form>
-			</div>
-
+				</div>
+			</form>
 		</div>
+
 	</div>
 </div>
 
