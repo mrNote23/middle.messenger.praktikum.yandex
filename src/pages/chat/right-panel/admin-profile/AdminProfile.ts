@@ -16,23 +16,27 @@ const formFields: TFormValidatorConfig = {
     required: true,
     firstUC: true,
     maxLength: 50,
+    filter: /[^а-яa-z\-]+/gi,
     message: "letters only (no spaces) or '-'",
   },
   second_name: {
     required: true,
     firstUC: true,
     maxLength: 50,
+    filter: /[^а-яa-z\-]+/gi,
     message: "letters only (no spaces) or '-'",
   },
   display_name: {
     required: true,
     maxLength: 20,
+    filter: /[^а-яa-z\-]+/gi,
     message: "letters only (no spaces) or '-'",
   },
   login: {
     required: true,
     minLength: 3,
     maxLength: 20,
+    filter: /[^а-яa-z0-9\-]+/gi,
     message: "3 to 20 characters, letters, numbers, '-'",
   },
   email: {
@@ -64,7 +68,6 @@ const formFields: TFormValidatorConfig = {
 
 export class AdminProfile extends Component {
   admin: IUser;
-  formValidator: {};
 
   constructor() {
     super(view);
@@ -73,7 +76,7 @@ export class AdminProfile extends Component {
   connectedCallback(): void {
     this.admin = Extract(ADMIN);
     this.render({ ...this.admin });
-    this.formValidator = new FormValidator(
+    new FormValidator(
       this.getElementsByTagName("form")[0],
       formFields,
       (props) => {

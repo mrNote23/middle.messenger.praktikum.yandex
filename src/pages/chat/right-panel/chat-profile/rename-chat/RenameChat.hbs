@@ -1,4 +1,4 @@
-<form novalidate id="add-chat-form">
+<form novalidate id="rename-chat-form">
 	<div class="mb-2 input-container">
 		<input
 				class="form-control"
@@ -6,12 +6,13 @@
 				name="chat_name"
 				id="chat_name"
 				placeholder=" "
+				value="{{chatTitle}}"
 		/>
 		<label for="chat_name" class="placeholder">Chat name</label>
 	</div>
 
 	<div class="buttons">
-		<button class="btn" type="submit">Add</button>
+		<button class="btn" type="submit">Rename</button>
 		<button class="btn outline" type="reset">Not now</button>
 	</div>
 </form>

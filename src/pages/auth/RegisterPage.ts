@@ -9,18 +9,21 @@ const formFields: TFormValidatorConfig = {
     required: true,
     firstUC: true,
     maxLength: 50,
+    filter: /[^а-яa-z\-]+/gi,
     message: "letters only (no spaces) or '-'",
   },
   second_name: {
     required: true,
     firstUC: true,
     maxLength: 50,
+    filter: /[^а-яa-z\-]+/gi,
     message: "letters only (no spaces) or '-'",
   },
   login: {
     required: true,
     minLength: 3,
     maxLength: 20,
+    filter: /[^а-яa-z0-9\-]+/gi,
     message: "3 to 20 characters, letters, numbers, '-'",
   },
   email: {
@@ -52,15 +55,13 @@ const formFields: TFormValidatorConfig = {
 };
 
 export class RegisterPage extends Component {
-  formValidator: {};
-
   constructor() {
     super(view);
   }
 
   connectedCallback(): void {
     this.render();
-    this.formValidator = new FormValidator(
+    new FormValidator(
       this.getElementsByTagName("form")[0],
       formFields,
       Chat.register

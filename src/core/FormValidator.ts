@@ -7,6 +7,7 @@ export type TFormValidatorConfig = {
     match?: string;
     message?: string;
     compare?: string;
+    filter?: any;
   };
 };
 
@@ -46,14 +47,20 @@ export class FormValidator {
 
         this.form[field].addEventListener("input", this.onChange);
         if (config[field].required) {
-          this.form[field].valid = false;
+          this.form[field].valid = this.form[field].value.length ? true : false;
         } else {
           this.form[field].valid = true;
         }
       }
     }
     this.form.addEventListener("submit", this.formSubmit);
+    this.form.addEventListener("reset", this.formReset);
   }
+
+  formReset = <T>(e: T): void => {
+    e.preventDefault();
+    this.cb(false);
+  };
 
   formSubmit = <T>(e: T): void => {
     e.preventDefault();
@@ -75,8 +82,14 @@ export class FormValidator {
     let field = e.target;
     let error = false;
 
+    // Первая буква должна быть заглавной
     if (this.config[field.name].firstUC) {
-      field.value = field.value.replace(/(^|\s)\S/g, (u) => u.toUpperCase());
+      field.value = field.value.replace(/(^|\s)\S$/g, (u) => u.toUpperCase());
+    }
+
+    // очистка фильтром
+    if (this.config[field.name].filter) {
+      field.value = field.value.replace(this.config[field.name].filter, "");
     }
 
     // минимальная длина

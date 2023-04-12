@@ -10,6 +10,7 @@ const formFields = {
     required: true,
     minLength: 3,
     maxLength: 20,
+    filter: /[^а-яa-z0-9\-]+/gi,
     message: "3 to 20 characters, letters, numbers, '-'",
   },
   password: {
@@ -21,15 +22,13 @@ const formFields = {
 };
 
 export class LoginPage extends Component {
-  formValidator: any;
-
   constructor() {
     super(view);
   }
 
   connectedCallback(): void {
     this.render();
-    this.formValidator = new FormValidator(
+    new FormValidator(
       this.getElementsByTagName("form")[0],
       formFields,
       Chat.login
