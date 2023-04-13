@@ -16,6 +16,7 @@ type TComponentParams = {
 
 export class Component extends HTMLElement {
   subscriptions: TSubscriberItem[] = [];
+  listeneners: Array<any> = [];
   params: TComponentParams | null = null;
 
   constructor(
@@ -60,10 +61,17 @@ export class Component extends HTMLElement {
                 itemNode.attributes[key].nodeValue.replace(/(\[\[)|(]])/g, ""),
               ];
               if (this[eventCallback]) {
-                itemNode[`on${eventName}`] = this[eventCallback];
+                // itemNode[`on${eventName}`] = this[eventCallback];
+                itemNode.addEventListener(eventName, this[eventCallback]);
+                // добавим в стэк слушателей
+                this.listeneners.push({
+                  node: itemNode,
+                  event: eventName,
+                  listener: this[eventCallback],
+                });
               }
               // удалим атрибут event-* для красоты
-              itemNode.removeAttribute(itemNode.attributes[key].nodeName);
+              // itemNode.removeAttribute(itemNode.attributes[key].nodeName);
             }
           }
         }
@@ -74,6 +82,11 @@ export class Component extends HTMLElement {
 
   // отписка при отключении компонента от DOM
   disconnectedCallback() {
+    // подписчики State
     this.subscriptions.forEach((elm) => State.unsubscribe(elm));
+    // Слушатели событий
+    this.listeneners.forEach((item) => {
+      item.node.removeEventListener(item.event, item.listener);
+    });
   }
 }

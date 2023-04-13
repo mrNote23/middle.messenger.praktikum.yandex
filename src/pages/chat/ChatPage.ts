@@ -14,9 +14,22 @@ export class ChatPage extends Component {
     super(view);
   }
 
+  tickHandler = (e) => {
+    console.log(`tick handler: ${JSON.stringify(e.detail)}`);
+  };
+
+  pingHandler = (e) => {
+    console.log(`ping handler: ${JSON.stringify(e.detail)}`);
+  };
+
+  pongHandler = (e) => {
+    console.log(`pong handler: ${JSON.stringify(e.detail)}`);
+  };
+
   connectedCallback(): void {
     // TODO: Временно разрешен вход без авторизации
     this.render();
+    const elm = this.querySelector("#sidebar");
     // if (!State.extract(ADMIN)) {
     //   setTimeout(() => {
     //     ChatApp.navigate("/login");

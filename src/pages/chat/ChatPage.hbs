@@ -1,4 +1,12 @@
 <div class="container d-flex text-left">
-  <left-panel id="sidebar" class="sidebar-group"></left-panel>
+  <left-panel
+
+    id="sidebar"
+    class="sidebar-group"
+    event-tick="[[tickHandler]]"
+    event-ping="[[pingHandler]]"
+    event-pong="[[pongHandler]]"
+    name="123"
+  ></left-panel>
   <right-panel id="chat" class="chat"></right-panel>
 </div>

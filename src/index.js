@@ -22,18 +22,20 @@ import ChatApp from "./core/ChatApp.ts";
 
 ChatApp.start();
 
-// const conn = new WebSocket("wss://ya-praktikum.tech/ws/chats/10262");
-const conn = new WebSocket(
-  `wss://ya-praktikum.tech/ws/chats/810558/10262/2e89cad7c7dd7a7aa97cd861885b714fee545a90:1681328369`
-);
+// // Рабочая версия
+// const conn = new WebSocket(
+//   `wss://ya-praktikum.tech/ws/chats/810558/10262/2e89cad7c7dd7a7aa97cd861885b714fee545a90:1681328369`
+// );
+//
+// conn.onopen = (e) => {
+//   console.log(e);
+//   conn.onmessage = (e) => {
+//     console.log(e);
+//   };
+//   conn.send(JSON.stringify({ type: "ping" }));
+// };
 
-conn.onopen = (e) => {
-  console.log(e);
-  conn.onmessage = (e) => {
-    console.log(e);
-  };
-  conn.send(JSON.stringify({ type: "ping" }));
-};
+// const conn = new WebSocket("wss://ya-praktikum.tech/ws/chats/10262");
 
 // const conn = new WebSocket(
 //   `wss://ya-praktikum.tech/ws/chats/810558/10262/2e89cad7c7dd7a7aa97cd861885b714fee545a90:1681328369`

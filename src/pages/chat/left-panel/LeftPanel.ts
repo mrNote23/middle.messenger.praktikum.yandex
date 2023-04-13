@@ -14,12 +14,44 @@ window.customElements.define("chats-list", ChatsList);
 window.customElements.define("users-list", UsersList);
 
 export class LeftPanel extends Component {
+  cnt = 0;
+
   constructor() {
     super(view);
+    console.log(this.attributes);
   }
+
+  public tick = () => {
+    this.dispatchEvent(
+      new CustomEvent("tick", { detail: `tick: ${this.cnt}` })
+    );
+    this.cnt++;
+  };
+
+  public ping = () => {
+    this.dispatchEvent(
+      new CustomEvent("ping", { detail: `ping: ${this.cnt}` })
+    );
+    this.cnt++;
+  };
+
+  public pong = () => {
+    this.dispatchEvent(
+      new CustomEvent("pong", { detail: `pong: ${this.cnt}` })
+    );
+    this.cnt++;
+  };
 
   connectedCallback(): void {
     this.render();
+
+    console.log(this);
+    setInterval(() => {
+      this.tick();
+      this.ping();
+      this.pong();
+    }, 1000);
+
     this.subscriber = State.subscribe(STATES.LEFT_MODE, (val) => {
       if (val === LEFTMODE.CHATS) {
         document.getElementById("left-container").innerHTML =
