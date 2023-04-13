@@ -1,11 +1,16 @@
 /*
   Класс создания компонента
   -------------------------
-  переменные задаются стандартным способом Handlebars - {{variable}}
-  и передаются объектом при вызове super({var: 'value'})
+  скомпилированный шаблон handlebars передается при вызове super(view)
+  переменные в шаблонизатор задаются стандартным способом Handlebars - {{variable}}
+  и передаются объектом при вызове render({var: 'value'})
 
-  обработчики событий прописываются по принципу <button event-click=[[handlerClick]] event-mouseover=[[handlerMouseOver]]></button>
+  обработчики событий прописываются по принципу <button event-click="[[handlerClick]]" event-mouseover="[[handlerMouseOver]]"></button>
   у создаваемого компонента должен присутствовать обработчик с именем handlerClick, handlerMouseOver
+
+  пропсы в теге прописываются так: <form-component props-data="[[formFields]]"></form-component> передаются объектом!
+  все данные в компонент передаются одним объектом
+  получать данные как результат промиса!!!
 */
 
 import State, { TSubscriberItem } from "./State";
@@ -15,16 +20,24 @@ type TComponentParams = {
 } | null;
 
 export class Component extends HTMLElement {
-  subscriptions: TSubscriberItem[] = [];
-  listeneners: Array<any> = [];
-  params: TComponentParams | null = null;
+  protected subscriptions: TSubscriberItem[] = [];
+  protected listeners: Array<any> = [];
+  protected params: TComponentParams | null = null;
+  public _props: object | null = null;
 
   constructor(
     public view: ((params: TComponentParams) => string) | null = null
   ) {
     super();
-    this.subscriptions = [];
   }
+
+  // генерация события (event)
+  // для компонента прописывается так <component event-ping=[[pingHandler]]>
+  // ping - event
+  // pingHandler - обработчик
+  createEvent = (eventName: string, eventProps: unknown): void => {
+    this.dispatchEvent(new CustomEvent(eventName, { detail: eventProps }));
+  };
 
   // анимация на время загрузки данных для компонента
   loading(): void {
@@ -35,6 +48,20 @@ export class Component extends HTMLElement {
   // добавление подписчика в стэк
   set subscriber(subs: TSubscriberItem) {
     this.subscriptions.push(subs);
+  }
+
+  // установка пропсов компонета
+  set setProps(props: object) {
+    this._props = props;
+  }
+
+  // получение пропсов компонента
+  get getProps() {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(this._props);
+      });
+    });
   }
 
   // рeндер компонента
@@ -48,33 +75,66 @@ export class Component extends HTMLElement {
 
   // установка обработчиков событий
   setEvents = <T>(node: T): void => {
+    let removeAttributes = [];
     if (node.childNodes) {
       node.childNodes.forEach((itemNode) => {
         if (itemNode.nodeType === 1 && itemNode.attributes) {
+          removeAttributes = [];
           for (const key in itemNode.attributes) {
-            if (
-              itemNode.attributes[key].nodeName &&
-              itemNode.attributes[key].nodeName.match(/^event-(\w)+$/gi)
-            ) {
-              const [eventName, eventCallback] = [
-                itemNode.attributes[key].nodeName.split("-")[1],
-                itemNode.attributes[key].nodeValue.replace(/(\[\[)|(]])/g, ""),
-              ];
-              if (this[eventCallback]) {
-                // добавим обработчик события
-                itemNode.addEventListener(eventName, this[eventCallback]);
-                // добавим в стэк слушателей
-                this.listeneners.push({
+            // if (itemNode.attributes[key].nodeName) {
+            //   switch(true) {
+            //     // event mounting
+            //     case itemNode.attributes[key].nodeName.match(/^event-(\w)+$/gi):
+            //       break;
+            //       // props mounting
+            //     case itemNode.attributes[key].nodeName === 'props-data':
+            //       break;
+            //   }
+            // }
+
+            if (itemNode.attributes[key].nodeName) {
+              // props-data mounting
+              if (itemNode.attributes[key].nodeName === "props-data") {
+                const propsName = itemNode.attributes[key].nodeValue.replace(
+                  /(\[\[)|(]])/g,
+                  ""
+                );
+                itemNode.setProps = this[propsName];
+              }
+
+              // events mounting
+              if (itemNode.attributes[key].nodeName.match(/^event-(\w)+$/gi)) {
+                const [eventName, eventCallback] = [
+                  itemNode.attributes[key].nodeName.split("-")[1],
+                  itemNode.attributes[key].nodeValue.replace(
+                    /(\[\[)|(]])/g,
+                    ""
+                  ),
+                ];
+                if (this[eventCallback]) {
+                  // добавим обработчик события
+                  itemNode.addEventListener(eventName, this[eventCallback]);
+                  // добавим в стэк слушателей
+                  this.listeners.push({
+                    node: itemNode,
+                    event: eventName,
+                    listener: this[eventCallback],
+                  });
+                }
+                // добавим в стек для дальнейшего удаления
+                removeAttributes.push({
                   node: itemNode,
-                  event: eventName,
-                  listener: this[eventCallback],
+                  attr: itemNode.attributes[key].nodeName,
                 });
               }
-              // удалим атрибут event-* для красоты
-              // itemNode.removeAttribute(itemNode.attributes[key].nodeName);
             }
           }
         }
+        // удалим атрибуты
+        removeAttributes.forEach((item) => {
+          item.node.removeAttribute(item.attr);
+        });
+        // проверим вложенные элементы
         this.setEvents(itemNode);
       });
     }
@@ -85,7 +145,7 @@ export class Component extends HTMLElement {
     // подписчики State
     this.subscriptions.forEach((elm) => State.unsubscribe(elm));
     // Слушатели событий
-    this.listeneners.forEach((item) => {
+    this.listeners.forEach((item) => {
       item.node.removeEventListener(item.event, item.listener);
     });
   }

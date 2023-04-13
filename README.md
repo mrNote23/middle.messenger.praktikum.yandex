@@ -40,6 +40,24 @@
 - ESLint
 - StyleLint
 
+## Используемые классы
+
+### Class Component()
+
+Используется для создания компонента
+
+```text
+class Component() {
+    constructor() {
+        super(view)                     // view - скомпилированный шаблон (handlebars)                                        
+    }                                   // можно не указывать
+    
+    connectedCallback() {               // метод вызывается при монтировании компонента в DOM
+        this.subscribers 
+    
+}
+```
+
 ## Установка и запуск приложения
 
 Установка пакета

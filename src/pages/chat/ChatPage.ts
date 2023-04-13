@@ -10,6 +10,8 @@ window.customElements.define("left-panel", LeftPanel);
 window.customElements.define("right-panel", RightPanel);
 
 export class ChatPage extends Component {
+  bigData: object;
+
   constructor() {
     super(view);
   }
@@ -24,6 +26,11 @@ export class ChatPage extends Component {
 
   pongHandler = (e) => {
     console.log(`pong handler: ${JSON.stringify(e.detail)}`);
+  };
+
+  bigData = {
+    id: 1,
+    name: "Andrew",
   };
 
   connectedCallback(): void {

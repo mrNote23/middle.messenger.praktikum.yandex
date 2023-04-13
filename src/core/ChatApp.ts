@@ -4,6 +4,7 @@ import { IChat, IChatMessage, IChatUsers, IUser } from "./interfaces";
 import { OnMobile } from "../utils/on-mobile";
 import { ModalWindowComponent } from "../ui/modal-window/ModalWindow";
 import { MainRouter } from "../main-router/MainRouter";
+import { FormValidator } from "../ui/form-validator/FormValidator";
 
 export enum STATES {
   CHATS_LIST = "chatsList",
@@ -32,6 +33,7 @@ export const ADMIN = "admin";
 class ChatApp {
   constructor() {
     window.customElements.define("main-router", MainRouter);
+    window.customElements.define("form-validator", FormValidator);
     window.customElements.define("modal-window", ModalWindowComponent);
   }
 

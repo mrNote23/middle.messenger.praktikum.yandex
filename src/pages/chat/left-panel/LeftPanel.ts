@@ -1,12 +1,12 @@
 import view from "./LeftPanel.hbs";
 import { Component } from "../../../core/Component";
 import State from "../../../core/State";
-import "./LeftPanel.scss";
 import { LEFTMODE, STATES } from "../../../core/ChatApp";
 import { HeaderComponent } from "./header-component/HeaderComponent";
 import { SearchComponent } from "./search-component/SearchComponent";
 import { ChatsList } from "./chats-list/ChatsList";
 import { UsersList } from "./users-list/UsersList";
+import "./LeftPanel.scss";
 
 window.customElements.define("header-component", HeaderComponent);
 window.customElements.define("search-component", SearchComponent);
@@ -18,39 +18,27 @@ export class LeftPanel extends Component {
 
   constructor() {
     super(view);
-    console.log(this.attributes);
   }
-
-  public tick = () => {
-    this.dispatchEvent(
-      new CustomEvent("tick", { detail: `tick: ${this.cnt}` })
-    );
-    this.cnt++;
-  };
-
-  public ping = () => {
-    this.dispatchEvent(
-      new CustomEvent("ping", { detail: `ping: ${this.cnt}` })
-    );
-    this.cnt++;
-  };
-
-  public pong = () => {
-    this.dispatchEvent(
-      new CustomEvent("pong", { detail: `pong: ${this.cnt}` })
-    );
-    this.cnt++;
-  };
 
   connectedCallback(): void {
     this.render();
-
-    console.log(this);
+    this.getProps.then((res) => {
+      console.log(res);
+    });
     setInterval(() => {
-      this.tick();
-      this.ping();
-      this.pong();
-    }, 1000);
+      this.createEvent("tick", `tick: ${this.cnt}`);
+      this.cnt++;
+    }, 5000);
+
+    setInterval(() => {
+      this.createEvent("ping", `ping: ${this.cnt}`);
+      this.cnt++;
+    }, 10000);
+
+    setInterval(() => {
+      this.createEvent("pong", `pong: ${this.cnt}`);
+      this.cnt++;
+    }, 15000);
 
     this.subscriber = State.subscribe(STATES.LEFT_MODE, (val) => {
       if (val === LEFTMODE.CHATS) {

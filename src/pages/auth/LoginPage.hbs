@@ -6,40 +6,41 @@
       </a>
     </div>
     <div class="auth-body">
-      <form novalidate>
-        <div class="mb-1 input-container">
-          <input
-            class="form-control"
-            type="text"
-            name="login"
-            id="login"
-            placeholder=" "
-            autofocus
-          />
-          <label for="login" class="placeholder">Login</label>
-        </div>
+      <form-validator props-data="[[formFields]]" event-validated="[[formValidated]]">
+        <form novalidate>
+          <div class="mb-1 input-container">
+            <input
+              class="form-control"
+              type="text"
+              name="login"
+              id="login"
+              placeholder=" "
+              autofocus
+            />
+            <label for="login" class="placeholder">Login</label>
+          </div>
 
-        <div class="mb-2 input-container">
-          <input
-            class="form-control"
-            type="password"
-            name="password"
-            id="password"
-            placeholder=" "
-          />
-          <label for="password" class="placeholder">Password</label>
-        </div>
-        <div class="auth-error">Неверный логин или пароль</div>
-        <div class="pt-1 pb-1">
-          <div class="text-center">
-            <button class="btn d-block w-100" type="submit">Sign in</button>
-            <span class="register-link">
+          <div class="mb-2 input-container">
+            <input
+              class="form-control"
+              type="password"
+              name="password"
+              id="password"
+              placeholder=" "
+            />
+            <label for="password" class="placeholder">Password</label>
+          </div>
+          <div class="pt-1 pb-1">
+            <div class="text-center">
+              <button class="btn d-block w-100" type="submit">Sign in</button>
+              <span class="register-link">
 								Don’t have an account?
 								<a class="router-link" href="/register">Register</a>
 						</span>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </form-validator>
     </div>
   </div>
 </div>
