@@ -61,7 +61,7 @@ export class Component extends HTMLElement {
                 itemNode.attributes[key].nodeValue.replace(/(\[\[)|(]])/g, ""),
               ];
               if (this[eventCallback]) {
-                // itemNode[`on${eventName}`] = this[eventCallback];
+                // добавим обработчик события
                 itemNode.addEventListener(eventName, this[eventCallback]);
                 // добавим в стэк слушателей
                 this.listeneners.push({
