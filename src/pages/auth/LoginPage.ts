@@ -2,7 +2,7 @@ import view from "./LoginPage.hbs";
 import { Component } from "../../core/Component";
 import "./auth.scss";
 import { FormValidator } from "../../core/FormValidator";
-import Chat from "../../core/ChatApp";
+import ChatApp from "../../core/ChatApp";
 
 const formFields = {
   login: {
@@ -30,7 +30,7 @@ export class LoginPage extends Component {
     new FormValidator(
       this.getElementsByTagName("form")[0],
       formFields,
-      Chat.login
+      ChatApp.login
     );
   }
 }
