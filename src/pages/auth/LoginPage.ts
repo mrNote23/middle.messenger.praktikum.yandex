@@ -1,11 +1,11 @@
 import view from "./LoginPage.hbs";
 import { Component } from "../../core/Component";
-import "./auth.scss";
-import { FormValidator } from "../../core/FormValidator";
 import ChatApp from "../../core/ChatApp";
+import { TFormValidatorConfig } from "../../ui/form-validator/FormValidator";
+import "./auth.scss";
 
 export class LoginPage extends Component {
-  formFields = {
+  formFields: TFormValidatorConfig = {
     login: {
       required: true,
       minLength: 3,
@@ -23,6 +23,7 @@ export class LoginPage extends Component {
 
   constructor() {
     super(view);
+    this.classList.add("wrapper");
   }
 
   formValidated = (e: CustomEvent): void => {

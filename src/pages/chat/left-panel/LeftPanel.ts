@@ -22,23 +22,6 @@ export class LeftPanel extends Component {
 
   connectedCallback(): void {
     this.render();
-    this.getProps.then((res) => {
-      console.log(res);
-    });
-    setInterval(() => {
-      this.createEvent("tick", `tick: ${this.cnt}`);
-      this.cnt++;
-    }, 5000);
-
-    setInterval(() => {
-      this.createEvent("ping", `ping: ${this.cnt}`);
-      this.cnt++;
-    }, 10000);
-
-    setInterval(() => {
-      this.createEvent("pong", `pong: ${this.cnt}`);
-      this.cnt++;
-    }, 15000);
 
     this.subscriber = State.subscribe(STATES.LEFT_MODE, (val) => {
       if (val === LEFTMODE.CHATS) {

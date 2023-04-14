@@ -1,5 +1,23 @@
 import { Component } from "../../core/Component";
-import { MATCH } from "../../core/FormValidator";
+
+export enum MATCH {
+  PHONE = "phone", // телефон в формате +78217348374, '+' - не обязателен
+  EMAIL = "email", // стандартный email
+  PASSWORD = "password", // символы в разных регистрах и цифры
+}
+
+export type TFormValidatorConfig = {
+  [key: string]: {
+    required?: boolean; // true - обязательное поле
+    firstUC?: boolean; // true - первая буква станет заглавной
+    minLength?: number; // минимальная длина
+    maxLength?: number; // максимальная длина (автоматическая обрезка)
+    match?: MATCH; // тип поля для валидации
+    message?: string; // сообщение при неверном вводе
+    compare?: string; // имя поля для сравнения (например для подтверждения пароля)
+    filter?: unknown; // регулярное выражение, удалится все, что описано
+  };
+};
 
 export class FormValidator extends Component {
   config: unknown;
@@ -13,7 +31,6 @@ export class FormValidator extends Component {
     this.getProps.then((props) => {
       // найдем форму
       const form = this.getElementsByTagName("form")[0];
-      console.log(form);
       // если форма есть, то начинаем работать
       if (form && !!props) {
         this.validateForm(form, props);
@@ -48,6 +65,17 @@ export class FormValidator extends Component {
         // так надо чтобы потом можно было снять обработчики
         this.form[field].addEventListener("blur", this.hideError);
         this.form[field].addEventListener("focus", this.showError);
+        // добавим слушателей в стек чтобы потом очистить
+        this.listener = {
+          node: this.form[field],
+          event: "blur",
+          listener: this.hideError,
+        };
+        this.listener = {
+          node: this.form[field],
+          event: "focus",
+          listener: this.showError,
+        };
 
         // обработчик события input
         this.form[field].addEventListener("input", this.onChange);
@@ -62,6 +90,17 @@ export class FormValidator extends Component {
     // на форму тоже обработчики submit и reset
     this.form.addEventListener("submit", this.formSubmit);
     this.form.addEventListener("reset", this.formReset);
+    // добавим слушателей в стек чтобы потом очистить
+    this.listener = {
+      node: this.form,
+      event: "submit",
+      listener: this.formSubmit,
+    };
+    this.listener = {
+      node: this.form,
+      event: "reset",
+      listener: this.formReset,
+    };
   };
 
   private hideError<T>(e: T): void {
@@ -74,8 +113,7 @@ export class FormValidator extends Component {
 
   private formReset = <T>(e: T): void => {
     e.preventDefault();
-    this.removeListeners();
-    this.createEvent("ssubmit", false);
+    this.createEvent("validated", false);
   };
 
   private formSubmit = <T>(e: T): void => {
@@ -90,7 +128,6 @@ export class FormValidator extends Component {
       }
     }
     if (valid) {
-      this.removeListeners();
       this.createEvent("validated", result);
     }
   };
@@ -177,16 +214,5 @@ export class FormValidator extends Component {
         field.classList.add("success");
       }
     }
-  };
-
-  private removeListeners = () => {
-    console.log("validator: remove listeners");
-    for (const field in this.config) {
-      this.form[field].removeEventListener("blur", this.hideError);
-      this.form[field].removeEventListener("focus", this.showError);
-      this.form[field].removeEventListener("input", this.onChange);
-    }
-    this.form.removeEventListener("submit", this.formSubmit);
-    this.form.removeEventListener("reset", this.formReset);
   };
 }

@@ -19,9 +19,15 @@ type TComponentParams = {
   [key: string]: unknown;
 } | null;
 
+type TListener = {
+  node: unknown;
+  event: string;
+  listener: unknown;
+};
+
 export class Component extends HTMLElement {
   protected subscriptions: TSubscriberItem[] = [];
-  protected listeners: Array<any> = [];
+  protected listeners: Array<unknown> = [];
   protected params: TComponentParams | null = null;
   public _props: object | null = null;
 
@@ -45,9 +51,14 @@ export class Component extends HTMLElement {
       "<div class='loader'><div></div><div></div><div></div><div></div></div>";
   }
 
-  // добавление подписчика в стэк
+  // добавление State.subscriber в стэк
   set subscriber(subs: TSubscriberItem) {
     this.subscriptions.push(subs);
+  }
+
+  // добавление Event.listener в стэк
+  set listener(listener: TListener) {
+    this.listeners.push(listener);
   }
 
   // установка пропсов компонета
@@ -81,17 +92,6 @@ export class Component extends HTMLElement {
         if (itemNode.nodeType === 1 && itemNode.attributes) {
           removeAttributes = [];
           for (const key in itemNode.attributes) {
-            // if (itemNode.attributes[key].nodeName) {
-            //   switch(true) {
-            //     // event mounting
-            //     case itemNode.attributes[key].nodeName.match(/^event-(\w)+$/gi):
-            //       break;
-            //       // props mounting
-            //     case itemNode.attributes[key].nodeName === 'props-data':
-            //       break;
-            //   }
-            // }
-
             if (itemNode.attributes[key].nodeName) {
               // props-data mounting
               if (itemNode.attributes[key].nodeName === "props-data") {
@@ -115,11 +115,11 @@ export class Component extends HTMLElement {
                   // добавим обработчик события
                   itemNode.addEventListener(eventName, this[eventCallback]);
                   // добавим в стэк слушателей
-                  this.listeners.push({
+                  this.listener = {
                     node: itemNode,
                     event: eventName,
                     listener: this[eventCallback],
-                  });
+                  };
                 }
                 // добавим в стек для дальнейшего удаления
                 removeAttributes.push({

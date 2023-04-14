@@ -17,8 +17,8 @@
 // chatId = 10262
 // после логина передается кука: authCookie
 
-import "./assets/scss/index.ts";
-import ChatApp from "./core/ChatApp.ts";
+import "./assets/scss";
+import ChatApp from "./core/ChatApp";
 
 ChatApp.start();
 

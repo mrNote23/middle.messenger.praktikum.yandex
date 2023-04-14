@@ -1,15 +1,14 @@
 import view from "./RegisterPage.hbs";
 import { Component } from "../../core/Component";
-import {
-  FormValidator,
-  MATCH,
-  TFormValidatorConfig,
-} from "../../core/FormValidator";
 import "./auth.scss";
 import ChatApp from "../../core/ChatApp";
+import {
+  MATCH,
+  TFormValidatorConfig,
+} from "../../ui/form-validator/FormValidator";
 
 export class RegisterPage extends Component {
-  formFields = {
+  formFields: TFormValidatorConfig = {
     first_name: {
       required: true,
       firstUC: true,
@@ -62,6 +61,7 @@ export class RegisterPage extends Component {
 
   constructor() {
     super(view);
+    this.classList.add("wrapper");
   }
 
   formValidated = (e: CustomEvent): void => {

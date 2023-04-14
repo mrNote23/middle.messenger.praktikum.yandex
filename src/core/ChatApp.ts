@@ -3,8 +3,8 @@ import State from "./State";
 import { IChat, IChatMessage, IChatUsers, IUser } from "./interfaces";
 import { OnMobile } from "../utils/on-mobile";
 import { ModalWindowComponent } from "../ui/modal-window/ModalWindow";
-import { MainRouter } from "../main-router/MainRouter";
 import { FormValidator } from "../ui/form-validator/FormValidator";
+import { App } from "../App";
 
 export enum STATES {
   CHATS_LIST = "chatsList",
@@ -31,22 +31,17 @@ export enum RIGHTMODE {
 export const ADMIN = "admin";
 
 class ChatApp {
+  rootRoutes;
+
   constructor() {
-    window.customElements.define("main-router", MainRouter);
+    window.customElements.define("main-app", App);
     window.customElements.define("form-validator", FormValidator);
     window.customElements.define("modal-window", ModalWindowComponent);
   }
 
   start = () => {
     // инициализация состояний
-    State.store(STATES.CHATS_LIST, []); // Список чатов (IChat[])
-    State.store(STATES.CURRENT_CHAT, null); // текущий чат (IChat)
-    State.store(STATES.CURRENT_USER, null); // текущий пользователь чата (IUser)
-    State.store(STATES.CHAT_USERS, []); // пользователи текущего чата (IUser[])
-    State.store(STATES.CHAT_MESSAGES, null); // сообщения текущего чата
-
-    State.store(STATES.LEFT_MODE, LEFTMODE.CHATS); // режим левой панели ( chats/users )
-    State.store(STATES.RIGHT_MODE, RIGHTMODE.CHAT); // режим правой панели (chat/adminProfile/userProfile/chatProfile)
+    this.init();
 
     // TODO: Потом убрать
     State.store(ADMIN, {
@@ -61,20 +56,51 @@ class ChatApp {
       role: "admin",
     });
 
-    window.document.getElementById(
-      "root"
-    ).innerHTML = `<main-router></main-router>`;
+    document.addEventListener("click", <T>(e: T) => {
+      if (
+        e.target.tagName === "A" &&
+        e.target.classList.contains("router-link")
+      ) {
+        e.preventDefault();
+        const pathName = e.target.getAttribute("href");
+        this.navigate(pathName);
+      }
+    });
+    window.addEventListener("popstate", <T>(e: T) => {
+      this.navigate(e.currentTarget.location.pathname, false);
+    });
+
+    window.document.getElementById("root").innerHTML = `<main-app></main-app>`;
+
+    this.navigate(window.location.pathname);
+  };
+
+  // инициализация стэйта
+  init = () => {
+    State.store(STATES.CHATS_LIST, []); // Список чатов (IChat[])
+    State.store(STATES.CURRENT_CHAT, null); // текущий чат (IChat)
+    State.store(STATES.CURRENT_USER, null); // текущий пользователь чата (IUser)
+    State.store(STATES.CHAT_USERS, []); // пользователи текущего чата (IUser[])
+    State.store(STATES.CHAT_MESSAGES, null); // сообщения текущего чата
+
+    State.store(STATES.LEFT_MODE, LEFTMODE.CHATS); // режим левой панели ( chats/users )
+    State.store(STATES.RIGHT_MODE, RIGHTMODE.CHAT); // режим правой панели (chat/adminProfile/userProfile/chatProfile)
   };
 
   // навигация на url
-  navigate = (path: string): void => {
-    const router = document.getElementsByTagName("main-router");
-    router[0] && router[0].setAttribute("path", path);
+  navigate = (path: string, pushState = true): void => {
+    const router = document.getElementById("root-router");
+    if (router) {
+      router.setAttribute("path", path);
+
+      pushState && window.history.pushState({}, "", path);
+    }
   };
 
   // логин пользователя
   login = <T>(props: T): void => {
     console.log(props);
+    this.init();
     // admin info ВРЕМЕННО!
     State.store(ADMIN, {
       id: 8,
@@ -93,11 +119,12 @@ class ChatApp {
 
   // logout
   logout = () => {
+    this.navigate("/login");
     State.clear();
-    this.navigate("/");
   };
   // регистрация пользователя
   register = <T>(props: T): void => {
+    this.init();
     console.log(props);
     // admin info ВРЕМЕННО!
     State.store(ADMIN, {
