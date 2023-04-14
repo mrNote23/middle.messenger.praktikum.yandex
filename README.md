@@ -46,7 +46,12 @@
 
 ```mermaid
 flowchart TD
-  Start --> Stop
+    (<main-app>) --> (<root-router>);
+    (<root-router>) --> (<login-page>);
+    (<root-router>) --> (<register-page>);
+    (<root-router>) --> (<chat-page>);
+    (<root-router>) --> (<error-404>);
+    (<root-router>) --> (<error-500>);
 
 ```
 
