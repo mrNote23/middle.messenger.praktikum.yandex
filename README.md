@@ -101,7 +101,7 @@ class AppChat {
 
 ```mermaid
 flowchart TD
-    main-app --> root-router
+    main-app --> app-router
     app-router --> login-page
     app-router --> register-page
     app-router --> chat-page
