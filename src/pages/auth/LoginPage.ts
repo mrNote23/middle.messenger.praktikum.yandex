@@ -32,10 +32,5 @@ export class LoginPage extends Component {
 
   connected(): void {
     this.render();
-    console.log("connected");
-  }
-
-  disconnected() {
-    console.log("component disconnected");
   }
 }

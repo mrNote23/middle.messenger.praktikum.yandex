@@ -87,18 +87,19 @@ export class Component extends HTMLElement {
   render = (params: TComponentParams | null = null): void => {
     this.params = params;
     if (this.view !== null) {
-      this.innerHTML = this.view(params);
-      this.addEvents(this);
+      const html = this.view(params);
+      this._prepareDOM(html);
+      this.innerHTML = html;
+      this._addEvents(this);
     }
   };
 
   setEvent = (eventName, eventHandler) => {
     this._events.push({ eventName, eventHandler });
-    console.log(this.tagName, this._events);
   };
 
   // установка обработчиков событий
-  addEvents = <T>(node: T): void => {
+  private _addEvents = <T>(node: T): void => {
     let removeAttributes = [];
     if (node.childNodes) {
       node.childNodes.forEach((itemNode) => {
@@ -107,12 +108,17 @@ export class Component extends HTMLElement {
           for (const key in itemNode.attributes) {
             if (itemNode.attributes[key].nodeName) {
               // props-data mounting
-              if (itemNode.attributes[key].nodeName === "props-data") {
+              if (itemNode.attributes[key].nodeName.match(/^props-(\w)+$/gi)) {
                 const propsName = itemNode.attributes[key].nodeValue.replace(
                   /(\[\[)|(]])/g,
                   ""
                 );
                 itemNode.setProps = this[propsName];
+                // добавим в стек для дальнейшего удаления
+                removeAttributes.push({
+                  node: itemNode,
+                  attr: itemNode.attributes[key].nodeName,
+                });
               }
 
               // events mounting
@@ -148,7 +154,7 @@ export class Component extends HTMLElement {
           item.node.removeAttribute(item.attr);
         });
         // проверим вложенные элементы
-        this.addEvents(itemNode);
+        this._addEvents(itemNode);
       });
     }
   };
@@ -169,4 +175,11 @@ export class Component extends HTMLElement {
   connectedCallback() {
     this["connected"] && this["connected"]();
   }
+
+  _prepareDOM = (html) => {
+    // const regex = /<(\w+)\s[^>]*(event-|props-)(.?)+>/gi;
+    //
+    // let matches = html.match(regex);
+    // console.log(matches);
+  };
 }
