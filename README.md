@@ -45,6 +45,12 @@
 ### Header
 
 ```mermaid
+flowchart TD
+  Start --> Stop
+
+```
+
+```text
 graph TD;
     (<main-app>)-->(<root-router>);
     (<root-router>)-->(<login-page>);
