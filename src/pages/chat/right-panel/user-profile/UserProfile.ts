@@ -14,7 +14,7 @@ export class UserProfile extends Component {
     super(view);
   }
 
-  connectedCallback(): void {
+  connected(): void {
     this.subscriber = State.subscribe(
       STATES.CURRENT_CHAT,
       (val) => (this.currentChat = val)

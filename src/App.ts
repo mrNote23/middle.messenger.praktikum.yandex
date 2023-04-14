@@ -23,7 +23,7 @@ export class App extends Component {
     this.rootRoutes = rootRoutes;
   }
 
-  connectedCallback() {
+  connected() {
     this.render();
   }
 }

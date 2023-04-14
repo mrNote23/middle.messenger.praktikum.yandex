@@ -27,7 +27,7 @@ export class ModalWindowComponent extends Component {
     super(view);
   }
 
-  connectedCallback() {
+  connected() {
     this.render({
       title: this.getAttribute("title"),
       content: this.innerHTML,

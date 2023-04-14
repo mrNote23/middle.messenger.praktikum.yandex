@@ -78,14 +78,20 @@ Class AppChat()
 
 # Создание компонент
 
-### **`Class Component()`** - класс для создания компонент
+### **`Class Component()`**
+
+> Шаблон компонента (precompiled hbs) передается в методе **super()** при создании экземпляра класса,
+> либо позже в **this.view**
 
 - `render({props})`
 
   рендер компонента с параметрами props для шаблона handlebars
-- `connectedCallback(): void`
+- `connected(): void`
 
   метод вызывается после монтирования компонента в DOM
+- `disconnected(): void`
+
+  метод вызывается перед демонтирования компонента из DOM
 - `setter subscriber:TSubscriber`
 
   записывает подписчика State.subscriber в стэк
@@ -94,12 +100,13 @@ Class AppChat()
   записывает слушателя событий в стэк
 - `getProps():Promise`
 
-  получение пропсов компонента прописанных в теге в атрибуте props-data
+  получение пропсов компонента прописанных в атрибуте props-data
 - `createEvent(eventName: string, eventProps: any): void`
 
-  создание события с названием eventName, подписка на событие через тег event-eventName или через addEventListener
+  создание события с названием eventName, обработчики события указываются в атрибуте event-eventName или через
+  addEventListener
 
-> После unmounting компонента из DOM, все подпсчики и слушатели установленные через **subscriber** и **listener** -
+> После unmounting компонента из DOM, все подписчики и слушатели установленные через **subscriber** и **listener** -
 > удаляются
 
 Пример использования:
@@ -132,7 +139,7 @@ export class MainComponent extends Component {
     this.getElementsByTagName("h2")[0].textContent = val;
   };
 
-  connectedCallback(): void {
+  connected(): void {
     this.getProps.then((props: any) => {
       this.props = props;
       this.render({...this.props});
@@ -184,23 +191,23 @@ export class App extends Component {
   routRoutes: TRoute[] = [
     {
       path: "/",
-      content: `<chat-page></chat-page>`,
+      content: "<chat-page></chat-page>",
     },
     {
       path: "/login",
-      content: `<login-page></login-page>`,
+      content: "<login-page></login-page>",
     },
     {
       path: "/register",
-      content: `<register-page></register-page>`,
+      content: "<register-page></register-page>",
     },
     {
       path: "/404",
-      content: `<error-page>404</error-page>`,
+      content: "<error-page>404</error-page>",
     },
     {
       path: "/500",
-      content: `<error-page>500</error-page>`,
+      content: "<error-page>500</error-page>",
     },
     {
       path: "*",
@@ -212,7 +219,7 @@ export class App extends Component {
     super(view({path: "/"}));
   }
 
-  connectedCallback() {
+  connected() {
     this.render();
   }
 }
@@ -227,9 +234,10 @@ export class App extends Component {
 
 Валидация форм
 
-пример использования
+Пример использования
 
 ```typescript
+// Login.ts
 import view from "./Login.hbs";
 import {Component} from "./Component";
 import {FormValidator} from "./FormValidator";
@@ -283,14 +291,14 @@ export class Login extends Component {
     console.log(`You are logined: ${e.detail}`);
   };
 
-  connectedCallback(): void {
+  connected(): void {
     this.render();
   }
 }
 ```
 
 ```HTML
-<!--Login.ts-->
+<!--Login.hbs-->
 <form-validator props-data="[[formFields]]" event-validated="[[formValidated]]">
   <form novalidate>
     <input type="text" name="login" id="login">
@@ -304,10 +312,11 @@ export class Login extends Component {
 
 ## ModalWindowComponent
 
-модальное окно
+Модальное окно
 
-пример использования
-при вызове RenameChat() будет открыто модальное окно с формой для редактирования названия чата
+Пример использования
+
+> При вызове RenameChat() будет открыто модальное окно с формой для редактирования названия чата
 
 ```typescript
 // RenameChat.ts

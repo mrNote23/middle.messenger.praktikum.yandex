@@ -13,7 +13,7 @@ export class ChatsList extends Component {
     super(view);
   }
 
-  connectedCallback(): void {
+  connected(): void {
     // подписка на изменение текущего чата
     this.subscriber = State.subscribe(
       STATES.CURRENT_CHAT,

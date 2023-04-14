@@ -11,7 +11,7 @@ export class SearchComponent extends Component {
     console.log(`Search: ${e.target.value}`);
   };
 
-  connectedCallback(): void {
+  connected(): void {
     this.render();
   }
 }

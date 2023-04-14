@@ -12,7 +12,7 @@ export class UsersList extends Component {
     super(view);
   }
 
-  connectedCallback(): void {
+  connected(): void {
     this.usersList = State.extract(STATES.CHAT_USERS);
     this.render({ list: this.usersList });
   }

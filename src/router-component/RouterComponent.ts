@@ -13,7 +13,7 @@ export class RouterComponent extends Component {
     super();
   }
 
-  connectedCallback(): void {
+  connected(): void {
     this.getProps.then((routes: TRoute[]) => {
       this._routes = routes;
       this._fill(this.getAttribute("path"));

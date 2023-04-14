@@ -27,7 +27,7 @@ export class RightPanel extends Component {
     super();
   }
 
-  connectedCallback(): void {
+  connected(): void {
     this.subscriber = State.subscribe(STATES.RIGHT_MODE, (val) => {
       this.innerHTML = templates[val];
     });

@@ -148,5 +148,12 @@ export class Component extends HTMLElement {
     this.listeners.forEach((item) => {
       item.node.removeEventListener(item.event, item.listener);
     });
+    // вызовем метод потомка
+    this["disconnected"] && this["disconnected"]();
+  }
+
+  // component mounted
+  connectedCallback() {
+    this["connected"] && this["connected"]();
   }
 }

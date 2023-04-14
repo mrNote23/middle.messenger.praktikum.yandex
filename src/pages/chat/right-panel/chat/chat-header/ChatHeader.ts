@@ -16,7 +16,7 @@ export class ChatHeader extends Component {
     super(view);
   }
 
-  connectedCallback(): void {
+  connected(): void {
     this.chat = null;
     this.usersAvatars = [];
     this.usersCountAvatar = 0;

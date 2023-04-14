@@ -20,7 +20,7 @@ export class LeftPanel extends Component {
     super(view);
   }
 
-  connectedCallback(): void {
+  connected(): void {
     this.render();
 
     this.subscriber = State.subscribe(STATES.LEFT_MODE, (val) => {

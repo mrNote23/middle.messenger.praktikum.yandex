@@ -15,7 +15,7 @@ export class ChatPage extends Component {
     this.classList.add("wrapper");
   }
 
-  connectedCallback(): void {
+  connected(): void {
     // TODO: Временно разрешен вход без авторизации
     this.render();
     // if (!State.extract(ADMIN)) {

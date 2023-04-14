@@ -27,7 +27,7 @@ export class FormValidator extends Component {
     super();
   }
 
-  connectedCallback() {
+  connected() {
     this.getProps.then((props) => {
       // найдем форму
       const form = this.getElementsByTagName("form")[0];

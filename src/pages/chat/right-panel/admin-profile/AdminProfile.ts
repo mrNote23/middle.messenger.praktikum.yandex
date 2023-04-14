@@ -77,7 +77,7 @@ export class AdminProfile extends Component {
     super(view);
   }
 
-  connectedCallback(): void {
+  connected(): void {
     this.admin = State.extract(ADMIN);
     this.render({ ...this.admin });
   }

@@ -9,7 +9,7 @@ export class ErrorPage extends Component {
     this.classList.add("wrapper");
   }
 
-  connectedCallback(): void {
+  connected(): void {
     switch (this.textContent) {
       case "404":
         this.view = view404;

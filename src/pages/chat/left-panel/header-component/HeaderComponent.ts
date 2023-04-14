@@ -47,7 +47,7 @@ export class HeaderComponent extends Component {
     }
   };
 
-  connectedCallback() {
+  connected() {
     this.render();
 
     this.subscriber = State.subscribe(

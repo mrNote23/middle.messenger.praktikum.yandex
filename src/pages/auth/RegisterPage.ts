@@ -68,7 +68,7 @@ export class RegisterPage extends Component {
     ChatApp.register(e.detail);
   };
 
-  connectedCallback(): void {
+  connected(): void {
     this.render();
   }
 }

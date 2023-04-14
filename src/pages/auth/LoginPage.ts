@@ -30,7 +30,12 @@ export class LoginPage extends Component {
     ChatApp.login(e.detail);
   };
 
-  connectedCallback(): void {
+  connected(): void {
     this.render();
+    console.log("connected");
+  }
+
+  disconnected() {
+    console.log("component disconnected");
   }
 }
