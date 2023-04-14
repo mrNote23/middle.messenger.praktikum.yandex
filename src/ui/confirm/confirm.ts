@@ -13,13 +13,11 @@ export const Confirm = (props: TConfirmProps, cb: () => void): void => {
   });
 
   function clickYes() {
-    console.log("yes");
     modalWindow.remove();
     cb();
   }
 
   function clickNo() {
-    console.log("no");
     modalWindow.remove();
   }
 };
