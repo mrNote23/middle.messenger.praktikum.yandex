@@ -1,11 +1,11 @@
 import view from "./ChatPage.hbs";
 import { Component } from "../../core/Component";
-import { LeftPanel } from "./left-panel/LeftPanel";
-import { RightPanel } from "./right-panel/RightPanel";
+import { LeftBlock } from "./left-block/LeftBlock";
+import { RightBlock } from "./right-block/RightBlock";
 import "./ChatPage.scss";
 
-window.customElements.define("left-panel", LeftPanel);
-window.customElements.define("right-panel", RightPanel);
+window.customElements.define("left-block", LeftBlock);
+window.customElements.define("right-block", RightBlock);
 
 export class ChatPage extends Component {
   bigData: object;

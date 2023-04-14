@@ -22,7 +22,7 @@ const templates: { [key: string]: string } = {
   chatProfile: "<chat-profile class='profile'></chat-profile>",
 };
 
-export class RightPanel extends Component {
+export class RightBlock extends Component {
   constructor() {
     super();
   }

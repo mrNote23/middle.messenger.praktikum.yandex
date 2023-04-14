@@ -107,6 +107,8 @@ flowchart TD
     root-router --> chat-page
     root-router --> error-404
     root-router --> error-500
+    chat-page --> left-block
+    chat-page --> right-block
 
 ```
 
