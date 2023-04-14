@@ -62,23 +62,11 @@ export class FormValidator extends Component {
           this.previousSibling.style.display = "none";
         };
 
-        // так надо чтобы потом можно было снять обработчики
-        this.form[field].addEventListener("blur", this.hideError);
-        this.form[field].addEventListener("focus", this.showError);
-        // добавим слушателей в стек чтобы потом очистить
-        this.listener = {
-          node: this.form[field],
-          event: "blur",
-          listener: this.hideError,
-        };
-        this.listener = {
-          node: this.form[field],
-          event: "focus",
-          listener: this.showError,
-        };
+        this.form[field]["onblur"] = this.hideError;
+        this.form[field]["onfocus"] = this.showError;
 
         // обработчик события input
-        this.form[field].addEventListener("input", this.onChange);
+        this.form[field]["oninput"] = this.onChange;
 
         if (this.config[field].required) {
           this.form[field].valid = !!this.form[field].value.length;
@@ -87,35 +75,27 @@ export class FormValidator extends Component {
         }
       }
     }
-    // на форму тоже обработчики submit и reset
-    this.form.addEventListener("submit", this.formSubmit);
-    this.form.addEventListener("reset", this.formReset);
-    // добавим слушателей в стек чтобы потом очистить
-    this.listener = {
-      node: this.form,
-      event: "submit",
-      listener: this.formSubmit,
-    };
-    this.listener = {
-      node: this.form,
-      event: "reset",
-      listener: this.formReset,
-    };
+    this.form["onsubmit"] = this.formSubmit;
+    this.form["onreset"] = this.formReset;
   };
 
+  // скрыть ошибку ввода
   private hideError<T>(e: T): void {
     e.target.hideError();
   }
 
+  // показать ошибку ввода
   private showError<T>(e: T): void {
     e.target.showError();
   }
 
+  // форма сброшена, отказ от воода
   private formReset = <T>(e: T): void => {
     e.preventDefault();
     this.createEvent("validated", false);
   };
 
+  // сабмит формы
   private formSubmit = <T>(e: T): void => {
     e.preventDefault();
     let valid = true;
@@ -123,8 +103,11 @@ export class FormValidator extends Component {
     for (const field in this.config) {
       result[field] = this.form[field].value;
       if (!this.form[field].valid) {
-        this.form[field].classList.add("validated");
+        this.form[field].classList.add("error");
         valid = false;
+      } else {
+        this.form[field].classList.remove("error");
+        this.form[field].classList.add("success");
       }
     }
     if (valid) {
@@ -175,7 +158,7 @@ export class FormValidator extends Component {
       error = true;
     }
 
-    // match
+    // match проверка стандартных типов
     if (this.config[field.name].match) {
       const match = this.config[field.name].match;
       switch (true) {

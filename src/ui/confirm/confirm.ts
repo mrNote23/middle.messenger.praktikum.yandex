@@ -7,24 +7,19 @@ type TConfirmProps = {
 };
 
 export const Confirm = (props: TConfirmProps, cb: () => void): void => {
-  const modalWindow = new ModalWindow(props.title, view({ ...props }));
+  const modalWindow = new ModalWindow(props.title, view({ ...props }), {
+    clickYes,
+    clickNo,
+  });
 
-  const submitForm = <T>(e: T) => {
-    e.preventDefault();
-    e.target.removeEventListener("submit", submitForm);
+  function clickYes() {
+    console.log("yes");
     modalWindow.remove();
     cb();
-  };
+  }
 
-  const resetForm = <T>(e: T) => {
-    e.preventDefault();
-    e.target.removeEventListener("reset", resetForm);
+  function clickNo() {
+    console.log("no");
     modalWindow.remove();
-  };
-
-  document
-    .getElementById("confirm-form")
-    .addEventListener("submit", submitForm);
-
-  document.getElementById("confirm-form").addEventListener("reset", resetForm);
+  }
 };

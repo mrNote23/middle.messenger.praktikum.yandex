@@ -30,6 +30,7 @@ export class Component extends HTMLElement {
   protected listeners: Array<unknown> = [];
   protected params: TComponentParams | null = null;
   public _props: object | null = null;
+  protected _events = [];
 
   constructor(
     public view: ((params: TComponentParams) => string) | null = null
@@ -42,6 +43,13 @@ export class Component extends HTMLElement {
   // ping - event
   // pingHandler - обработчик
   createEvent = (eventName: string, eventProps: unknown): void => {
+    // ивенты установленные через пропсы
+    this._events.forEach((event) => {
+      if (event.eventName === eventName) {
+        event.eventHandler({ detail: eventProps });
+      }
+    });
+    // ивенты навешанные листенером
     this.dispatchEvent(new CustomEvent(eventName, { detail: eventProps }));
   };
 
@@ -80,12 +88,17 @@ export class Component extends HTMLElement {
     this.params = params;
     if (this.view !== null) {
       this.innerHTML = this.view(params);
-      this.setEvents(this);
+      this.addEvents(this);
     }
   };
 
+  setEvent = (eventName, eventHandler) => {
+    this._events.push({ eventName, eventHandler });
+    console.log(this.tagName, this._events);
+  };
+
   // установка обработчиков событий
-  setEvents = <T>(node: T): void => {
+  addEvents = <T>(node: T): void => {
     let removeAttributes = [];
     if (node.childNodes) {
       node.childNodes.forEach((itemNode) => {
@@ -111,16 +124,16 @@ export class Component extends HTMLElement {
                     ""
                   ),
                 ];
+
                 if (this[eventCallback]) {
                   // добавим обработчик события
-                  itemNode.addEventListener(eventName, this[eventCallback]);
-                  // добавим в стэк слушателей
-                  this.listener = {
-                    node: itemNode,
-                    event: eventName,
-                    listener: this[eventCallback],
-                  };
+                  if (itemNode.setEvent) {
+                    itemNode.setEvent(eventName, this[eventCallback]);
+                  } else {
+                    itemNode[`on${eventName}`] = this[eventCallback];
+                  }
                 }
+
                 // добавим в стек для дальнейшего удаления
                 removeAttributes.push({
                   node: itemNode,
@@ -135,7 +148,7 @@ export class Component extends HTMLElement {
           item.node.removeAttribute(item.attr);
         });
         // проверим вложенные элементы
-        this.setEvents(itemNode);
+        this.addEvents(itemNode);
       });
     }
   };

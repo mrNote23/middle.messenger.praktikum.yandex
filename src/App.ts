@@ -13,7 +13,7 @@ window.customElements.define("register-page", RegisterPage);
 window.customElements.define("error-page", ErrorPage);
 window.customElements.define("chat-page", ChatPage);
 
-window.customElements.define("root-router", RouterComponent);
+window.customElements.define("app-router", RouterComponent);
 
 export class App extends Component {
   rootRoutes;
