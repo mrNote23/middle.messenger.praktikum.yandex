@@ -42,39 +42,68 @@
 
 # Структура приложения
 
-```text
-Class State()
-Class AppChat()
+```typescript
+// Менеджер состояний
+class State {
+  store(varName: string, val: any): boolean {
+    // сохранение объекта без оповещения подписчиков
+  };
 
-<main-app>
-    <root-router>
-    </root-router>
-</main-app>
+  dispatch(varName: string, val: T): void {
+    // изменение объекта с оповещением подписчиков
+  };
+
+  extract(varName: string): any {
+    // получение объекта
+  };
+
+  subscribe(varName: string, cb: object): TSubscriberItem {
+    // подписка на изменение объекта
+  };
+
+  unsubscribe(subs: TSubscriberItem): void {
+    // отписка от подписки :)	  
+  };
+
+  clear(): void {
+    // полная очистка, удаление всех объектов и подписчиков
+  };
+}
+
+// Управление приложением
+class AppChat {
+  init() {
+    // Инициализация приложения
+  }
+
+  start() {
+    // Старт
+  }
+
+  navigate() {
+    // Навигация по страницам
+  }
+
+  login() {
+    // Логин пользователя
+  }
+
+  logout() {
+    // Выход из приложения
+  }
+
+  // и т.д. 
+  // ...
+}
 ```
 
-- ### **`State`** - Менеджер состояний
-  - `store(varName: string, value: any): boolean`
+```HTML
 
-    сохранение объекта без оповещения подписчиков
-  - `dispatch(varName: string, value: any): void`
-
-    изменение объекта с оповещением подписчиков
-
-  - `extract(varName: string): any`
-
-    получение объекта
-  - `subscribe(varName: string, callBack: (value) => {}): TSubsctiber`
-
-    подписка на изменение объекта
-  - `unsubscribe(subsctiber: TSubscriber)`
-
-    отписка от подписки :)
-  - `clear(): void`
-
-    полная очистка, удаление всех объектов и подписчиков
-
-- ### **`AppChat`** - Управление приложением
-  - `Содержит в себе все actions приложения (login, sendMessage и т.п.)`
+<main-app>
+  <root-router>
+  </root-router>
+</main-app>
+```
 
 # Создание компонент
 
@@ -106,7 +135,7 @@ Class AppChat()
   создание события с названием eventName, обработчики события указываются в атрибуте event-eventName или через
   addEventListener
 
-> После unmounting компонента из DOM, все подписчики и слушатели установленные через **subscriber** и **listener** -
+> После демонтирования компонента из DOM, все подписчики и слушатели установленные через **subscriber** и **listener** -
 > удаляются
 
 Пример использования:
