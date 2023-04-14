@@ -1,0 +1,20 @@
+<form-validator props-data="[[formFields]]" event-validated="[[formValidated]]">
+  <form novalidate id="add-chat-form">
+    <div class="mb-2 input-container">
+      <input
+        class="form-control"
+        type="text"
+        name="chat_name"
+        id="chat_name"
+        placeholder=" "
+      />
+      <label for="chat_name" class="placeholder">Chat name</label>
+    </div>
+
+    <div class="buttons">
+      <button class="btn" type="submit">Add</button>
+      <button class="btn outline" type="reset">Not now</button>
+    </div>
+  </form>
+</form-validator>
+

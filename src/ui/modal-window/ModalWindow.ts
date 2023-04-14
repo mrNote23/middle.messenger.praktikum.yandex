@@ -5,10 +5,15 @@ import "./ModalWindow.scss";
 export class ModalWindow {
   node: HTMLElement;
 
-  constructor(title: string, content: string = "") {
+  constructor(title = "", content = "", args: object | null = null) {
     this.node = document.createElement("modal-window");
     this.node.title = title;
     this.node.innerHTML = content;
+    if (args) {
+      for (const props of Object.entries(args)) {
+        this.node[props[0]] = props[1];
+      }
+    }
     document.body.appendChild(this.node);
   }
 
@@ -22,15 +27,13 @@ export class ModalWindowComponent extends Component {
     super(view);
   }
 
-  connectedCallback() {
+  connected() {
     this.render({
       title: this.getAttribute("title"),
       content: this.innerHTML,
     });
     document.addEventListener("keyup", this.pressEscape);
   }
-
-  disconnectedCallback() {}
 
   clickAway = (e: MouseEvent): void => {
     if (e?.target["className"] === "modal-content") {

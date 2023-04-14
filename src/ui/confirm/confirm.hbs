@@ -1,9 +1,7 @@
 <div class="text-center">
-	<h2>{{text}}</h2>
-	<form id="confirm-form">
-		<div class="modal-buttons">
-			<button class="btn w-100" type="submit" value="yes">Yes</button>
-			<button class="btn w-100 outline" type="reset" value="no">No</button>
-		</div>
-	</form>
+  <h2>{{text}}</h2>
+  <div class="modal-buttons">
+    <button class="btn w-100" event-click="[[clickYes]]">Yes</button>
+    <button class="btn w-100 outline" event-click="[[clickNo]]">No</button>
+  </div>
 </div>

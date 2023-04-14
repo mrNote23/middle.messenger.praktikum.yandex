@@ -1,6 +1,6 @@
-export type TStoreHolder = {
-  store: {};
-  storeNode: any;
+type TStoreHolder = {
+  store: object;
+  storeNode: unknown;
 };
 
 export type TSubscriberItem = {
@@ -8,105 +8,121 @@ export type TSubscriberItem = {
   uuid: string;
 };
 
-const storeHolder: TStoreHolder = {
-  store: {},
-  storeNode: class {
-    value: any = 0;
-    subscribers: {};
+class StoreNode {
+  value = null;
+  subscribers: object;
 
-    constructor(val = null) {
-      this.value = val;
-      this.subscribers = {};
+  constructor(val = null) {
+    this.value = val;
+    this.subscribers = {};
+  }
+
+  set setter<T>(val: T) {
+    let a = this.value;
+    let b = val;
+    // не совсем верно, но для данного случая пойдет
+    if (typeof val === "object") {
+      a = <T>JSON.stringify(a);
+      b = <T>JSON.stringify(b);
+    }
+    if (a !== b) {
+      this.processSubscribers(val);
+    }
+    this.value = val;
+  }
+
+  get getter<T>(): T {
+    return this.value;
+  }
+
+  unSubscribe(uuid: string): void {
+    delete this.subscribers[uuid];
+  }
+
+  subscribe(cb: <T>(value: T) => void): string {
+    let uuid = null;
+    while (this.subscribers[uuid] || !uuid) {
+      uuid = `${(~~(Math.random() * 1e8)).toString(16)}-${(~~(
+        Math.random() * 1e8
+      )).toString(16)}-${(~~(Math.random() * 1e8)).toString(16)}`;
     }
 
-    set setter(val: any) {
-      let a = this.value;
-      let b = val;
-      // не совсем верно, но для данного случая пойдет
-      if (typeof val === "object" || typeof val === "array") {
-        a = JSON.stringify(a);
-        b = JSON.stringify(b);
-      }
-      if (a !== b) {
-        this.processSubscribers(val);
-      }
-      this.value = val;
+    this.subscribers[uuid] = cb;
+    cb(this.value);
+    return uuid;
+  }
+
+  processSubscribers = <T>(val: T): void => {
+    for (const uuid in this.subscribers) {
+      this.subscribers[uuid](val);
     }
+  };
+}
 
-    get getter(): any {
-      return this.value;
-    }
+class State {
+  storeHolder: TStoreHolder;
 
-    unSubscribe(uuid: string): void {
-      delete this.subscribers[uuid];
-    }
-
-    subscribe(cb: (value: any) => void): string {
-      let uuid = null;
-      while (this.subscribers[uuid] || !uuid) {
-        uuid = `${(~~(Math.random() * 1e8)).toString(16)}-${(~~(
-          Math.random() * 1e8
-        )).toString(16)}-${(~~(Math.random() * 1e8)).toString(16)}`;
-      }
-
-      this.subscribers[uuid] = cb;
-      cb(this.value);
-      return uuid;
-    }
-
-    processSubscribers = (val: any): void => {
-      for (let uuid in this.subscribers) {
-        this.subscribers[uuid](val);
-      }
+  constructor() {
+    this.storeHolder = {
+      store: {},
+      storeNode: StoreNode,
     };
-  },
-};
-
-export const Extract = (varName: string): any => {
-  if (varName && storeHolder.store[varName]) {
-    return storeHolder.store[varName].value;
-  } else {
-    throw new Error(`Store.Dispatch: variable '${varName}' not found`);
   }
-};
 
-export const Dispatch = (varName: string, val: any): void => {
-  if (varName && storeHolder.store[varName]) {
-    storeHolder.store[varName].setter = val;
-  } else {
-    throw new Error(`Store.Dispatch: wrong variable '${varName}'`);
-  }
-};
+  // получение значения параметра
+  extract = <T>(varName: string): T | null => {
+    if (varName && this.storeHolder.store[varName]) {
+      return this.storeHolder.store[varName].value;
+    } else {
+      return null;
+    }
+  };
 
-export const Subscribe = (varName: string, cb: object): TSubscriberItem => {
-  if (varName && storeHolder.store[varName]) {
-    return { varName: varName, uuid: storeHolder.store[varName].subscribe(cb) };
-  } else {
-    throw new Error(`Store.Subscribe: wrong variable '${varName}'`);
-  }
-};
+  // установка значения параметра
+  dispatch = <T>(varName: string, val: T): void => {
+    if (varName && this.storeHolder.store[varName]) {
+      this.storeHolder.store[varName].setter = val;
+    } else {
+      throw new Error(`State.Dispatch: wrong variable '${varName}'`);
+    }
+  };
 
-export const UnSubscribe = (subs: TSubscriberItem): void => {
-  const { varName, uuid } = { ...subs };
-  if (varName && storeHolder.store[varName]) {
-    storeHolder.store[varName].unSubscribe(uuid);
-  } else {
-    throw new Error(`Store.UnSubscribe: wrong variable '${varName}'`);
-  }
-};
+  // подписка на изменение параметра
+  subscribe = (varName: string, cb: object): TSubscriberItem => {
+    if (varName && this.storeHolder.store[varName]) {
+      return {
+        varName: varName,
+        uuid: this.storeHolder.store[varName].subscribe(cb),
+      };
+    } else {
+      throw new Error(`State.Subscribe: wrong variable '${varName}'`);
+    }
+  };
 
-export const Store = (
-  varName: string | null = null,
-  val: any = null
-): boolean => {
-  if (!varName) {
-    throw new Error(`Store.Store: wrong variable '${varName}'`);
-  } else {
-    storeHolder.store[varName] = new storeHolder.storeNode(val);
-    return true;
-  }
-};
+  // отписка
+  unsubscribe = (subs: TSubscriberItem): void => {
+    const { varName, uuid } = { ...subs };
+    if (varName && this.storeHolder.store[varName]) {
+      this.storeHolder.store[varName].unSubscribe(uuid);
+    } else {
+      throw new Error(`State.UnSubscribe: wrong variable '${varName}'`);
+    }
+  };
 
-export const ClearStore = (): void => {
-  storeHolder.store = {};
-};
+  // сохранение параметра
+  store = <T>(varName: string | null = null, val: T): boolean => {
+    if (!varName) {
+      throw new Error(`State.Store: wrong variable '${varName}'`);
+    } else {
+      this.storeHolder.store[varName] = new this.storeHolder.storeNode(val);
+      return true;
+    }
+  };
+
+  // сброс
+  clear = (): void => {
+    this.storeHolder.store = {};
+  };
+}
+
+export default new State();
