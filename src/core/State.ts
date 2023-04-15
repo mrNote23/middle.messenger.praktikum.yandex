@@ -1,6 +1,6 @@
 type TStoreHolder = {
-  store: object;
-  storeNode: unknown;
+  store: { [key: string]: StoreNode };
+  storeNode: StoreNode | {};
 };
 
 export type TSubscriberItem = {
@@ -9,21 +9,21 @@ export type TSubscriberItem = {
 };
 
 class StoreNode {
-  value = null;
-  subscribers: object;
+  value: any = null;
+  subscribers: { [key: string]: (val: any) => void };
 
   constructor(val = null) {
     this.value = val;
     this.subscribers = {};
   }
 
-  set setter<T>(val: T) {
+  set setter(val: any) {
     let a = this.value;
     let b = val;
     // не совсем верно, но для данного случая пойдет
     if (typeof val === "object") {
-      a = <T>JSON.stringify(a);
-      b = <T>JSON.stringify(b);
+      a = JSON.stringify(a);
+      b = JSON.stringify(b);
     }
     if (a !== b) {
       this.processSubscribers(val);
@@ -31,7 +31,7 @@ class StoreNode {
     this.value = val;
   }
 
-  get getter<T>(): T {
+  get getter(): any {
     return this.value;
   }
 
@@ -39,9 +39,9 @@ class StoreNode {
     delete this.subscribers[uuid];
   }
 
-  subscribe(cb: <T>(value: T) => void): string {
-    let uuid = null;
-    while (this.subscribers[uuid] || !uuid) {
+  subscribe(cb: (value: any) => void): string {
+    let uuid = "";
+    while (this.subscribers[uuid] || uuid === "") {
       uuid = `${(~~(Math.random() * 1e8)).toString(16)}-${(~~(
         Math.random() * 1e8
       )).toString(16)}-${(~~(Math.random() * 1e8)).toString(16)}`;
@@ -70,7 +70,7 @@ class State {
   }
 
   // получение значения параметра
-  extract = <T>(varName: string): T | null => {
+  extract = (varName: string): any => {
     if (varName && this.storeHolder.store[varName]) {
       return this.storeHolder.store[varName].value;
     } else {
@@ -88,7 +88,7 @@ class State {
   };
 
   // подписка на изменение параметра
-  subscribe = (varName: string, cb: object): TSubscriberItem => {
+  subscribe = (varName: string, cb: (val: any) => void): TSubscriberItem => {
     if (varName && this.storeHolder.store[varName]) {
       return {
         varName: varName,
@@ -110,11 +110,11 @@ class State {
   };
 
   // сохранение параметра
-  store = <T>(varName: string | null = null, val: T): boolean => {
+  store = (varName: string | null = null, val: any): boolean => {
     if (!varName) {
       throw new Error(`State.Store: wrong variable '${varName}'`);
     } else {
-      this.storeHolder.store[varName] = new this.storeHolder.storeNode(val);
+      this.storeHolder.store[varName] = new StoreNode(val);
       return true;
     }
   };
