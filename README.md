@@ -97,9 +97,7 @@ class AppChat {
 }
 ```
 
-<iframe frameborder="0"
-style=" width: 100%; height: 110%;" src="https://stackblitz.com/edit/sws-state-manager?embed=1&file=index.ts">
-</iframe>
+<iframe src="https://stackblitz.com/edit/sws-state-manager?embed=1&file=index.ts"></iframe>
 
 ### DOM Components
 
