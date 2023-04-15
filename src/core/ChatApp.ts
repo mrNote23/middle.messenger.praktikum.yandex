@@ -1,10 +1,9 @@
 import Api from "./Api";
 import State from "./State";
-import { IChat, IChatMessage, IChatUsers, IUser } from "./interfaces";
+import { IChat, IChatMessage, IChatUsers, IUser } from "./config/interfaces";
 import { OnMobile } from "../utils/on-mobile";
-import { ModalWindowComponent } from "../ui/modal-window/ModalWindow";
-import { FormValidator } from "../ui/form-validator/FormValidator";
-import { App } from "../App";
+import { ModalWindowComponent } from "../shared/modal-window/ModalWindow";
+import { FormValidator } from "../shared/form-validator/FormValidator";
 
 export enum STATES {
   CHATS_LIST = "chatsList",
@@ -17,15 +16,15 @@ export enum STATES {
 }
 
 export enum LEFTMODE {
-  CHATS = "chats",
-  USERS = "users",
+  CHATS = "/chats",
+  USERS = "/users",
 }
 
 export enum RIGHTMODE {
-  CHAT = "chat",
-  ADMIN_PROFILE = "adminProfile",
-  USER_PROFILE = "userProfile",
-  CHAT_PROFILE = "chatProfile",
+  CHAT = "/chat",
+  ADMIN_PROFILE = "/adminProfile",
+  USER_PROFILE = "/userProfile",
+  CHAT_PROFILE = "/chatProfile",
 }
 
 export const ADMIN = "admin";
@@ -34,7 +33,6 @@ class ChatApp {
   rootRoutes;
 
   constructor() {
-    window.customElements.define("main-app", App);
     window.customElements.define("form-validator", FormValidator);
     window.customElements.define("modal-window", ModalWindowComponent);
   }
@@ -70,8 +68,6 @@ class ChatApp {
       this.navigate(e.currentTarget.location.pathname, false);
     });
 
-    window.document.getElementById("root").innerHTML = `<main-app></main-app>`;
-
     this.navigate(window.location.pathname);
   };
 
@@ -92,7 +88,6 @@ class ChatApp {
     const router = document.getElementById("root-router");
     if (router) {
       router.setAttribute("path", path);
-
       pushState && window.history.pushState({}, "", path);
     }
   };

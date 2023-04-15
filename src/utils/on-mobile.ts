@@ -1,7 +1,7 @@
 export class OnMobile {
   static showLeftPanel = (): void => {
     document.getElementById("sidebar").classList.remove("hidden");
-    document.getElementById("chat").classList.remove("show");
+    document.getElementById("right-router").classList.remove("show");
   };
 
   static showRightPanel = (): void => {
@@ -11,7 +11,7 @@ export class OnMobile {
 
     if (backEnabled) {
       document.getElementById("sidebar").classList.add("hidden");
-      document.getElementById("chat").classList.add("show");
+      document.getElementById("right-router").classList.add("show");
     }
   };
 }
