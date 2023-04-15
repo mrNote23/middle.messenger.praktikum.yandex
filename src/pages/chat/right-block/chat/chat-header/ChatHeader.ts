@@ -2,7 +2,7 @@ import view from "./ChatHeader.hbs";
 import State from "../../../../../core/State";
 import { OnMobile } from "../../../../../utils/on-mobile";
 import { Component } from "../../../../../core/Component";
-import { IChat, IUser } from "../../../../../core/interfaces";
+import { IChat, IUser } from "../../../../../core/config/interfaces";
 import "./ChatHeader.scss";
 import { RIGHTMODE, STATES } from "../../../../../core/ChatApp";
 

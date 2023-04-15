@@ -1,4 +1,4 @@
-import { IUser } from "../core/interfaces";
+import { IUser } from "../core/config/interfaces";
 
 export const _users: IUser[] = [
   {

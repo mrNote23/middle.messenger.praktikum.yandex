@@ -1,4 +1,4 @@
-import { IChatMessage } from "../core/interfaces";
+import { IChatMessage } from "../core/config/interfaces";
 
 export const _chatMessages: IChatMessage[] = [
   {

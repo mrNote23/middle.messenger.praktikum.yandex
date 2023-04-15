@@ -2,7 +2,7 @@ import view from "./ChatBody.hbs";
 import State from "../../../../../core/State";
 import { Component } from "../../../../../core/Component";
 import "./ChatBody.scss";
-import { IChat } from "../../../../../core/interfaces";
+import { IChat } from "../../../../../core/config/interfaces";
 import { ADMIN, STATES } from "../../../../../core/ChatApp";
 
 export class ChatBody extends Component {

@@ -1,10 +1,11 @@
 import view from "./App.hbs";
 import { Component } from "./core/Component";
-import { RouterComponent } from "./router-component/RouterComponent";
-import { LoginPage } from "./pages/auth/LoginPage";
-import { RegisterPage } from "./pages/auth/RegisterPage";
-import { ErrorPage } from "./pages/misc/ErrorPage";
+import { RouterComponent } from "./shared/router-component/RouterComponent";
+import { LoginPage } from "./pages/auth/login-page/LoginPage";
+import { RegisterPage } from "./pages/auth/register-page/RegisterPage";
+import { ErrorPage } from "./pages/misc/error-page/ErrorPage";
 import { ChatPage } from "./pages/chat/ChatPage";
+import ChatApp from "./core/ChatApp";
 
 import { rootRoutes } from "./core/config/rootRoutes";
 
@@ -25,5 +26,6 @@ export class App extends Component {
 
   connected() {
     this.render();
+    ChatApp.start();
   }
 }
