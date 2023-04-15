@@ -88,8 +88,13 @@ export class Component extends HTMLElement {
     this.params = params;
     if (this.view !== null) {
       const html = this.view(params);
-      this._prepareDOM(html);
       this.innerHTML = html;
+      const attrs = this._prepareDOM(html);
+      if (attrs) {
+        this.querySelectorAll(attrs.join(",")).forEach((elm) => {
+          console.log(elm);
+        });
+      }
       this._addEvents(this);
     }
   };
@@ -177,9 +182,16 @@ export class Component extends HTMLElement {
   }
 
   _prepareDOM = (html) => {
-    // const regex = /<(\w+)\s[^>]*(event-|props-)(.?)+>/gi;
-    //
-    // let matches = html.match(regex);
-    // console.log(matches);
+    let tmp = new Set();
+    let sou = html.replace(/[\n\t]/g, "");
+    const regex = /(event-\w+|props-\w+)/gi;
+    const res = sou.match(regex);
+    if (res) {
+      res.forEach((item) => {
+        item.trim() && tmp.add(item);
+      });
+    }
+    const resAttrs = Array.from(tmp).map((item) => `[${item}]`);
+    return resAttrs.length ? resAttrs : null;
   };
 }
