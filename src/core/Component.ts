@@ -8,8 +8,7 @@
   обработчики событий прописываются по принципу <button event-click="[[handlerClick]]" event-mouseover="[[handlerMouseOver]]"></button>
   у создаваемого компонента должен присутствовать обработчик с именем handlerClick, handlerMouseOver
 
-  пропсы в теге прописываются так: <form-component props-data="[[formFields]]"></form-component> передаются объектом!
-  все данные в компонент передаются одним объектом
+  пропсы в теге прописываются так: <form-component props-fields="[[formFields]]"></form-component>
   получать данные как результат промиса!!!
 */
 
