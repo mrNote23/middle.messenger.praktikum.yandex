@@ -100,30 +100,6 @@ class AppChat {
 ### DOM Components
 
 ```mermaid
-classDiagram
-Animal <|-- Duck
-Animal <|-- Fish
-Animal <|-- Zebra
-Animal : +int age
-Animal : +String gender
-Animal: +isMammal()
-Animal: +mate()
-class Duck{
-+String beakColor
-+swim()
-+quack()
-}
-class Fish{
--int sizeInFeet
--canEat()
-}
-class Zebra{
-+bool is_wild
-+run()
-}
-```
-
-```mermaid
 flowchart TD
     main-app --> app-router
     app-router --> login-page
@@ -133,6 +109,14 @@ flowchart TD
     app-router --> error-500
     chat-page --> left-block
     chat-page --> right-block
+    left-block --> left-router
+    right-block --> right-router
+    left-router --> chats-list
+    left-router --> users-list
+    right-router --> chat-messages
+    right-router --> chat-profile
+    right-router --> user-profile
+    right-router --> admin-profile
 
 ```
 
