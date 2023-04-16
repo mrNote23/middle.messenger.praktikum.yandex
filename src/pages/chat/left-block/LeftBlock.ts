@@ -28,7 +28,7 @@ export class LeftBlock extends Component {
     this.render();
     this.router = document.getElementById("left-router");
 
-    this.subscriber = State.subscribe(STATES.LEFT_MODE, (val) => {
+    this.addSubscriber(STATES.LEFT_MODE, (val) => {
       this.router.setAttribute("path", val);
     });
   }

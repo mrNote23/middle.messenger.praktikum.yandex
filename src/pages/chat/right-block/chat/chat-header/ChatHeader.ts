@@ -22,7 +22,7 @@ export class ChatHeader extends Component {
     this.usersCountAvatar = 0;
     this.chatUsers = [];
 
-    this.subscriber = State.subscribe(STATES.CURRENT_CHAT, this.chatChanged);
+    this.addSubscriber(STATES.CURRENT_CHAT, this.chatChanged);
   }
 
   chatChanged = (chat: IChat | "loading"): void => {

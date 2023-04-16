@@ -24,14 +24,14 @@ type TComponentParams = {
 } | null;
 
 type TListener = {
-  node: unknown;
+  node: HTMLElement;
   event: string;
-  listener: unknown;
+  callBack: (e: any) => void;
 };
 
 export class Component extends HTMLElement {
   protected subscriptions: TSubscriberItem[] = [];
-  protected listeners: Array<unknown> = [];
+  protected listeners: TListener[] = [];
   protected params: TComponentParams | null = null;
   public _props: TProps = {};
   protected _events = [];
@@ -43,10 +43,7 @@ export class Component extends HTMLElement {
   }
 
   // генерация события (event)
-  // для компонента прописывается так <component event-ping=[[pingHandler]]>
-  // ping - event
-  // pingHandler - обработчик
-  createEvent = (eventName: string, eventProps: unknown): void => {
+  protected createEvent = (eventName: string, eventProps: unknown): void => {
     // ивенты установленные через пропсы
     this._events.forEach((event) => {
       if (event.eventName === eventName) {
@@ -58,19 +55,20 @@ export class Component extends HTMLElement {
   };
 
   // анимация на время загрузки данных для компонента
-  loading(): void {
+  protected loading(): void {
     this.innerHTML =
       "<div class='loader'><div></div><div></div><div></div><div></div></div>";
   }
 
-  // добавление State.subscriber в стэк
-  set subscriber(subs: TSubscriberItem) {
-    this.subscriptions.push(subs);
+  // добавление State.subscriber
+  protected addSubscriber(varName: string, callBack: (val: any) => void) {
+    this.subscriptions.push(State.subscribe(varName, callBack));
   }
 
-  // добавление Event.listener в стэк
-  set listener(listener: TListener) {
-    this.listeners.push(listener);
+  // добавление Event.listener
+  protected addListener<TListener>(node, event, callBack) {
+    node.addEventListener(event, callBack);
+    this.listeners.push(<TListener>{ node, event, callBack });
   }
 
   // set component's props
@@ -93,7 +91,7 @@ export class Component extends HTMLElement {
   };
 
   // render component
-  render = (params: TComponentParams | null = null): void => {
+  protected render = (params: TComponentParams | null = null): void => {
     this.params = params;
     if (this.view !== null) {
       const html = this.view(params);
@@ -196,10 +194,14 @@ export class Component extends HTMLElement {
   disconnectedCallback() {
     // подписчики State
     this.subscriptions.forEach((elm) => State.unsubscribe(elm));
+    this.subscriptions.length = 0;
+
     // Слушатели событий
     this.listeners.forEach((item) => {
-      item.node.removeEventListener(item.event, item.listener);
+      item.node.removeEventListener(item.event, item.callBack);
     });
+    this.listeners.length = 0;
+
     // вызовем метод потомка
     this["disconnected"] && this["disconnected"]();
   }

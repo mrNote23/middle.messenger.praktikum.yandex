@@ -40,88 +40,7 @@
 - ESLint
 - StyleLint
 
-# Структура приложения
-
-```typescript
-// Менеджер состояний
-class State {
-  store(varName: string, val: any): boolean {
-    // сохранение объекта без оповещения подписчиков
-  };
-
-  dispatch(varName: string, val: T): void {
-    // изменение объекта с оповещением подписчиков
-  };
-
-  extract(varName: string): any {
-    // получение объекта
-  };
-
-  subscribe(varName: string, cb: object): TSubscriberItem {
-    // подписка на изменение объекта
-  };
-
-  unsubscribe(subs: TSubscriberItem): void {
-    // отписка от подписки :)	  
-  };
-
-  clear(): void {
-    // полная очистка, удаление всех объектов и подписчиков
-  };
-}
-
-// Управление приложением
-class AppChat {
-  init() {
-    // Инициализация приложения
-  }
-
-  start() {
-    // Старт
-  }
-
-  navigate() {
-    // Навигация по страницам
-  }
-
-  login() {
-    // Логин пользователя
-  }
-
-  logout() {
-    // Выход из приложения
-  }
-
-  // и т.д. 
-  // ...
-}
-```
-
-### DOM Components
-
-```mermaid
-classDiagram
-Animal <|-- Duck
-Animal <|-- Fish
-Animal <|-- Zebra
-Animal : +int age
-Animal : +String gender
-Animal: +isMammal()
-Animal: +mate()
-class Duck{
-+String beakColor
-+swim()
-+quack()
-}
-class Fish{
--int sizeInFeet
--canEat()
-}
-class Zebra{
-+bool is_wild
-+run()
-}
-```
+# Структура приложения (DOM)
 
 ```mermaid
 flowchart TD
@@ -133,47 +52,75 @@ flowchart TD
     app-router --> error-500
     chat-page --> left-block
     chat-page --> right-block
+    left-block --> left-router
+    right-block --> right-router
+    left-router --> chats-list
+    left-router --> users-list
+    right-router --> chat-messages
+    right-router --> chat-profile
+    right-router --> user-profile
+    right-router --> admin-profile
 
 ```
 
-# Создание компонент
+## Управление состояниями с помощью класса `State()`
+
+### **`Class State()`**
+
+- `store()` - сохранение объекта (переменной) без оповещения подписчиков
+- `extract()` - извлечение объекта
+- `subscribe()` - подписка на изменение объекта
+- `unsubscribe()` - отписка
+- `dispatch()` - изменение объекта с оповещением подписчиков
+- `clear()` - удаление всех объектов и подписчиков
+
+[Пример использования](https://stackblitz.com/edit/sws-state-manager?file=index.ts)
+
+## Компоненты приложения создаются на базе класса `Component()`
 
 ### **`Class Component()`**
 
-> Шаблон компонента (precompiled hbs) передается в методе **super()** при создании экземпляра класса,
-> либо позже в **this.view**
+Шаблон компонента (precompiled hbs) передается в методе `super()` при создании экземпляра класса,
+либо позже в `this.view` до вызова метода `this.render()`
 
-- `render({props})`
+Перед использованием созданного компонента, его необходимо объявить:
 
-  рендер компонента с параметрами props для шаблона handlebars
-- `connected(): void`
+```typescript
+document.customElements.define('main-component', MainComponent)
+```
 
-  метод вызывается после монтирования компонента в DOM
-- `disconnected(): void`
+### Методы используемые внутри компонента
 
-  метод вызывается перед демонтирования компонента из DOM
-- `setter subscriber:TSubscriber`
+- `render()` - рендер компонента с параметрами? для шаблона handlebars
+- `connected()` - метод вызывается после монтирования компонента в DOM
+- `disconnected()` - метод вызывается перед демонтирования компонента из DOM
+- `addSubscriber()` - добавляет подписчика State
+- `addListener()` - записывает слушателя eventListener
+- `getProps()` - получение пропсов компонента прописанных в атрибуте props-*
+- `createEvent()` - создание события с названием eventName
 
-  записывает подписчика State.subscriber в стэк
-- `setter listener:TListener`
+После демонтирования компонента из DOM, все подписчики и слушатели установленные через `addSubscriber` и
+`addListener` - удаляются.
+Т.е. слушатели событий назначаются следующим образом: `this.addListener(node, 'click', clickHandler)`
 
-  записывает слушателя событий в стэк
-- `getProps():Promise`
+Все параметры (пропсы, слушатели событий) прописываются в теге компонента с помощью атрибутов `event-*` и `props-*`
 
-  получение пропсов компонента прописанных в атрибуте props-data
-- `createEvent(eventName: string, eventProps: any): void`
+ ```HTML
 
-  создание события с названием eventName, обработчики события указываются в атрибуте event-eventName или через
-  addEventListener
+<main-component
+  class="list-users"
+  props-users="[[usersList]]"
+  event-select="[[onSelect]]"
+>
+</main-component>
+ ```
 
-> После демонтирования компонента из DOM, все подписчики и слушатели установленные через **subscriber** и **listener** -
-> удаляются
-
-Пример использования:
+#### Пример использования:
 
 ```typescript
 // MainComponent.ts
-import view from "./MainComponent.hbs"
+import view from "./MainComponent.hbs";
+import {State} from "./State";
 import {Component} from "./Component";
 
 export class MainComponent extends Component {
@@ -186,16 +133,16 @@ export class MainComponent extends Component {
     super(view);
   }
 
-  onInput = (e) => {
+  onInput = (e: InputEvent): void => {
     this.getElementsByTagName("h1")[0].textContent = e.target.value;
   };
 
-  onClick = () => {
+  onClick = (): void => {
     this.props.counter = 0;
     State.dispatch("counter", this.props.counter);
   };
 
-  showCounter = (val) => {
+  showCounter = (val: number): void => {
     this.getElementsByTagName("h2")[0].textContent = val;
   };
 
@@ -205,7 +152,7 @@ export class MainComponent extends Component {
       this.render({...this.props});
 
       State.store("counter", this.props.counter);
-      this.subscriber = State.subscribe("counter", this.showCounter);
+      this.addSubscriber("counter", this.showCounter);
 
       setInterval(() => {
         this.props.counter++;
@@ -225,13 +172,11 @@ export class MainComponent extends Component {
 <button event-click="[[onClick]]">Reset counter</button>
 ```
 
-# Описание некоторых компонент
+# Примеры некоторых компонент
 
 ## RouterComponent
 
-Динамическое изменение контента в зависимости от атрибута path
-
-пример использования
+**Динамическое изменение контента в зависимости от атрибута `path`**
 
 ```typescript
 // App.ts
@@ -248,7 +193,7 @@ type TRoute = {
 };
 
 export class App extends Component {
-  routRoutes: TRoute[] = [
+  rootRoutes: TRoute[] = [
     {
       path: "/",
       content: "<chat-page></chat-page>",
@@ -287,14 +232,12 @@ export class App extends Component {
 
 ```HTML
 <!-- App.hbs-->
-<main-router path="{{path}}" props-data="[[routRoutes]]"></main-router>
+<main-router path="{{path}}" props-routes="[[rootRoutes]]"></main-router>
 ```
 
-## FormValidatorComponent
+## FormValidator
 
-Валидация форм
-
-Пример использования
+**Валидация форм**
 
 ```typescript
 // Login.ts
@@ -366,71 +309,6 @@ export class Login extends Component {
     <input type="password" name="password" id="password">
     <label for="password">Password</label>
     <button type="submit">Sign in</button>
-  </form>
-</form-validator>
-```
-
-## ModalWindowComponent
-
-Модальное окно
-
-Пример использования
-
-> При вызове RenameChat() будет открыто модальное окно с формой для редактирования названия чата
-
-```typescript
-// RenameChat.ts
-import view from "./RenameChat.hbs";
-import {ModalWindow} from "./ModalWindow";
-import {TFormValidatorConfig} from "./FormValidator";
-
-export const RenameChat = (): void => {
-  const formFields: TFormValidatorConfig = {
-    chat_name: {
-      required: true,
-      minLength: 10,
-      maxLength: 50,
-      filter: /[^а-яa-z0-9\-\s]+/gi,
-      message: "10 to 50 characters, letters, numbers, '-'",
-    },
-  };
-
-  const modalWindow = new ModalWindow(
-    "Rename chat", // Title для модального окна
-    view({chatTitle: "current chat name"}), // InnerHTML для модального окна
-    {
-      // дополнительные пропсы для ModalWindowComponent
-      formFields, // В текущем примере передаются данные для формы
-      formValidated,
-    }
-  );
-
-  // обработчик формы из модального окна
-  function formValidated(e: CustomEvent): void {
-    console.log(e.detail);
-    modalWindow.remove();
-  }
-};
-```
-
-```HTML
-<!--RenameChat.hbs-->
-<form-validator props-fields="[[formFields]]" event-validated="[[formValidated]]">
-  <form novalidate>
-    <div>
-      <input
-        type="text"
-        name="chat_name"
-        id="chat_name"
-        value="{{chatTitle}}"
-      />
-      <label for="chat_name">Chat name</label>
-    </div>
-
-    <div>
-      <button type="submit">Rename</button>
-      <button type="reset">Not now</button>
-    </div>
   </form>
 </form-validator>
 ```

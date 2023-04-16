@@ -20,7 +20,7 @@ export class UsersListItem extends Component {
         e.preventDefault();
         this.createEvent("select", this.user.id);
       };
-      this.subscriber = State.subscribe(STATES.CURRENT_USER, this.onChangeUser);
+      this.addSubscriber(STATES.CURRENT_USER, this.onChangeUser);
     });
   }
 

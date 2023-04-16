@@ -32,7 +32,7 @@ export class ModalWindowComponent extends Component {
       title: this.getAttribute("title"),
       content: this.innerHTML,
     });
-    document.addEventListener("keyup", this.pressEscape);
+    this.addListener(document, "keyup", this.pressEscape);
   }
 
   clickAway = (e: MouseEvent): void => {
