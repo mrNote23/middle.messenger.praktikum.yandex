@@ -95,7 +95,7 @@ document.customElements.define('main-component', MainComponent)
 - `connected()` - метод вызывается после монтирования компонента в DOM
 - `disconnected()` - метод вызывается перед демонтирования компонента из DOM
 - `addSubscriber()` - добавляет подписчика State
-- `addListener()` - записывает слушателя eventListener
+- `addListener()` - добавляет слушателя eventListener
 - `getProps()` - получение пропсов компонента прописанных в атрибуте props-*
 - `createEvent()` - создание события с названием eventName
 
