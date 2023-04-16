@@ -80,11 +80,12 @@ flowchart TD
 
 ### **`Class Component()`**
 
-```
-Шаблон компонента (precompiled hbs) передается в методе `super()` при создании экземпляра класса, 
+Шаблон компонента (precompiled hbs) передается в методе `super()` при создании экземпляра класса,
 либо позже в `this.view` до вызова метода `this.render()`
 
 Перед использованием созданного компонента, его необходимо объявить:
+
+```typescript
 document.customElements.define('main-component', MainComponent)
 ```
 
@@ -98,14 +99,11 @@ document.customElements.define('main-component', MainComponent)
 - `getProps()` - получение пропсов компонента прописанных в атрибуте props-*
 - `createEvent()` - создание события с названием eventName
 
-```
-После демонтирования компонента из DOM, все подписчики и слушатели установленные через **addSubscriber** и **
-addListener** - удаляются. Т.е. слушатели событий назначаются следующим образом: `this.addListener(node, 'click', clickHandler)`
-```
+После демонтирования компонента из DOM, все подписчики и слушатели установленные через `addSubscriber` и
+`addListener` - удаляются.
+Т.е. слушатели событий назначаются следующим образом: `this.addListener(node, 'click', clickHandler)`
 
-```
 Все параметры (пропсы, слушатели событий) прописываются в теге компонента с помощью атрибутов `event-*` и `props-*`
-```
 
  ```HTML
 
@@ -173,9 +171,7 @@ export class MainComponent extends Component {
 
 ## RouterComponent
 
-```text
-Динамическое изменение контента в зависимости от атрибута path
-```
+**Динамическое изменение контента в зависимости от атрибута `path`**
 
 ```typescript
 // App.ts
@@ -236,9 +232,7 @@ export class App extends Component {
 
 ## FormValidator
 
-```text
-Валидация форм
-```
+**Валидация форм**
 
 ```typescript
 // Login.ts
