@@ -69,12 +69,16 @@ flowchart TD
 
 ### **`Class Component()`**
 
-> Шаблон компонента (precompiled hbs) передается в методе **super()** при создании экземпляра класса,
-> либо позже в **this.view**
+> Шаблон компонента (precompiled hbs) передается в методе `super()` при создании экземпляра класса,
+> либо позже в `this.view` до вызова метода `this.render()`
+> ### Перед использованием созданного компонента, его необходимо объявить
+> ```typescript
+> document.customElements.define('main-component', MainComponent)
+> ```
 
 ### Методы используемые внутри компонента
 
-- `render({params})` - рендер компонента с параметрами params для шаблона handlebars
+- `render()` - рендер компонента с параметрами? для шаблона handlebars
 - `connected()` - метод вызывается после монтирования компонента в DOM
 - `disconnected()` - метод вызывается перед демонтирования компонента из DOM
 - `addSubscriber()` - добавляет подписчика State
