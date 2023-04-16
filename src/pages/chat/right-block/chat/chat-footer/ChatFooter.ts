@@ -26,7 +26,7 @@ export class ChatFooter extends Component {
   };
 
   connected(): void {
-    this.subscriber = State.subscribe(STATES.CURRENT_CHAT, (val) => {
+    this.addSubscriber(STATES.CURRENT_CHAT, (val) => {
       if (val && val !== "loading") {
         this.style.display = "flex";
         this.render({ message: this.message });

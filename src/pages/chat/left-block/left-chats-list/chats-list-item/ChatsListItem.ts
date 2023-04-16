@@ -24,7 +24,7 @@ export class ChatsListItem extends Component {
         e.preventDefault();
         this.createEvent("select", this.chat.id);
       };
-      this.subscriber = State.subscribe(STATES.CURRENT_CHAT, this.onChangeChat);
+      this.addSubscriber(STATES.CURRENT_CHAT, this.onChangeChat);
     });
   }
 

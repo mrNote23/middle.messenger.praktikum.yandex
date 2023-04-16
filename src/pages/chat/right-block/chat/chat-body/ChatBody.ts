@@ -17,7 +17,7 @@ export class ChatBody extends Component {
   }
 
   connected(): void {
-    this.subscriber = State.subscribe(STATES.CURRENT_CHAT, this.chatChanged);
+    this.addSubscriber(STATES.CURRENT_CHAT, this.chatChanged);
   }
 
   chatChanged = (chat: IChat | "loading"): void => {

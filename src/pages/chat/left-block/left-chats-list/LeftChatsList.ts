@@ -18,13 +18,10 @@ export class LeftChatsList extends Component {
 
   connected(): void {
     // подписка на изменение текущего чата
-    this.subscriber = State.subscribe(
-      STATES.CURRENT_CHAT,
-      (val) => (this.currentChat = val)
-    );
+    this.addSubscriber(STATES.CURRENT_CHAT, (val) => (this.currentChat = val));
 
     // подписка на изменения списка чатов
-    this.subscriber = State.subscribe(STATES.CHATS_LIST, (val) => {
+    this.addSubscriber(STATES.CHATS_LIST, (val) => {
       this.chatsList = val;
       if (!val.length) {
         this.loading();

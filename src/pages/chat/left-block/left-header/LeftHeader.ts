@@ -49,16 +49,9 @@ export class LeftHeader extends Component {
 
   connected() {
     this.render();
-
-    this.subscriber = State.subscribe(
-      STATES.LEFT_MODE,
-      (val) => (this.leftMode = val)
-    );
-    this.subscriber = State.subscribe(
-      STATES.RIGHT_MODE,
-      (val) => (this.rightMode = val)
-    );
-    this.subscriber = State.subscribe(STATES.CURRENT_CHAT, (val) => {
+    this.addSubscriber(STATES.LEFT_MODE, (val) => (this.leftMode = val));
+    this.addSubscriber(STATES.RIGHT_MODE, (val) => (this.rightMode = val));
+    this.addSubscriber(STATES.CURRENT_CHAT, (val) => {
       val && document.getElementById("mode-users").classList.remove("d-none");
     });
   }

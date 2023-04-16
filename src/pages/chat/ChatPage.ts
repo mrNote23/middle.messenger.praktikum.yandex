@@ -37,7 +37,7 @@ export class ChatPage extends Component {
 
     this.router = document.getElementById("right-router");
 
-    this.subscriber = State.subscribe(STATES.RIGHT_MODE, (val) => {
+    this.addSubscriber(STATES.RIGHT_MODE, (val) => {
       this.router.setAttribute("path", val);
     });
 

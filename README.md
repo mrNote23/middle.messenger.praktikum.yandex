@@ -63,40 +63,34 @@ flowchart TD
 
 ```
 
-## Компоненты приложения создаются на базе класса Component
+### Компоненты приложения создаются на базе класса `Component()`
 
-## Управление состояниями с помощью класса State
+### Управление состояниями с помощью класса `State()`
 
 ### **`Class Component()`**
 
 > Шаблон компонента (precompiled hbs) передается в методе **super()** при создании экземпляра класса,
 > либо позже в **this.view**
 
-- `render({props})`
+### Методы используемые внутри компонента
 
-  рендер компонента с параметрами props для шаблона handlebars
-- `connected(): void`
+- `render({params})` - рендер компонента с параметрами params для шаблона handlebars
+- `connected()` - метод вызывается после монтирования компонента в DOM
+- `disconnected()` - метод вызывается перед демонтирования компонента из DOM
+- `addSubscriber()` - добавляет подписчика State
+- `addListener()` - записывает слушателя eventListener
+- `getProps()` - получение пропсов компонента прописанных в атрибуте props-*
+- `createEvent()` - создание события с названием eventName
 
-  метод вызывается после монтирования компонента в DOM
-- `disconnected(): void`
+> После демонтирования компонента из DOM, все подписчики и слушатели установленные через **addSubscriber** и **
+> addListener** -
+> удаляются. Т.е. слушатели событий назначаются следующим образом: `this.addListener(node, 'click', clickHandler)`
 
-  метод вызывается перед демонтирования компонента из DOM
-- `setter subscriber:TSubscriber`
-
-  записывает подписчика State.subscriber в стэк
-- `setter listener:TListener`
-
-  записывает слушателя событий в стэк
-- `getProps():Promise`
-
-  получение пропсов компонента прописанных в атрибуте props-data
-- `createEvent(eventName: string, eventProps: any): void`
-
-  создание события с названием eventName, обработчики события указываются в атрибуте event-eventName или через
-  addEventListener
-
-> После демонтирования компонента из DOM, все подписчики и слушатели установленные через **subscriber** и **listener** -
-> удаляются
+> Все параметры (пропсы, слушатели событий) прописываются в теге компонента с помощью тегов `event-*` и `props-*`
+>
+> ```HTML
+> <main-component class="list-users" props-users="[[usersList]]" event-select="[[onSelect]]"></main-component>
+> ```
 
 Пример использования:
 
@@ -134,7 +128,7 @@ export class MainComponent extends Component {
       this.render({...this.props});
 
       State.store("counter", this.props.counter);
-      this.subscriber = State.subscribe("counter", this.showCounter);
+      this.addSubscriber("counter", this.showCounter);
 
       setInterval(() => {
         this.props.counter++;
