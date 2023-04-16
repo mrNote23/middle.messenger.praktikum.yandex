@@ -1,0 +1,19 @@
+<div class="avatar">
+  <img class="rounded-circle" src="{{avatar}}" alt="">
+</div>
+<div class="chats-item-body">
+  <div class="chats-item-info">
+    <h2 class="chats-title m-0">{{title}}</h2>
+    <p class="chats-last-message">{{last_message.content}}</p>
+  </div>
+  <div class="chats-last-message-info">
+						<span>
+              {{last_message.time}}
+            </span>
+    {{#if unread_count}}
+      <div class="chats-unread-messages">
+        {{unread_count}}
+      </div>
+    {{/if}}
+  </div>
+</div>

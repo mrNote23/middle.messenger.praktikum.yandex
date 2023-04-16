@@ -1,25 +1,7 @@
 {{#if notSelected}}
-	<div class="empty">Please select another chat or create new</div>
+  <div class="empty">Please select another chat or create new</div>
 {{else}}
-	{{#each messages}}
-		{{#ifeq user_id ../adminId}}
-			<div class="message-body message-right">
-				<div class="message-content">
-					<div class="message">{{../content}}</div>
-					<div class="time">{{dateConvert ../time}}
-					</div>
-				</div>
-			</div>
-		{{else}}
-			<div class="message-body">
-				<div class="message-avatar">
-					<img class="rounded-circle" src="{{../avatar}}" alt="">
-				</div>
-				<div class="message-content">
-					<div class="message">{{../content}}</div>
-					<div class="time">{{dateConvert ../time}}</div>
-				</div>
-			</div>
-		{{/ifeq}}
-	{{/each}}
+  {{#each messages}}
+    <chat-message-item props-message="[[messages[{{id}}]]]" props-adminid="[[adminId]]"></chat-message-item>
+  {{/each}}
 {{/if}}

@@ -1,4 +1,4 @@
-import { Component } from "../../core/Component";
+import { Component, TProps } from "../../core/Component";
 
 export type TRoute = {
   path: string;
@@ -14,8 +14,8 @@ export class RouterComponent extends Component {
   }
 
   connected(): void {
-    this.getProps.then((routes: TRoute[]) => {
-      this._routes = routes;
+    this.getProps.then((props: TProps) => {
+      this._routes = props.routes;
       this._fill(this.getAttribute("path"));
     });
   }

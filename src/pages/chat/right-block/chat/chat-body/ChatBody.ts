@@ -2,10 +2,16 @@ import view from "./ChatBody.hbs";
 import State from "../../../../../core/State";
 import { Component } from "../../../../../core/Component";
 import "./ChatBody.scss";
-import { IChat } from "../../../../../core/config/interfaces";
+import { IChat, IChatMessageItem } from "../../../../../core/config/interfaces";
 import { ADMIN, STATES } from "../../../../../core/ChatApp";
+import { ChatMessageItem } from "./chat-message-item/ChatMessageItem";
+
+window.customElements.define("chat-message-item", ChatMessageItem);
 
 export class ChatBody extends Component {
+  messages: IChatMessageItem[];
+  adminId: number;
+
   constructor() {
     super(view);
   }
@@ -18,9 +24,10 @@ export class ChatBody extends Component {
     if (chat === "loading") {
       this.loading();
     } else {
+      this.messages = State.extract(STATES.CHAT_MESSAGES);
+      this.adminId = State.extract(ADMIN).id;
       this.render({
-        messages: State.extract(STATES.CHAT_MESSAGES),
-        adminId: State.extract(ADMIN).id,
+        messages: this.messages,
         notSelected: !State.extract(STATES.CHAT_MESSAGES),
       });
     }

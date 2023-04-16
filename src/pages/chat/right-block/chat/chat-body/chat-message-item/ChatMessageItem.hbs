@@ -1,0 +1,19 @@
+{{#if isAdmin}}
+  <div class="message-body message-right">
+    <div class="message-content">
+      <div class="message">{{content}}</div>
+      <div class="time">{{time}}
+      </div>
+    </div>
+  </div>
+{{else}}
+  <div class="message-body">
+    <div class="message-avatar">
+      <img class="rounded-circle" src="{{avatar}}" alt="">
+    </div>
+    <div class="message-content">
+      <div class="message">{{content}}</div>
+      <div class="time">{{time}}</div>
+    </div>
+  </div>
+{{/if}}
