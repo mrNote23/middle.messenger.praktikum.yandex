@@ -172,7 +172,7 @@ export class MainComponent extends Component {
 <button event-click="[[onClick]]">Reset counter</button>
 ```
 
-# Примеры некоторых компонент
+# Примеры использования некоторых компонент
 
 ## RouterComponent
 
