@@ -1,4 +1,4 @@
-import { Component } from "../../core/Component";
+import { Component, TProps } from "../../core/Component";
 
 export enum MATCH {
   PHONE = "phone", // телефон в формате +78217348374, '+' - не обязателен
@@ -28,12 +28,12 @@ export class FormValidator extends Component {
   }
 
   connected() {
-    this.getProps.then((props) => {
+    this.getProps.then((props: TProps) => {
       // найдем форму
       const form = this.getElementsByTagName("form")[0];
       // если форма есть, то начинаем работать
-      if (form && !!props) {
-        this.validateForm(form, props);
+      if (form && !!props.fields) {
+        this.validateForm(form, props.fields);
       }
     });
   }

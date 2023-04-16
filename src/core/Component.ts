@@ -15,6 +15,10 @@
 
 import State, { TSubscriberItem } from "./State";
 
+export type TProps = {
+  [key: string]: any;
+};
+
 type TComponentParams = {
   [key: string]: unknown;
 } | null;
@@ -29,7 +33,7 @@ export class Component extends HTMLElement {
   protected subscriptions: TSubscriberItem[] = [];
   protected listeners: Array<unknown> = [];
   protected params: TComponentParams | null = null;
-  public _props: object | null = null;
+  public _props: TProps = {};
   protected _events = [];
 
   constructor(
@@ -71,7 +75,7 @@ export class Component extends HTMLElement {
 
   // set component's props
   set setProps(props: object) {
-    this._props = props;
+    this._props[props.name] = props.value;
   }
 
   // get component's props
@@ -128,10 +132,22 @@ export class Component extends HTMLElement {
       for (const [key, attr] of Object.entries(node.attributes)) {
         // props-data mounting
         if (attr.nodeName.match(/^props-(\w)+$/gi)) {
-          const propsName = node
-            .getAttribute(attr.nodeName)
-            .replace(/(\[\[)|(]])/g, "");
-          node.setProps = this[propsName];
+          const [propsName, propsValue] = [
+            attr.nodeName.split("-")[1],
+            node.getAttribute(attr.nodeName).replace(/(\[\[)|(]])/g, ""),
+          ];
+          // check props on object/array
+          let args = propsValue.match(/(\[\S+\])|(\(\S+\))/gi);
+          if (args) {
+            let _propsValue = propsValue.match(/^[a-z0-9_-]+/gi)![0];
+            node.setProps = {
+              name: propsName,
+              value: eval("this[_propsValue]" + args.join("")),
+            };
+          } else {
+            node.setProps = { name: propsName, value: this[propsValue] };
+          }
+
           // добавим в стек для дальнейшего удаления
           removeAttributes.push({
             node,
@@ -145,11 +161,21 @@ export class Component extends HTMLElement {
             attr.nodeName.split("-")[1],
             node.getAttribute(attr.nodeName).replace(/(\[\[)|(]])/g, ""),
           ];
-          if (this[eventCallback]) {
-            if (node.setEvent) {
-              node.setEvent(eventName, this[eventCallback]);
-            } else {
-              node[`on${eventName}`] = this[eventCallback];
+          let args = eventCallback.match(/(\[\S+\])|(\(\S+\))/gi);
+          if (args) {
+            let _eventCallback = eventCallback.match(/^[a-z0-9_-]+/gi)![0];
+            if (this[_eventCallback]) {
+              node.setEvent(eventName, () => {
+                eval("this[_eventCallback]" + args.join(""));
+              });
+            }
+          } else {
+            if (this[eventCallback]) {
+              if (node.setEvent) {
+                node.setEvent(eventName, this[eventCallback]);
+              } else {
+                node[`on${eventName}`] = this[eventCallback];
+              }
             }
           }
           // добавим в стек для дальнейшего удаления

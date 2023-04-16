@@ -9,7 +9,7 @@
   "reporters":  ["...", "parcel-reporter-static-files-copy"],
   "transformers": {
     "*.hbs": [
-      "parcel-transformer-mainhbs"
+      "parcel-transformer-hbs"
     ],
   }
 }

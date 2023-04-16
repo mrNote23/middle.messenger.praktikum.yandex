@@ -359,7 +359,7 @@ export class Login extends Component {
 
 ```HTML
 <!--Login.hbs-->
-<form-validator props-data="[[formFields]]" event-validated="[[formValidated]]">
+<form-validator props-fields="[[formFields]]" event-validated="[[formValidated]]">
   <form novalidate>
     <input type="text" name="login" id="login">
     <label for="login">Login</label>
@@ -415,7 +415,7 @@ export const RenameChat = (): void => {
 
 ```HTML
 <!--RenameChat.hbs-->
-<form-validator props-data="[[formFields]]" event-validated="[[formValidated]]">
+<form-validator props-fields="[[formFields]]" event-validated="[[formValidated]]">
   <form novalidate>
     <div>
       <input

@@ -2,8 +2,11 @@ import view from "./LeftChatsList.hbs";
 import State from "../../../../core/State";
 import { Component } from "../../../../core/Component";
 import { IChat } from "../../../../core/config/interfaces";
-import Chat, { STATES } from "../../../../core/ChatApp";
+import ChatApp, { STATES } from "../../../../core/ChatApp";
+import { ChatsListItem } from "./chats-list-item/ChatsListItem";
 import "./LeftChatsList.scss";
+
+window.customElements.define("chats-list-item", ChatsListItem);
 
 export class LeftChatsList extends Component {
   chatsList: IChat[] = [];
@@ -25,7 +28,7 @@ export class LeftChatsList extends Component {
       this.chatsList = val;
       if (!val.length) {
         this.loading();
-        Chat.loadChatsList();
+        ChatApp.loadChatsList();
       } else {
         this.render({
           chatsList: this.chatsList,
@@ -35,17 +38,8 @@ export class LeftChatsList extends Component {
     });
   }
 
-  // выбор чата (клик по списку)
-  selectChat = <T>(e: T): void => {
-    const item: Element = e.target.closest("li");
-    const chatId: string | null = item.id || null;
-    if (chatId !== null && !item.classList.contains("active")) {
-      Chat.setCurrentChat(this.chatsList[chatId.split("-")[1]]);
-
-      document
-        .querySelectorAll("li.chats-item.active")
-        .forEach((elm) => elm.classList.remove("active"));
-      item.classList.add("active");
-    }
-  };
+  // выбор чата
+  selectChat(id) {
+    ChatApp.setCurrentChat(this.chatsList[id]);
+  }
 }
