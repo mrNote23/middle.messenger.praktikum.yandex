@@ -107,7 +107,12 @@ document.customElements.define('main-component', MainComponent)
 
  ```HTML
 
-<main-component class="list-users" props-users="[[usersList]]" event-select="[[onSelect]]"></main-component>
+<main-component
+  class="list-users"
+  props-users="[[usersList]]"
+  event-select="[[onSelect]]"
+>
+</main-component>
  ```
 
 #### Пример использования:
