@@ -213,9 +213,7 @@ export class MainComponent extends Component {
 
 ## RouterComponent
 
-Динамическое изменение контента в зависимости от атрибута path
-
-пример использования
+> Динамическое изменение контента в зависимости от атрибута path
 
 ```typescript
 // App.ts
@@ -232,7 +230,7 @@ type TRoute = {
 };
 
 export class App extends Component {
-  routRoutes: TRoute[] = [
+  rootRoutes: TRoute[] = [
     {
       path: "/",
       content: "<chat-page></chat-page>",
@@ -271,14 +269,12 @@ export class App extends Component {
 
 ```HTML
 <!-- App.hbs-->
-<main-router path="{{path}}" props-data="[[routRoutes]]"></main-router>
+<main-router path="{{path}}" props-routes="[[rootRoutes]]"></main-router>
 ```
 
-## FormValidatorComponent
+## FormValidator
 
-Валидация форм
-
-Пример использования
+> Валидация форм
 
 ```typescript
 // Login.ts
@@ -350,71 +346,6 @@ export class Login extends Component {
     <input type="password" name="password" id="password">
     <label for="password">Password</label>
     <button type="submit">Sign in</button>
-  </form>
-</form-validator>
-```
-
-## ModalWindowComponent
-
-Модальное окно
-
-Пример использования
-
-> При вызове RenameChat() будет открыто модальное окно с формой для редактирования названия чата
-
-```typescript
-// RenameChat.ts
-import view from "./RenameChat.hbs";
-import {ModalWindow} from "./ModalWindow";
-import {TFormValidatorConfig} from "./FormValidator";
-
-export const RenameChat = (): void => {
-  const formFields: TFormValidatorConfig = {
-    chat_name: {
-      required: true,
-      minLength: 10,
-      maxLength: 50,
-      filter: /[^а-яa-z0-9\-\s]+/gi,
-      message: "10 to 50 characters, letters, numbers, '-'",
-    },
-  };
-
-  const modalWindow = new ModalWindow(
-    "Rename chat", // Title для модального окна
-    view({chatTitle: "current chat name"}), // InnerHTML для модального окна
-    {
-      // дополнительные пропсы для ModalWindowComponent
-      formFields, // В текущем примере передаются данные для формы
-      formValidated,
-    }
-  );
-
-  // обработчик формы из модального окна
-  function formValidated(e: CustomEvent): void {
-    console.log(e.detail);
-    modalWindow.remove();
-  }
-};
-```
-
-```HTML
-<!--RenameChat.hbs-->
-<form-validator props-fields="[[formFields]]" event-validated="[[formValidated]]">
-  <form novalidate>
-    <div>
-      <input
-        type="text"
-        name="chat_name"
-        id="chat_name"
-        value="{{chatTitle}}"
-      />
-      <label for="chat_name">Chat name</label>
-    </div>
-
-    <div>
-      <button type="submit">Rename</button>
-      <button type="reset">Not now</button>
-    </div>
   </form>
 </form-validator>
 ```
