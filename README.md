@@ -40,64 +40,7 @@
 - ESLint
 - StyleLint
 
-# Структура приложения
-
-```typescript
-// Менеджер состояний
-class State {
-  store(varName: string, val: any): boolean {
-    // сохранение объекта без оповещения подписчиков
-  };
-
-  dispatch(varName: string, val: T): void {
-    // изменение объекта с оповещением подписчиков
-  };
-
-  extract(varName: string): any {
-    // получение объекта
-  };
-
-  subscribe(varName: string, cb: object): TSubscriberItem {
-    // подписка на изменение объекта
-  };
-
-  unsubscribe(subs: TSubscriberItem): void {
-    // отписка от подписки :)	  
-  };
-
-  clear(): void {
-    // полная очистка, удаление всех объектов и подписчиков
-  };
-}
-
-// Управление приложением
-class AppChat {
-  init() {
-    // Инициализация приложения
-  }
-
-  start() {
-    // Старт
-  }
-
-  navigate() {
-    // Навигация по страницам
-  }
-
-  login() {
-    // Логин пользователя
-  }
-
-  logout() {
-    // Выход из приложения
-  }
-
-  // и т.д. 
-  // ...
-}
-```
-
-### DOM Components
+# Структура приложения (DOM)
 
 ```mermaid
 flowchart TD
@@ -120,7 +63,9 @@ flowchart TD
 
 ```
 
-# Создание компонент
+## Компоненты приложения создаются на базе класса Component
+
+## Управление состояниями с помощью класса State
 
 ### **`Class Component()`**
 
@@ -209,7 +154,7 @@ export class MainComponent extends Component {
 <button event-click="[[onClick]]">Reset counter</button>
 ```
 
-# Описание некоторых компонент
+# Примеры некоторых компонент
 
 ## RouterComponent
 
