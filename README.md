@@ -63,7 +63,7 @@ flowchart TD
 
 ```
 
-### Управление состояниями с помощью класса `State()`
+## Управление состояниями с помощью класса `State()`
 
 ### **`Class State()`**
 
@@ -74,9 +74,9 @@ flowchart TD
 - `despatch()` - изменение объекта с оповещением подписчиков
 - `clear()` - удаление всех объектов и подписчиков
 
-[![Пример использования](https://stackblitz.com/edit/sws-state-manager?file=index.ts)]
+[Пример использования](https://stackblitz.com/edit/sws-state-manager?file=index.ts)
 
-### Компоненты приложения создаются на базе класса `Component()`
+## Компоненты приложения создаются на базе класса `Component()`
 
 ### **`Class Component()`**
 
@@ -113,7 +113,7 @@ addListener** -
 <main-component class="list-users" props-users="[[usersList]]" event-select="[[onSelect]]"></main-component>
  ```
 
-Пример использования:
+#### Пример использования:
 
 ```typescript
 // MainComponent.ts
@@ -174,7 +174,9 @@ export class MainComponent extends Component {
 
 ## RouterComponent
 
-> Динамическое изменение контента в зависимости от атрибута path
+```text
+Динамическое изменение контента в зависимости от атрибута path
+```
 
 ```typescript
 // App.ts
@@ -235,7 +237,9 @@ export class App extends Component {
 
 ## FormValidator
 
-> Валидация форм
+```text
+Валидация форм
+```
 
 ```typescript
 // Login.ts
