@@ -71,7 +71,7 @@ flowchart TD
 - `extract()` - извлечение объекта
 - `subscribe()` - подписка на изменение объекта
 - `unsubscribe()` - отписка
-- `despatch()` - изменение объекта с оповещением подписчиков
+- `dispatch()` - изменение объекта с оповещением подписчиков
 - `clear()` - удаление всех объектов и подписчиков
 
 [Пример использования](https://stackblitz.com/edit/sws-state-manager?file=index.ts)
@@ -81,10 +81,10 @@ flowchart TD
 ### **`Class Component()`**
 
 ```text
-Шаблон компонента (precompiled hbs) передается в методе `super()` при создании экземпляра класса, 
-либо позже в `this.view` до вызова метода `this.render()`
-### Перед использованием созданного компонента, его необходимо объявить
+Шаблон компонента (precompiled hbs) передается в методе `super()` 
+при создании экземпляра класса, либо позже в `this.view` до вызова метода `this.render()`
 
+Перед использованием созданного компонента, его необходимо объявить:
 document.customElements.define('main-component', MainComponent)
 ```
 
@@ -98,11 +98,11 @@ document.customElements.define('main-component', MainComponent)
 - `getProps()` - получение пропсов компонента прописанных в атрибуте props-*
 - `createEvent()` - создание события с названием eventName
 
-```text
+<p style="background-color: #bec0c9; color: #333; padding: 10px">
 После демонтирования компонента из DOM, все подписчики и слушатели установленные через **addSubscriber** и **
 addListener** -
 удаляются. Т.е. слушатели событий назначаются следующим образом: `this.addListener(node, 'click', clickHandler)`
-```
+</p>
 
 ```text
 Все параметры (пропсы, слушатели событий) прописываются в теге компонента с помощью атрибутов `event-*` и `props-*`
