@@ -2,7 +2,6 @@ import view from "./ChatsListItem.hbs";
 import { Component, TProps } from "../../../../../core/Component";
 import { IChat } from "../../../../../core/config/interfaces";
 import { STATES } from "../../../../../core/ChatApp";
-import State from "../../../../../core/State";
 import { dateConvert } from "../../../../../utils/date-convert";
 
 export class ChatsListItem extends Component {

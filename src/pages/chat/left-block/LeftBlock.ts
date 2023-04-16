@@ -1,6 +1,5 @@
 import view from "./LeftBlock.hbs";
 import { Component } from "../../../core/Component";
-import State from "../../../core/State";
 import { STATES } from "../../../core/ChatApp";
 import { LeftSearch } from "./left-search/LeftSearch";
 import { LeftChatsList } from "./left-chats-list/LeftChatsList";

@@ -16,7 +16,7 @@
 import State, { TSubscriberItem } from "./State";
 
 export type TProps = {
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 type TComponentParams = {
@@ -26,7 +26,7 @@ type TComponentParams = {
 type TListener = {
   node: HTMLElement;
   event: string;
-  callBack: (e: any) => void;
+  callBack: (e: unknown) => void;
 };
 
 export class Component extends HTMLElement {
@@ -61,7 +61,7 @@ export class Component extends HTMLElement {
   }
 
   // добавление State.subscriber
-  protected addSubscriber(varName: string, callBack: (val: any) => void) {
+  protected addSubscriber(varName: string, callBack: (val: unknown) => void) {
     this.subscriptions.push(State.subscribe(varName, callBack));
   }
 
@@ -111,8 +111,8 @@ export class Component extends HTMLElement {
   };
 
   _parseAttributes = (html) => {
-    let tmp = new Set();
-    let sou = html.replace(/[\n\t]/g, "");
+    const tmp = new Set();
+    const sou = html.replace(/[\n\t]/g, "");
     const regex = /(event-\w+|props-\w+)/gi;
     const res = sou.match(regex);
     if (res) {
@@ -125,7 +125,7 @@ export class Component extends HTMLElement {
   };
 
   private _addEvents(nodes) {
-    let removeAttributes = [];
+    const removeAttributes = [];
     nodes.forEach((node) => {
       for (const [key, attr] of Object.entries(node.attributes)) {
         // props-data mounting
@@ -135,9 +135,9 @@ export class Component extends HTMLElement {
             node.getAttribute(attr.nodeName).replace(/(\[\[)|(]])/g, ""),
           ];
           // check props on object/array
-          let args = propsValue.match(/(\[\S+\])|(\(\S+\))/gi);
+          const args = propsValue.match(/(\[\S+\])|(\(\S+\))/gi);
           if (args) {
-            let _propsValue = propsValue.match(/^[a-z0-9_-]+/gi)![0];
+            const _propsValue = propsValue.match(/^[a-z0-9_-]+/gi)![0];
             node.setProps = {
               name: propsName,
               value: eval("this[_propsValue]" + args.join("")),
@@ -159,9 +159,9 @@ export class Component extends HTMLElement {
             attr.nodeName.split("-")[1],
             node.getAttribute(attr.nodeName).replace(/(\[\[)|(]])/g, ""),
           ];
-          let args = eventCallback.match(/(\[\S+\])|(\(\S+\))/gi);
+          const args = eventCallback.match(/(\[\S+\])|(\(\S+\))/gi);
           if (args) {
-            let _eventCallback = eventCallback.match(/^[a-z0-9_-]+/gi)![0];
+            const _eventCallback = eventCallback.match(/^[a-z0-9_-]+/gi)![0];
             if (this[_eventCallback]) {
               node.setEvent(eventName, () => {
                 eval("this[_eventCallback]" + args.join(""));

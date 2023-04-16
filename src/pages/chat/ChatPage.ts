@@ -1,5 +1,4 @@
 import view from "./ChatPage.hbs";
-import State from "../../core/State";
 import { TRoute } from "../../shared/router-component/RouterComponent";
 import { Component } from "../../core/Component";
 import { LeftBlock } from "./left-block/LeftBlock";

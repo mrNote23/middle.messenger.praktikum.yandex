@@ -1,6 +1,5 @@
 import view from "./ChatFooter.hbs";
 import { Component } from "../../../../../core/Component";
-import State from "../../../../../core/State";
 import { STATES } from "../../../../../core/ChatApp";
 import "./ChatFooter.scss";
 

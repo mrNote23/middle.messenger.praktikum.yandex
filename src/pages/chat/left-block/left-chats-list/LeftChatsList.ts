@@ -1,5 +1,4 @@
 import view from "./LeftChatsList.hbs";
-import State from "../../../../core/State";
 import { Component } from "../../../../core/Component";
 import { IChat } from "../../../../core/config/interfaces";
 import ChatApp, { STATES } from "../../../../core/ChatApp";
