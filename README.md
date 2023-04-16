@@ -74,7 +74,7 @@ flowchart TD
 - `despatch()` - изменение объекта с оповещением подписчиков
 - `clear()` - удаление всех объектов и подписчиков
 
-[Пример использования](https://stackblitz.com/edit/sws-state-manager?file=index.ts)
+[![Пример использования](https://stackblitz.com/edit/sws-state-manager?file=index.ts)]
 
 ### Компоненты приложения создаются на базе класса `Component()`
 
