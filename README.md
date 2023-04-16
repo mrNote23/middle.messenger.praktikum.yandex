@@ -63,18 +63,30 @@ flowchart TD
 
 ```
 
-### Компоненты приложения создаются на базе класса `Component()`
-
 ### Управление состояниями с помощью класса `State()`
+
+### **`Class State()`**
+
+- `store()` - сохранение объекта (переменной) без оповещения подписчиков
+- `extract()` - извлечение объекта
+- `subscribe()` - подписка на изменение объекта
+- `unsubscribe()` - отписка
+- `despatch()` - изменение объекта с оповещением подписчиков
+- `clear()` - удаление всех объектов и подписчиков
+
+[Пример использования](https://stackblitz.com/edit/sws-state-manager?file=index.ts)
+
+### Компоненты приложения создаются на базе класса `Component()`
 
 ### **`Class Component()`**
 
-> Шаблон компонента (precompiled hbs) передается в методе `super()` при создании экземпляра класса,
-> либо позже в `this.view` до вызова метода `this.render()`
-> ### Перед использованием созданного компонента, его необходимо объявить
-> ```typescript
-> document.customElements.define('main-component', MainComponent)
-> ```
+```text
+Шаблон компонента (precompiled hbs) передается в методе `super()` при создании экземпляра класса, 
+либо позже в `this.view` до вызова метода `this.render()`
+### Перед использованием созданного компонента, его необходимо объявить
+
+document.customElements.define('main-component', MainComponent)
+```
 
 ### Методы используемые внутри компонента
 
@@ -86,21 +98,27 @@ flowchart TD
 - `getProps()` - получение пропсов компонента прописанных в атрибуте props-*
 - `createEvent()` - создание события с названием eventName
 
-> После демонтирования компонента из DOM, все подписчики и слушатели установленные через **addSubscriber** и **
-> addListener** -
-> удаляются. Т.е. слушатели событий назначаются следующим образом: `this.addListener(node, 'click', clickHandler)`
+```text
+После демонтирования компонента из DOM, все подписчики и слушатели установленные через **addSubscriber** и **
+addListener** -
+удаляются. Т.е. слушатели событий назначаются следующим образом: `this.addListener(node, 'click', clickHandler)`
+```
 
-> Все параметры (пропсы, слушатели событий) прописываются в теге компонента с помощью тегов `event-*` и `props-*`
->
-> ```HTML
-> <main-component class="list-users" props-users="[[usersList]]" event-select="[[onSelect]]"></main-component>
-> ```
+```text
+Все параметры (пропсы, слушатели событий) прописываются в теге компонента с помощью атрибутов `event-*` и `props-*`
+```
+
+ ```HTML
+
+<main-component class="list-users" props-users="[[usersList]]" event-select="[[onSelect]]"></main-component>
+ ```
 
 Пример использования:
 
 ```typescript
 // MainComponent.ts
-import view from "./MainComponent.hbs"
+import view from "./MainComponent.hbs";
+import {State} from "./State";
 import {Component} from "./Component";
 
 export class MainComponent extends Component {
@@ -113,16 +131,16 @@ export class MainComponent extends Component {
     super(view);
   }
 
-  onInput = (e) => {
+  onInput = (e: InputEvent): void => {
     this.getElementsByTagName("h1")[0].textContent = e.target.value;
   };
 
-  onClick = () => {
+  onClick = (): void => {
     this.props.counter = 0;
     State.dispatch("counter", this.props.counter);
   };
 
-  showCounter = (val) => {
+  showCounter = (val: number): void => {
     this.getElementsByTagName("h2")[0].textContent = val;
   };
 
