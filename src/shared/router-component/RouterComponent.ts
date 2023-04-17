@@ -1,4 +1,4 @@
-import { Component, TProps } from "../../core/Component";
+import { Component } from "../../core/Component";
 
 export type TRoute = {
   path: string;
@@ -7,21 +7,16 @@ export type TRoute = {
 };
 
 export class RouterComponent extends Component {
-  private _routes: TRoute[] | null = null;
-
   constructor() {
     super();
   }
 
-  connected(): void {
-    this.getProps.then((props: TProps) => {
-      this._routes = props.routes;
-      this._fill(this.getAttribute("path"));
-    });
+  propsChanged() {
+    this._fill(this.getAttribute("path"));
   }
 
   private _fill(path: string): void {
-    if (this._routes) {
+    if (this.props.routes) {
       let res = this._findRoute(path);
       if (res) {
         // если роут найден
@@ -44,8 +39,8 @@ export class RouterComponent extends Component {
   }
 
   private _findRoute = (path: string): TRoute | null => {
-    if (this._routes) {
-      return this._routes.find((elm) => {
+    if (this.props.routes) {
+      return this.props.routes.find((elm) => {
         if (elm.path === path) {
           return elm;
         }

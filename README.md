@@ -93,10 +93,11 @@ document.customElements.define('main-component', MainComponent)
 
 - `render()` - рендер компонента с параметрами? для шаблона handlebars
 - `connected()` - метод вызывается после монтирования компонента в DOM
-- `disconnected()` - метод вызывается перед демонтирования компонента из DOM
+- `disconnected()` - метод вызывается перед демонтированием компонента из DOM
 - `addSubscriber()` - добавляет подписчика State
 - `addListener()` - добавляет слушателя eventListener
-- `getProps()` - получение пропсов компонента прописанных в атрибуте props-*
+- `props` - пропсы компонента прописанные в атрибуте props-*
+- `propsChanged()` - метод вызывается при изменении пропсов
 - `createEvent()` - создание события с названием eventName
 
 После демонтирования компонента из DOM, все подписчики и слушатели установленные через `addSubscriber` и
