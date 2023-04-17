@@ -1,0 +1,12 @@
+<ul class="chats-list">
+  {{#each chatsList}}
+    <li>
+      <chats-list-item
+        class="chats-item"
+        props-chat="[[chatsList[{{id}}]]]"
+        event-select="[[selectChat({{id}})]]"
+      >
+      </chats-list-item>
+    </li>
+  {{/each}}
+</ul>

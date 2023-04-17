@@ -1,4 +1,4 @@
-import { IChatUsers } from "../core/interfaces";
+import { IChatUsers } from "../core/config/interfaces";
 
 export const _chatUsers: IChatUsers[] = [
   {

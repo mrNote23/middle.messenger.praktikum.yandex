@@ -1,9 +1,9 @@
 import Api from "./Api";
 import State from "./State";
-import { IChat, IChatMessage, IChatUsers, IUser } from "./interfaces";
+import { IChat, IChatMessage, IChatUsers, IUser } from "./config/interfaces";
 import { OnMobile } from "../utils/on-mobile";
-import { ModalWindowComponent } from "../ui/modal-window/ModalWindow";
-import { MainRouter } from "../main-router/MainRouter";
+import { ModalWindowComponent } from "../shared/modal-window/ModalWindow";
+import { FormValidator } from "../shared/form-validator/FormValidator";
 
 export enum STATES {
   CHATS_LIST = "chatsList",
@@ -16,26 +16,63 @@ export enum STATES {
 }
 
 export enum LEFTMODE {
-  CHATS = "chats",
-  USERS = "users",
+  CHATS = "/chats",
+  USERS = "/users",
 }
 
 export enum RIGHTMODE {
-  CHAT = "chat",
-  ADMIN_PROFILE = "adminProfile",
-  USER_PROFILE = "userProfile",
-  CHAT_PROFILE = "chatProfile",
+  CHAT = "/chat",
+  ADMIN_PROFILE = "/adminProfile",
+  USER_PROFILE = "/userProfile",
+  CHAT_PROFILE = "/chatProfile",
 }
 
 export const ADMIN = "admin";
 
 class ChatApp {
+  rootRoutes;
+
   constructor() {
-    window.customElements.define("main-router", MainRouter);
+    window.customElements.define("form-validator", FormValidator);
     window.customElements.define("modal-window", ModalWindowComponent);
   }
 
   start = () => {
+    // инициализация состояний
+    this.init();
+
+    // TODO: Потом убрать
+    State.store(ADMIN, {
+      id: 8,
+      first_name: "Андрей",
+      second_name: "Суворов",
+      display_name: "Andrey.S",
+      login: "andrey.s",
+      email: "andrey.s@email.com",
+      phone: "89223332218",
+      avatar: "/images/avatars/avatar-8.jpg",
+      role: "admin",
+    });
+
+    document.addEventListener("click", <T>(e: T) => {
+      if (
+        e.target.tagName === "A" &&
+        e.target.classList.contains("router-link")
+      ) {
+        e.preventDefault();
+        const pathName = e.target.getAttribute("href");
+        this.navigate(pathName);
+      }
+    });
+    window.addEventListener("popstate", <T>(e: T) => {
+      this.navigate(e.currentTarget.location.pathname, false);
+    });
+
+    this.navigate(window.location.pathname);
+  };
+
+  // инициализация стэйта
+  init = () => {
     State.store(STATES.CHATS_LIST, []); // Список чатов (IChat[])
     State.store(STATES.CURRENT_CHAT, null); // текущий чат (IChat)
     State.store(STATES.CURRENT_USER, null); // текущий пользователь чата (IUser)
@@ -44,20 +81,21 @@ class ChatApp {
 
     State.store(STATES.LEFT_MODE, LEFTMODE.CHATS); // режим левой панели ( chats/users )
     State.store(STATES.RIGHT_MODE, RIGHTMODE.CHAT); // режим правой панели (chat/adminProfile/userProfile/chatProfile)
-
-    window.document.getElementById("root").innerHTML =
-      "<main-router></main-router>";
   };
 
   // навигация на url
-  navigate = (path: string): void => {
-    const router = document.getElementsByTagName("main-router");
-    router[0] && router[0].setAttribute("path", path);
+  navigate = (path: string, pushState = true): void => {
+    const router = document.getElementById("root-router");
+    if (router) {
+      router.setAttribute("path", path);
+      pushState && window.history.pushState({}, "", path);
+    }
   };
 
   // логин пользователя
   login = <T>(props: T): void => {
     console.log(props);
+    this.init();
     // admin info ВРЕМЕННО!
     State.store(ADMIN, {
       id: 8,
@@ -76,11 +114,12 @@ class ChatApp {
 
   // logout
   logout = () => {
+    this.navigate("/login");
     State.clear();
-    this.navigate("/");
   };
   // регистрация пользователя
   register = <T>(props: T): void => {
+    this.init();
     console.log(props);
     // admin info ВРЕМЕННО!
     State.store(ADMIN, {

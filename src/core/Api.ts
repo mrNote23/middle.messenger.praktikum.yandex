@@ -1,7 +1,7 @@
 import { _chats } from "../fakedb/_chats";
 import { _chatUsers } from "../fakedb/_chatUsers";
 import { _chatMessages } from "../fakedb/_chatMessages";
-import { IChat, IChatMessage, IChatUsers } from "./interfaces";
+import { IChat, IChatMessage, IChatUsers } from "./config/interfaces";
 
 class Api {
   delay = 200;
