@@ -38,7 +38,7 @@ export class Component extends HTMLElement {
 
   protected props: TProps;
   private _props: TProps = {};
-  protected _events: TEvent[] = [];
+  private _events: TEvent[] = [];
 
   constructor(
     public view: ((params: TComponentParams) => string) | null = null
@@ -111,14 +111,10 @@ export class Component extends HTMLElement {
       const html = this.view(params);
       this.innerHTML = html;
       const attrs = this._parseAttributes(html);
-      const needNodes = [];
       if (attrs) {
-        this.querySelectorAll(attrs.join(",")).forEach((elm) => {
-          needNodes.push(elm);
+        this.querySelectorAll(attrs.join(",")).forEach((node) => {
+          this._addPropsAndEvents(node);
         });
-      }
-      if (needNodes.length) {
-        this._addPropsAndEvents(needNodes);
       }
     }
   };
@@ -135,66 +131,64 @@ export class Component extends HTMLElement {
     return resAttrs.length ? resAttrs : null;
   };
 
-  private _addPropsAndEvents(nodes) {
+  private _addPropsAndEvents(node) {
     const removeAttributes = [];
-    nodes.forEach((node) => {
-      for (const [key, attr] of Object.entries(node.attributes)) {
-        // props-data mounting
-        if (attr.nodeName.match(/^props-(\w)+$/gi)) {
-          const [propsName, propsValue] = [
-            attr.nodeName.split("-")[1],
-            node.getAttribute(attr.nodeName).replace(/(\[\[)|(]])/g, ""),
-          ];
-          // check props on object/array
-          const args = propsValue.match(/(\[\S+\])|(\(\S+\))/gi);
-          if (args) {
-            const _propsValue = propsValue.match(/^[a-z0-9_-]+/gi)![0];
-            node.props[propsName] = eval("this[_propsValue]" + args.join(""));
-          } else {
-            node.props[propsName] = this[propsValue];
-          }
-
-          // добавим в стек для дальнейшего удаления
-          removeAttributes.push({
-            node,
-            attr: attr.nodeName,
-          });
+    for (const [key, attr] of Object.entries(node.attributes)) {
+      // props-data mounting
+      if (attr.nodeName.match(/^props-(\w)+$/gi)) {
+        const [propsName, propsValue] = [
+          attr.nodeName.split("-")[1],
+          node.getAttribute(attr.nodeName).replace(/(\[\[)|(]])/g, ""),
+        ];
+        // check props on object/array
+        const args = propsValue.match(/(\[\S+\])|(\(\S+\))/gi);
+        if (args) {
+          const _propsValue = propsValue.match(/^[a-z0-9_-]+/gi)![0];
+          node.props[propsName] = eval("this[_propsValue]" + args.join(""));
+        } else {
+          node.props[propsName] = this[propsValue];
         }
 
-        // events-mounting
-        if (attr.nodeName.match(/^event-(\w)+$/gi)) {
-          const [eventName, eventCallback] = [
-            attr.nodeName.split("-")[1],
-            node.getAttribute(attr.nodeName).replace(/(\[\[)|(]])/g, ""),
-          ];
-          const args = eventCallback.match(/(\[\S+\])|(\(\S+\))/gi);
-          if (args) {
-            const _eventCallback = eventCallback.match(/^[a-z0-9_-]+/gi)![0];
-            if (this[_eventCallback]) {
-              node.setEvent(eventName, () => {
-                eval("this[_eventCallback]" + args.join(""));
-              });
-            }
-          } else {
-            if (this[eventCallback]) {
-              if (node.setEvent) {
-                node.setEvent(eventName, this[eventCallback]);
-              } else {
-                node[`on${eventName}`] = this[eventCallback];
-              }
-            }
-          }
-          // добавим в стек для дальнейшего удаления
-          removeAttributes.push({
-            node,
-            attr: attr.nodeName,
-          });
-        }
+        // добавим в стек для дальнейшего удаления
+        removeAttributes.push({
+          node,
+          attr: attr.nodeName,
+        });
       }
-      // remove attributes
-      removeAttributes.forEach((item) => {
-        item.node.removeAttribute(item.attr);
-      });
+
+      // events-mounting
+      if (attr.nodeName.match(/^event-(\w)+$/gi)) {
+        const [eventName, eventCallback] = [
+          attr.nodeName.split("-")[1],
+          node.getAttribute(attr.nodeName).replace(/(\[\[)|(]])/g, ""),
+        ];
+        const args = eventCallback.match(/(\[\S+\])|(\(\S+\))/gi);
+        if (args) {
+          const _eventCallback = eventCallback.match(/^[a-z0-9_-]+/gi)![0];
+          if (this[_eventCallback]) {
+            node.setEvent(eventName, () => {
+              eval("this[_eventCallback]" + args.join(""));
+            });
+          }
+        } else {
+          if (this[eventCallback]) {
+            if (node.setEvent) {
+              node.setEvent(eventName, this[eventCallback]);
+            } else {
+              node[`on${eventName}`] = this[eventCallback];
+            }
+          }
+        }
+        // добавим в стек для дальнейшего удаления
+        removeAttributes.push({
+          node,
+          attr: attr.nodeName,
+        });
+      }
+    }
+    // remove attributes
+    removeAttributes.forEach((item) => {
+      item.node.removeAttribute(item.attr);
     });
   }
 
