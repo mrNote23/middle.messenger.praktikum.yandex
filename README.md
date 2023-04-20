@@ -86,7 +86,7 @@ flowchart TD
 Перед использованием созданного компонента, его необходимо объявить:
 
 ```typescript
-document.customElements.define('main-component', MainComponent)
+window.customElements.define('main-component', MainComponent)
 ```
 
 ### Методы используемые внутри компонента

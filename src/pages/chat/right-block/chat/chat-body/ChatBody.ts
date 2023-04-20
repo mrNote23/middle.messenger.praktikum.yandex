@@ -24,8 +24,8 @@ export class ChatBody extends Component {
     if (chat === "loading") {
       this.loading();
     } else {
-      this.messages = State.extract(STATES.CHAT_MESSAGES);
-      this.adminId = State.extract(ADMIN).id;
+      this.messages = <IChatMessageItem[]>State.extract(STATES.CHAT_MESSAGES);
+      this.adminId = State.extract(ADMIN).id | null;
       this.render({
         messages: this.messages,
         notSelected: !State.extract(STATES.CHAT_MESSAGES),
