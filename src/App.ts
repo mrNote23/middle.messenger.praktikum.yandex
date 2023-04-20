@@ -25,7 +25,8 @@ export class App extends Component {
   }
 
   connected() {
-    ChatApp.start();
+    ChatApp.init();
     this.render();
+    ChatApp.start();
   }
 }

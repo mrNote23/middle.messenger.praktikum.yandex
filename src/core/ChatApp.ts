@@ -38,22 +38,6 @@ class ChatApp {
   }
 
   start = () => {
-    // инициализация состояний
-    this.init();
-
-    // TODO: Потом убрать
-    State.store(ADMIN, {
-      id: 8,
-      first_name: "Андрей",
-      second_name: "Суворов",
-      display_name: "Andrey.S",
-      login: "andrey.s",
-      email: "andrey.s@email.com",
-      phone: "89223332218",
-      avatar: "/images/avatars/avatar-8.jpg",
-      role: "admin",
-    });
-
     document.addEventListener("click", <T>(e: T) => {
       if (
         e.target.tagName === "A" &&
@@ -73,6 +57,19 @@ class ChatApp {
 
   // инициализация стэйта
   init = () => {
+    // TODO: Потом убрать
+    State.store(ADMIN, {
+      id: 8,
+      first_name: "Андрей",
+      second_name: "Суворов",
+      display_name: "Andrey.S",
+      login: "andrey.s",
+      email: "andrey.s@email.com",
+      phone: "89223332218",
+      avatar: "/images/avatars/avatar-8.jpg",
+      role: "admin",
+    });
+
     State.store(STATES.CHATS_LIST, []); // Список чатов (IChat[])
     State.store(STATES.CURRENT_CHAT, null); // текущий чат (IChat)
     State.store(STATES.CURRENT_USER, null); // текущий пользователь чата (IUser)
