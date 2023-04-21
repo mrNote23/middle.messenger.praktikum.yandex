@@ -1,7 +1,10 @@
+import { API_URL } from "./config/endpoints";
+
 export enum METHODS {
   GET = "GET",
   PUT = "PUT",
   POST = "POST",
+  PATCH = "PATCH",
   DELETE = "DELETE",
 }
 
@@ -13,7 +16,73 @@ type TOptions = {
 };
 
 export class HTTPTransport {
-  static request = <TResponse>(
+  protected endpoint: string;
+
+  constructor(endpoint: string) {
+    this.endpoint = `${API_URL}${endpoint}`;
+  }
+
+  public get<Response>(
+    path = "/",
+    data?: unknown,
+    headers?: Array<object>
+  ): Promise<Response> {
+    return this.request<Response>(this.endpoint + path, {
+      method: METHODS.GET,
+      data,
+      headers,
+    });
+  }
+
+  public put<Response>(
+    path = "/",
+    data?: unknown,
+    headers?: Array<object>
+  ): Promise<Response> {
+    return this.request<Response>(this.endpoint + path, {
+      method: METHODS.PUT,
+      data,
+      headers,
+    });
+  }
+
+  public post<Response>(
+    path = "/",
+    data?: unknown,
+    headers?: Array<object>
+  ): Promise<Response> {
+    return this.request<Response>(this.endpoint + path, {
+      method: METHODS.POST,
+      data,
+      headers,
+    });
+  }
+
+  public patch<Response>(
+    path = "/",
+    data?: unknown,
+    headers?: Array<object>
+  ): Promise<Response> {
+    return this.request<Response>(this.endpoint + path, {
+      method: METHODS.PATCH,
+      data,
+      headers,
+    });
+  }
+
+  public delete<Response>(
+    path = "/",
+    data?: unknown,
+    headers?: Array<object>
+  ): Promise<Response> {
+    return this.request<Response>(this.endpoint + path, {
+      method: METHODS.DELETE,
+      data,
+      headers,
+    });
+  }
+
+  private request = <TResponse>(
     url: string,
     options: TOptions = {
       method: METHODS.GET,
@@ -34,6 +103,7 @@ export class HTTPTransport {
             .join("&")}`;
         }
       }
+
       xhr.open(method, url);
       if (typeof timeout === "number") {
         xhr.timeout = timeout;
@@ -65,9 +135,9 @@ export class HTTPTransport {
         }
       };
 
-      xhr.onabort = reject;
-      xhr.onerror = reject;
-      xhr.ontimeout = reject;
+      xhr.onabort = () => reject({ reason: "connection abort" });
+      xhr.onerror = () => reject({ reason: "connection error" });
+      xhr.ontimeout = () => reject({ reason: "connection timeout" });
 
       if (method === METHODS.GET || !data) {
         xhr.send();
