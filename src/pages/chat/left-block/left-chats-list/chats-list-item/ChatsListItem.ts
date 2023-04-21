@@ -1,9 +1,9 @@
 import view from "./ChatsListItem.hbs";
-import { Component, TProps } from "../../../../../core/Component";
+import { Component } from "../../../../../core/Component";
 import { IChat } from "../../../../../core/config/interfaces";
 import { STATES } from "../../../../../core/ChatApp";
-import State from "../../../../../core/State";
 import { dateConvert } from "../../../../../utils/date-convert";
+import State from "../../../../../core/State";
 
 export class ChatsListItem extends Component {
   chat: IChat;
@@ -12,25 +12,28 @@ export class ChatsListItem extends Component {
     super(view);
   }
 
+  propsChanged() {
+    if (this.props) {
+      this.props.chat.last_message = {
+        ...this.props.chat.last_message,
+        time: dateConvert(this.props.chat.last_message.time),
+      };
+      this.render(<IChat>this.props.chat);
+      this.onChangeChat(<IChat>State.extract(STATES.CURRENT_CHAT));
+    }
+  }
+
   connected() {
-    this.getProps.then((props: TProps) => {
-      this.chat = props.chat;
-      this.chat.last_message = {
-        ...this.chat.last_message,
-        time: dateConvert(this.chat.last_message.time),
-      };
-      this.render(this.chat);
-      this.onclick = (e: MouseEvent) => {
-        e.preventDefault();
-        this.createEvent("select", this.chat.id);
-      };
-      this.addSubscriber(STATES.CURRENT_CHAT, this.onChangeChat);
-    });
+    this.onclick = (e: MouseEvent) => {
+      e.preventDefault();
+      this.createEvent("select", this.props.chat.id);
+    };
+    this.addSubscriber(STATES.CURRENT_CHAT, this.onChangeChat);
   }
 
   onChangeChat = (chat: IChat) => {
-    if (chat instanceof Object) {
-      if (this.chat.id === chat.id) {
+    if (chat instanceof Object && this.props.chat) {
+      if (this.props.chat.id === chat.id) {
         this.classList.add("active");
       } else {
         this.classList.remove("active");

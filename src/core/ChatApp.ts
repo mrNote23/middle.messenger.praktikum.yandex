@@ -4,6 +4,8 @@ import { IChat, IChatMessage, IChatUsers, IUser } from "./config/interfaces";
 import { OnMobile } from "../utils/on-mobile";
 import { ModalWindowComponent } from "../shared/modal-window/ModalWindow";
 import { FormValidator } from "../shared/form-validator/FormValidator";
+import AuthApi from "./AuthApi";
+import authApi from "./AuthApi";
 
 export enum STATES {
   CHATS_LIST = "chatsList",
@@ -33,37 +35,11 @@ class ChatApp {
   rootRoutes;
 
   constructor() {
-    window.customElements.define("form-validator", FormValidator);
-    window.customElements.define("modal-window", ModalWindowComponent);
+    customElements.define("form-validator", FormValidator);
+    customElements.define("modal-window", ModalWindowComponent);
   }
 
   start = () => {
-    // инициализация состояний
-    this.init();
-
-    // TODO: Потом убрать
-    State.store(ADMIN, {
-      id: 8,
-      first_name: "Андрей",
-      second_name: "Суворов",
-      display_name: "Andrey.S",
-      login: "andrey.s",
-      email: "andrey.s@email.com",
-      phone: "89223332218",
-      avatar: "/images/avatars/avatar-8.jpg",
-      role: "admin",
-    });
-
-    document.addEventListener("click", <T>(e: T) => {
-      if (
-        e.target.tagName === "A" &&
-        e.target.classList.contains("router-link")
-      ) {
-        e.preventDefault();
-        const pathName = e.target.getAttribute("href");
-        this.navigate(pathName);
-      }
-    });
     window.addEventListener("popstate", <T>(e: T) => {
       this.navigate(e.currentTarget.location.pathname, false);
     });
@@ -73,6 +49,7 @@ class ChatApp {
 
   // инициализация стэйта
   init = () => {
+    State.store(ADMIN, null);
     State.store(STATES.CHATS_LIST, []); // Список чатов (IChat[])
     State.store(STATES.CURRENT_CHAT, null); // текущий чат (IChat)
     State.store(STATES.CURRENT_USER, null); // текущий пользователь чата (IUser)
@@ -93,49 +70,41 @@ class ChatApp {
   };
 
   // логин пользователя
-  login = <T>(props: T): void => {
-    console.log(props);
-    this.init();
-    // admin info ВРЕМЕННО!
-    State.store(ADMIN, {
-      id: 8,
-      first_name: "Андрей",
-      second_name: "Суворов",
-      display_name: "Andrey.S",
-      login: "andrey.s",
-      email: "andrey.s@email.com",
-      phone: "89223332218",
-      avatar: "/images/avatars/avatar-8.jpg",
-      role: "admin",
-    });
-
-    this.navigate("/");
-  };
+  async login<T>(props: T, cbError: (e: object) => void) {
+    try {
+      await AuthApi.logout().catch((e) => false);
+      await AuthApi.login(props).then(async (r) => {
+        const res = await AuthApi.profile();
+        this.init();
+        State.store(ADMIN, { ...res, role: "admin" });
+        this.navigate("/");
+      });
+    } catch (e) {
+      cbError(e);
+    }
+  }
 
   // logout
-  logout = () => {
+  async logout() {
+    await AuthApi.logout().catch((e) => false);
     this.navigate("/login");
     State.clear();
-  };
-  // регистрация пользователя
-  register = <T>(props: T): void => {
-    this.init();
-    console.log(props);
-    // admin info ВРЕМЕННО!
-    State.store(ADMIN, {
-      id: 8,
-      first_name: "Андрей",
-      second_name: "Суворов",
-      display_name: "Andrey.S",
-      login: "andrey.s",
-      email: "andrey.s@email.com",
-      phone: "89223332218",
-      avatar: "/images/avatars/avatar-8.jpg",
-      role: "admin",
-    });
+  }
 
-    this.navigate("/");
-  };
+  // регистрация пользователя
+  async register<T>(props: T, cbError: (e: object) => void) {
+    try {
+      await AuthApi.logout().catch((e) => false);
+      await AuthApi.register(props).then(async (r) => {
+        const res = await AuthApi.profile();
+        this.init();
+        State.store(ADMIN, { ...res, role: "admin" });
+        this.navigate("/");
+      });
+    } catch (e) {
+      cbError(e);
+    }
+  }
 
   // загрузка списка чатов
   loadChatsList = (): void => {

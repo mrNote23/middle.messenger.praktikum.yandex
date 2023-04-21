@@ -1,6 +1,6 @@
 type TStoreHolder = {
   store: { [key: string]: StoreNode };
-  storeNode: StoreNode | {};
+  storeNode: StoreNode;
 };
 
 export type TSubscriberItem = {
@@ -70,7 +70,7 @@ class State {
   }
 
   // получение значения параметра
-  extract = (varName: string): any => {
+  extract = (varName: string): unknown => {
     if (varName && this.storeHolder.store[varName]) {
       return this.storeHolder.store[varName].value;
     } else {
@@ -88,7 +88,10 @@ class State {
   };
 
   // подписка на изменение параметра
-  subscribe = (varName: string, cb: (val: any) => void): TSubscriberItem => {
+  subscribe = (
+    varName: string,
+    cb: (val: unknown) => void
+  ): TSubscriberItem => {
     if (varName && this.storeHolder.store[varName]) {
       return {
         varName: varName,
@@ -110,7 +113,7 @@ class State {
   };
 
   // сохранение параметра
-  store = (varName: string | null = null, val: any): boolean => {
+  store = (varName: string | null = null, val: unknown): boolean => {
     if (!varName) {
       throw new Error(`State.Store: wrong variable '${varName}'`);
     } else {

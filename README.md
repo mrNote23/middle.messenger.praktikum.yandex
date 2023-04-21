@@ -86,17 +86,18 @@ flowchart TD
 Перед использованием созданного компонента, его необходимо объявить:
 
 ```typescript
-document.customElements.define('main-component', MainComponent)
+customElements.define('main-component', MainComponent)
 ```
 
 ### Методы используемые внутри компонента
 
 - `render()` - рендер компонента с параметрами? для шаблона handlebars
 - `connected()` - метод вызывается после монтирования компонента в DOM
-- `disconnected()` - метод вызывается перед демонтирования компонента из DOM
+- `disconnected()` - метод вызывается перед демонтированием компонента из DOM
 - `addSubscriber()` - добавляет подписчика State
-- `addListener()` - записывает слушателя eventListener
-- `getProps()` - получение пропсов компонента прописанных в атрибуте props-*
+- `addListener()` - добавляет слушателя eventListener
+- `props` - пропсы компонента прописанные в атрибуте props-*
+- `propsChanged()` - метод вызывается при изменении пропсов
 - `createEvent()` - создание события с названием eventName
 
 После демонтирования компонента из DOM, все подписчики и слушатели установленные через `addSubscriber` и
@@ -172,7 +173,7 @@ export class MainComponent extends Component {
 <button event-click="[[onClick]]">Reset counter</button>
 ```
 
-# Примеры некоторых компонент
+# Примеры использования некоторых компонент
 
 ## RouterComponent
 
@@ -184,7 +185,7 @@ import view from "./App.hbs";
 import {Component} from "./Component";
 import {RouterComponent} from "./RouterComponent";
 
-window.customElements.define("main-router", RouterComponent);
+customElements.define("main-router", RouterComponent);
 
 type TRoute = {
   path: string;
@@ -245,7 +246,7 @@ import view from "./Login.hbs";
 import {Component} from "./Component";
 import {FormValidator} from "./FormValidator";
 
-window.customElements.define("form-validator", FormValidator);
+customElements.define("form-validator", FormValidator);
 
 enum MATCH {
   PHONE = "phone", // телефон в формате +78217348374, '+' - не обязателен

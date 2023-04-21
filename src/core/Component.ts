@@ -8,17 +8,18 @@
   обработчики событий прописываются по принципу <button event-click="[[handlerClick]]" event-mouseover="[[handlerMouseOver]]"></button>
   у создаваемого компонента должен присутствовать обработчик с именем handlerClick, handlerMouseOver
 
-  пропсы в теге прописываются так: <form-component props-data="[[formFields]]"></form-component> передаются объектом!
-  все данные в компонент передаются одним объектом
-  получать данные как результат промиса!!!
+  пропсы в теге прописываются так: <form-component props-fields="[[formFields]]"></form-component>
 */
 
 import State, { TSubscriberItem } from "./State";
 
 export type TProps = {
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
+export type TEvent = {
+  [key: string]: () => void;
+};
 type TComponentParams = {
   [key: string]: unknown;
 } | null;
@@ -26,31 +27,35 @@ type TComponentParams = {
 type TListener = {
   node: HTMLElement;
   event: string;
-  callBack: (e: any) => void;
+  callBack: (e: unknown) => void;
 };
 
 export class Component extends HTMLElement {
-  protected subscriptions: TSubscriberItem[] = [];
-  protected listeners: TListener[] = [];
   protected params: TComponentParams | null = null;
-  public _props: TProps = {};
-  protected _events = [];
+
+  protected _subscriptions: TSubscriberItem[] = [];
+  protected _listeners: TListener[] = [];
+
+  protected props: TProps;
+  private _props: TProps = {};
+  private _events: TEvent[] = [];
 
   constructor(
     public view: ((params: TComponentParams) => string) | null = null
   ) {
     super();
+    this.props = this._makePropsProxy(this, this._props);
   }
 
   // генерация события (event)
   protected createEvent = (eventName: string, eventProps: unknown): void => {
-    // ивенты установленные через пропсы
+    // ивенты установленные через атрибуты
     this._events.forEach((event) => {
       if (event.eventName === eventName) {
         event.eventHandler({ detail: eventProps });
       }
     });
-    // ивенты навешанные листенером
+    // для навешанных addListeners на данный компонент
     this.dispatchEvent(new CustomEvent(eventName, { detail: eventProps }));
   };
 
@@ -61,32 +66,41 @@ export class Component extends HTMLElement {
   }
 
   // добавление State.subscriber
-  protected addSubscriber(varName: string, callBack: (val: any) => void) {
-    this.subscriptions.push(State.subscribe(varName, callBack));
+  protected addSubscriber(varName: string, callBack: (val: unknown) => void) {
+    this._subscriptions.push(State.subscribe(varName, callBack));
   }
 
   // добавление Event.listener
   protected addListener<TListener>(node, event, callBack) {
     node.addEventListener(event, callBack);
-    this.listeners.push(<TListener>{ node, event, callBack });
+    this._listeners.push(<TListener>{ node, event, callBack });
   }
 
-  // set component's props
-  set setProps(props: object) {
-    this._props[props.name] = props.value;
+  private _propsChanged(prop: string, oldValue: unknown, newValue: unknown) {
+    if (oldValue != newValue && this["propsChanged"]) {
+      this["propsChanged"](prop, oldValue, newValue);
+    }
   }
 
-  // get component's props
-  get getProps() {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(this._props);
-      });
+  private _makePropsProxy(component, props) {
+    return new Proxy(props, {
+      get(target, prop: string) {
+        return target[prop];
+      },
+      set(target: TProps, prop: string, value) {
+        const oldValue = target[prop];
+        target[prop] = value;
+        component._propsChanged(prop, oldValue, value);
+        return true;
+      },
+      deleteProperty(): never {
+        throw new Error("Нет доступа");
+      },
     });
   }
 
   // set event handler
-  setEvent = (eventName, eventHandler) => {
+  protected setEvent = (eventName, eventHandler) => {
     this._events.push({ eventName, eventHandler });
   };
 
@@ -96,25 +110,18 @@ export class Component extends HTMLElement {
     if (this.view !== null) {
       const html = this.view(params);
       this.innerHTML = html;
-
       const attrs = this._parseAttributes(html);
-      const needNodes = [];
       if (attrs) {
-        this.querySelectorAll(attrs.join(",")).forEach((elm) => {
-          needNodes.push(elm);
+        this.querySelectorAll(attrs.join(",")).forEach((node) => {
+          this._addPropsAndEvents(node);
         });
-      }
-      if (needNodes.length) {
-        this._addEvents(needNodes);
       }
     }
   };
 
-  _parseAttributes = (html) => {
-    let tmp = new Set();
-    let sou = html.replace(/[\n\t]/g, "");
-    const regex = /(event-\w+|props-\w+)/gi;
-    const res = sou.match(regex);
+  private _parseAttributes = (html) => {
+    const tmp = new Set();
+    const res = html.replace(/[\n\t]/g, "").match(/(event-\w+|props-\w+)/gi);
     if (res) {
       res.forEach((item) => {
         item.trim() && tmp.add(item);
@@ -124,90 +131,85 @@ export class Component extends HTMLElement {
     return resAttrs.length ? resAttrs : null;
   };
 
-  private _addEvents(nodes) {
-    let removeAttributes = [];
-    nodes.forEach((node) => {
-      for (const [key, attr] of Object.entries(node.attributes)) {
-        // props-data mounting
-        if (attr.nodeName.match(/^props-(\w)+$/gi)) {
-          const [propsName, propsValue] = [
-            attr.nodeName.split("-")[1],
-            node.getAttribute(attr.nodeName).replace(/(\[\[)|(]])/g, ""),
-          ];
-          // check props on object/array
-          let args = propsValue.match(/(\[\S+\])|(\(\S+\))/gi);
-          if (args) {
-            let _propsValue = propsValue.match(/^[a-z0-9_-]+/gi)![0];
-            node.setProps = {
-              name: propsName,
-              value: eval("this[_propsValue]" + args.join("")),
-            };
-          } else {
-            node.setProps = { name: propsName, value: this[propsValue] };
-          }
-
-          // добавим в стек для дальнейшего удаления
-          removeAttributes.push({
-            node,
-            attr: attr.nodeName,
-          });
+  private _addPropsAndEvents(node) {
+    const removeAttributes = [];
+    for (const [key, attr] of Object.entries(node.attributes)) {
+      // props-data mounting
+      if (attr.nodeName.match(/^props-(\w)+$/gi)) {
+        const [propsName, propsValue] = [
+          attr.nodeName.split("-")[1],
+          node.getAttribute(attr.nodeName).replace(/(\[\[)|(]])/g, ""),
+        ];
+        // check props on object/array
+        const args = propsValue.match(/(\[\S+\])|(\(\S+\))/gi);
+        if (args) {
+          const _propsValue = propsValue.match(/^[a-z0-9_-]+/gi)![0];
+          node.props[propsName] = eval("this[_propsValue]" + args.join(""));
+        } else {
+          node.props[propsName] = this[propsValue];
         }
 
-        // events-mounting
-        if (attr.nodeName.match(/^event-(\w)+$/gi)) {
-          const [eventName, eventCallback] = [
-            attr.nodeName.split("-")[1],
-            node.getAttribute(attr.nodeName).replace(/(\[\[)|(]])/g, ""),
-          ];
-          let args = eventCallback.match(/(\[\S+\])|(\(\S+\))/gi);
-          if (args) {
-            let _eventCallback = eventCallback.match(/^[a-z0-9_-]+/gi)![0];
-            if (this[_eventCallback]) {
-              node.setEvent(eventName, () => {
-                eval("this[_eventCallback]" + args.join(""));
-              });
-            }
-          } else {
-            if (this[eventCallback]) {
-              if (node.setEvent) {
-                node.setEvent(eventName, this[eventCallback]);
-              } else {
-                node[`on${eventName}`] = this[eventCallback];
-              }
-            }
-          }
-          // добавим в стек для дальнейшего удаления
-          removeAttributes.push({
-            node,
-            attr: attr.nodeName,
-          });
-        }
+        // добавим в стек для дальнейшего удаления
+        removeAttributes.push({
+          node,
+          attr: attr.nodeName,
+        });
       }
-      // remove attributes
-      removeAttributes.forEach((item) => {
-        item.node.removeAttribute(item.attr);
-      });
+
+      // events-mounting
+      if (attr.nodeName.match(/^event-(\w)+$/gi)) {
+        const [eventName, eventCallback] = [
+          attr.nodeName.split("-")[1],
+          node.getAttribute(attr.nodeName).replace(/(\[\[)|(]])/g, ""),
+        ];
+        const args = eventCallback.match(/(\[\S+\])|(\(\S+\))/gi);
+        if (args) {
+          const _eventCallback = eventCallback.match(/^[a-z0-9_-]+/gi)![0];
+          if (this[_eventCallback]) {
+            node.setEvent(eventName, () => {
+              eval("this[_eventCallback]" + args.join(""));
+            });
+          }
+        } else {
+          if (this[eventCallback]) {
+            if (node.setEvent) {
+              node.setEvent(eventName, this[eventCallback]);
+            } else {
+              node[`on${eventName}`] = this[eventCallback];
+            }
+          }
+        }
+        // добавим в стек для дальнейшего удаления
+        removeAttributes.push({
+          node,
+          attr: attr.nodeName,
+        });
+      }
+    }
+    // remove attributes
+    removeAttributes.forEach((item) => {
+      item.node.removeAttribute(item.attr);
     });
   }
 
   // отписка при отключении компонента от DOM
-  disconnectedCallback() {
+  protected disconnectedCallback() {
     // подписчики State
-    this.subscriptions.forEach((elm) => State.unsubscribe(elm));
-    this.subscriptions.length = 0;
+    this._subscriptions.forEach((elm) => State.unsubscribe(elm));
+    this._subscriptions.length = 0;
 
     // Слушатели событий
-    this.listeners.forEach((item) => {
+    this._listeners.forEach((item) => {
       item.node.removeEventListener(item.event, item.callBack);
     });
-    this.listeners.length = 0;
+    this._listeners.length = 0;
 
     // вызовем метод потомка
     this["disconnected"] && this["disconnected"]();
   }
 
   // component mounted
-  connectedCallback() {
+  protected connectedCallback() {
     this["connected"] && this["connected"]();
   }
 }

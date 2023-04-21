@@ -1,9 +1,9 @@
 <div class="container d-table-cell vertical-align-middle">
   <div class="card card-auth">
     <div class="auth-header">
-      <a class="router-link" href="/">
+      <router-link href="/">
         <img class="logo-image" src="/images/logo.png" alt="">
-      </a>
+      </router-link>
     </div>
     <div class="auth-body">
       <form-validator props-fields="[[formFields]]" event-validated="[[formValidated]]">
@@ -79,14 +79,13 @@
             />
             <label for="confirm_password" class="placeholder">Confirm password</label>
           </div>
-
           <div class="auth-error">Error</div>
           <div class="pt-1 pb-1">
             <div class="text-center">
               <button class="btn d-block w-100" type="submit">Register</button>
               <span class="register-link">
 								Already have an account?
-								<a class="router-link" href="/login">Sing in</a>
+                <router-link href="/login">Sign in</router-link>
 						</span>
             </div>
           </div>

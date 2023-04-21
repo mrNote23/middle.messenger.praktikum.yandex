@@ -43,7 +43,8 @@ h1, h2, h3, h4, h5 {
   font-family: Roboto-Bold, sans-serif;
 }
 
-a, a:hover, a:focus {
+router-link, router-link:hover, router-link:focus, a, a:hover, a:focus {
+  cursor: pointer;
   color: var(--primary-color);
   text-decoration: none;
 }

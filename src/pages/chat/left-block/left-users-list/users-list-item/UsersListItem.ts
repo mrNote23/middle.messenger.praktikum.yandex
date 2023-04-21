@@ -1,4 +1,4 @@
-import { Component, TProps } from "../../../../../core/Component";
+import { Component } from "../../../../../core/Component";
 import view from "./UsersListItem.hbs";
 import { IUser } from "../../../../../core/config/interfaces";
 import { STATES } from "../../../../../core/ChatApp";
@@ -11,22 +11,25 @@ export class UsersListItem extends Component {
     super(view);
   }
 
-  connected() {
-    this.getProps.then((props: TProps) => {
-      this.user = props.user;
-      this.render(this.user);
+  propsChanged() {
+    if (this.props) {
+      this.render(<IUser>this.props.user);
+      this.onChangeUser(<IUser>State.extract(STATES.CURRENT_USER));
+    }
+  }
 
-      this.onclick = (e: MouseEvent) => {
-        e.preventDefault();
-        this.createEvent("select", this.user.id);
-      };
-      this.addSubscriber(STATES.CURRENT_USER, this.onChangeUser);
-    });
+  connected() {
+    this.onclick = (e: MouseEvent) => {
+      e.preventDefault();
+      this.createEvent("select", this.props.user.id);
+    };
+    this.addSubscriber(STATES.CURRENT_USER, this.onChangeUser);
+    // });
   }
 
   onChangeUser = (user: IUser) => {
-    if (user instanceof Object) {
-      if (this.user.id === user.id) {
+    if (user instanceof Object && this.props.user) {
+      if (this.props.user.id === user.id) {
         this.classList.add("active");
       } else {
         this.classList.remove("active");
