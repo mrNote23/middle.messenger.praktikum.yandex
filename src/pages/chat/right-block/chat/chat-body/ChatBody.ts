@@ -6,7 +6,7 @@ import { IChat, IChatMessageItem } from "../../../../../core/config/interfaces";
 import { ADMIN, STATES } from "../../../../../core/ChatApp";
 import { ChatMessageItem } from "./chat-message-item/ChatMessageItem";
 
-window.customElements.define("chat-message-item", ChatMessageItem);
+customElements.define("chat-message-item", ChatMessageItem);
 
 export class ChatBody extends Component {
   messages: IChatMessageItem[];

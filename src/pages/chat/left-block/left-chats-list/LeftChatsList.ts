@@ -5,7 +5,7 @@ import ChatApp, { STATES } from "../../../../core/ChatApp";
 import { ChatsListItem } from "./chats-list-item/ChatsListItem";
 import "./LeftChatsList.scss";
 
-window.customElements.define("chats-list-item", ChatsListItem);
+customElements.define("chats-list-item", ChatsListItem);
 
 export class LeftChatsList extends Component {
   chatsList: IChat[] = [];

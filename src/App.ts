@@ -10,14 +10,14 @@ import ChatApp from "./core/ChatApp";
 
 import { rootRoutes } from "./core/config/rootRoutes";
 
-window.customElements.define("router-link", RouterLink);
+customElements.define("router-link", RouterLink);
 
-window.customElements.define("login-page", LoginPage);
-window.customElements.define("register-page", RegisterPage);
-window.customElements.define("error-page", ErrorPage);
-window.customElements.define("chat-page", ChatPage);
+customElements.define("login-page", LoginPage);
+customElements.define("register-page", RegisterPage);
+customElements.define("error-page", ErrorPage);
+customElements.define("chat-page", ChatPage);
 
-window.customElements.define("app-router", RouterComponent);
+customElements.define("app-router", RouterComponent);
 
 export class App extends Component {
   rootRoutes;

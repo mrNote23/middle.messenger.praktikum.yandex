@@ -6,7 +6,7 @@ import ChatApp, { STATES } from "../../../../core/ChatApp";
 import "./LeftUsersList.scss";
 import { UsersListItem } from "./users-list-item/UsersListItem";
 
-window.customElements.define("users-list-item", UsersListItem);
+customElements.define("users-list-item", UsersListItem);
 
 export class LeftUsersList extends Component {
   usersList: IChatUsers;

@@ -128,6 +128,7 @@ export class HTTPTransport {
         } else {
           response = xhr.response;
         }
+
         if (xhr.status === 200) {
           resolve(response);
         } else {
