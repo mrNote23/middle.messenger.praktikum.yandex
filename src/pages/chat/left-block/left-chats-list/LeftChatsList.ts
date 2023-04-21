@@ -30,7 +30,9 @@ export class LeftChatsList extends Component {
         ChatApp.loadChatsList();
       } else {
         this.render({
-          chatsList: this.chatsList,
+          chatsList: this.chatsList.map((elm, index: number) => {
+            return { ...elm, index };
+          }),
           currentChatId: this.currentChat ? this.currentChat.id : null,
         });
       }
@@ -38,7 +40,9 @@ export class LeftChatsList extends Component {
   }
 
   // выбор чата
-  selectChat(id) {
-    ChatApp.setCurrentChat(this.chatsList[id]);
-  }
+  selectChat = (id) => {
+    ChatApp.setCurrentChat(
+      this.chatsList.filter((elm) => elm.id === id.detail)[0]
+    );
+  };
 }

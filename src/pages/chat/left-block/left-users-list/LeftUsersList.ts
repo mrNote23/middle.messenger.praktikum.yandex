@@ -16,11 +16,14 @@ export class LeftUsersList extends Component {
   }
 
   connected(): void {
-    this.usersList = State.extract(STATES.CHAT_USERS);
-    this.render({ list: this.usersList });
+    this.addSubscriber(STATES.CHAT_USERS, (val) => {
+      this.usersList = val;
+      this.render({ list: this.usersList });
+    });
+    // this.usersList = State.extract(STATES.CHAT_USERS);
   }
 
-  selectUser(id) {
-    ChatApp.setCurrentUser(this.usersList[id]);
-  }
+  selectUser = (id) => {
+    ChatApp.setCurrentUser(this.usersList[id.detail]);
+  };
 }

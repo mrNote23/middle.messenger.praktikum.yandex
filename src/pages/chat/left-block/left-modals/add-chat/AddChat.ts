@@ -2,6 +2,7 @@ import view from "./AddChat.hbs";
 import "./AddChat.scss";
 import { ModalWindow } from "../../../../../shared/modal-window/ModalWindow";
 import { TFormValidatorConfig } from "../../../../../shared/form-validator/FormValidator";
+import ChatApp from "../../../../../core/ChatApp";
 
 export const AddChat = (): void => {
   const formFields: TFormValidatorConfig = {
@@ -20,7 +21,7 @@ export const AddChat = (): void => {
   });
 
   function formValidated(e: CustomEvent): void {
-    console.log(e.detail);
+    ChatApp.addChat(e.detail.chat_name);
     modalWindow.remove();
   }
 };

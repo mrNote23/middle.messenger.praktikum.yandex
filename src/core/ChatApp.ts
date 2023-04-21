@@ -6,6 +6,9 @@ import { ModalWindowComponent } from "../shared/modal-window/ModalWindow";
 import { FormValidator } from "../shared/form-validator/FormValidator";
 import AuthApi from "./AuthApi";
 import authApi from "./AuthApi";
+import ChatApi from "./ChatApi";
+import UserApi from "./UserApi";
+import { RES_URL } from "./config/endpoints";
 
 export enum STATES {
   CHATS_LIST = "chatsList",
@@ -39,12 +42,23 @@ class ChatApp {
     customElements.define("modal-window", ModalWindowComponent);
   }
 
+  // запуск приложения
   start = () => {
     window.addEventListener("popstate", <T>(e: T) => {
       this.navigate(e.currentTarget.location.pathname, false);
     });
 
-    this.navigate(window.location.pathname);
+    if (window.location.pathname === "/") {
+      this.auth()
+        .then((r) => {
+          this.navigate(window.location.pathname);
+        })
+        .catch((e) => {
+          this.navigate("/login");
+        });
+    } else {
+      this.navigate(window.location.pathname);
+    }
   };
 
   // инициализация стэйта
@@ -75,7 +89,30 @@ class ChatApp {
       await AuthApi.logout().catch((e) => false);
       await AuthApi.login(props).then(async (r) => {
         const res = await AuthApi.profile();
-        localStorage.setItem("authorized", "true");
+        localStorage.setItem("admin", JSON.stringify(res));
+        this.init();
+        State.store(ADMIN, { ...res, role: "admin" });
+        this.navigate("/");
+      });
+    } catch (e) {
+      cbError(e);
+    }
+  }
+
+  // авторизация пользователя
+  auth(): Promise<IUser> {
+    return AuthApi.profile().then((res) => {
+      State.store(ADMIN, { ...res, role: "admin" });
+    });
+  }
+
+  // регистрация пользователя
+  async register<T>(props: T, cbError: (e: object) => void) {
+    try {
+      await AuthApi.logout().catch((e) => false);
+      await AuthApi.register(props).then(async (r) => {
+        const res = await AuthApi.profile();
+        localStorage.setItem("admin", JSON.stringify(res));
         this.init();
         State.store(ADMIN, { ...res, role: "admin" });
         this.navigate("/");
@@ -87,34 +124,87 @@ class ChatApp {
 
   // logout
   async logout() {
+    localStorage.removeItem("admin");
     await AuthApi.logout().catch((e) => false);
-    localStorage.removeItem("authorized");
     this.navigate("/login");
     State.clear();
   }
 
-  // регистрация пользователя
-  async register<T>(props: T, cbError: (e: object) => void) {
-    try {
-      await AuthApi.logout().catch((e) => false);
-      await AuthApi.register(props).then(async (r) => {
-        const res = await AuthApi.profile();
-        this.init();
-        State.store(ADMIN, { ...res, role: "admin" });
-        this.navigate("/");
-      });
-    } catch (e) {
-      cbError(e);
-    }
+  // добавление нового чата
+  addChat(title: string) {
+    console.log(title);
+    ChatApi.add(title)
+      .then((res) => {
+        const tmp = {
+          id: res.id,
+          title,
+          avatar: null,
+          created_by: State.extract(ADMIN).id,
+          unread_count: 0,
+          last_message: null,
+        };
+        State.dispatch(STATES.CHATS_LIST, [
+          ...State.extract(STATES.CHATS_LIST),
+          tmp,
+        ]);
+      })
+      .catch((e) => false);
   }
+
+  // поиск пользователя
+  searchUser = (login: string) => {
+    return UserApi.search(login);
+    console.log(login);
+  };
+
+  // добавление пользователя в чат
+  addUser = (user: IUser) => {
+    ChatApi.addUsers(State.extract(STATES.CURRENT_CHAT).id, [user.id]).then(
+      (res) => {
+        const tmp = JSON.parse(
+          JSON.stringify(State.extract(STATES.CHAT_USERS))
+        );
+
+        user.avatar = `${RES_URL}${user.avatar}`;
+        tmp[user.id] = user;
+        State.dispatch(STATES.CHAT_USERS, tmp);
+      }
+    );
+  };
+
+  // удаление пользователя из чата
+  deleteUser = (userId: number) => {
+    ChatApi.deleteUsers(State.extract(STATES.CURRENT_CHAT).id, [userId])
+      .then((res) => {
+        const tmp = JSON.parse(
+          JSON.stringify(State.extract(STATES.CHAT_USERS))
+        );
+        delete tmp[userId];
+        State.dispatch(STATES.CHAT_USERS, tmp);
+      })
+      .catch((e) => false);
+  };
 
   // загрузка списка чатов
   loadChatsList = (): void => {
-    Api.getChats()
-      .then((list) => {
-        list.length && State.dispatch(STATES.CHATS_LIST, list);
+    ChatApi.list()
+      .then((list: IChat[]) => {
+        list.length &&
+          State.dispatch(
+            STATES.CHATS_LIST,
+            list.map((elm) => {
+              return { ...elm, avatar: `${RES_URL}${elm.avatar}` };
+            })
+          );
       })
-      .catch();
+      .catch((e) => false);
+
+    // Api.getChats()
+    //   .then((list) => {
+    //     console.log(list);
+    //     list.length && State.dispatch(STATES.CHATS_LIST, list);
+    //   })
+    //   .catch(e => false);
   };
 
   // выбор текущего пользователя
@@ -127,23 +217,40 @@ class ChatApp {
   // выбор чата - загрузка пользователей и сообщений
   setCurrentChat = (chat: IChat): void => {
     State.dispatch(STATES.CURRENT_CHAT, "loading");
-    Promise.all([Api.getChatMessages(chat.id), Api.getChatUsers(chat.id)]).then(
-      (result) => {
-        // именно в таком порядке!!!
-        State.dispatch(STATES.CHAT_USERS, this._prepareUsersList(result[1]));
-        State.dispatch(
-          STATES.CHAT_MESSAGES,
-          this._prepareChatMessages(result[0], State.extract(STATES.CHAT_USERS))
-        );
-        State.dispatch(STATES.CURRENT_CHAT, chat);
-        State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
-        OnMobile.showRightPanel();
-      }
-    );
+
+    ChatApi.users(chat.id).then((res: IUser[]) => {
+      State.dispatch(
+        STATES.CHAT_USERS,
+        this._prepareUsersList(
+          res.map((elm) => {
+            return { ...elm, avatar: `${RES_URL}${elm.avatar}` };
+          })
+        )
+      );
+      State.dispatch(STATES.CHAT_MESSAGES, []);
+      State.dispatch(STATES.CURRENT_CHAT, chat);
+      State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
+      OnMobile.showRightPanel();
+    });
+
+    // Promise.all([Api.getChatMessages(chat.id), Api.getChatUsers(chat.id)]).then(
+    //   (result) => {
+    //     // именно в таком порядке!!!
+    //     State.dispatch(STATES.CHAT_USERS, this._prepareUsersList(result[1]));
+    //     State.dispatch(
+    //       STATES.CHAT_MESSAGES,
+    //       this._prepareChatMessages(result[0], State.extract(STATES.CHAT_USERS))
+    //     );
+    //     State.dispatch(STATES.CURRENT_CHAT, chat);
+    //     State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
+    //     OnMobile.showRightPanel();
+    //   }
+    // );
   };
 
   _prepareUsersList = (
-    users: Awaited<IChatMessage[] | IChatUsers[]>
+    // users: Awaited<IChatMessage[] | IChatUsers[]>
+    users: Awaited<IUser[]>
   ): object => {
     const res = {};
     users.forEach((user) => (res[user["id"]] = user));

@@ -4,6 +4,7 @@ export type TRoute = {
   path: string;
   content?: string;
   redirect?: string;
+  auth?: boolean;
 };
 
 export class RouterComponent extends Component {

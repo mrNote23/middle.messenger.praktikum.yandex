@@ -4,7 +4,7 @@ import { Confirm } from "../../../../../shared/confirm/confirm";
 import "./UserProfile.scss";
 import { Component } from "../../../../../core/Component";
 import { IChat, IUser } from "../../../../../core/config/interfaces";
-import { RIGHTMODE, STATES } from "../../../../../core/ChatApp";
+import ChatApp, { ADMIN, RIGHTMODE, STATES } from "../../../../../core/ChatApp";
 
 export class UserProfile extends Component {
   user: IUser;
@@ -20,6 +20,7 @@ export class UserProfile extends Component {
       this.user = val;
       this.render({
         ...this.user,
+        canDelete: this.user.id !== State.extract(ADMIN).id,
         chatTitle: this.currentChat.title,
         chatAvatar: this.currentChat.avatar,
       });
@@ -34,7 +35,8 @@ export class UserProfile extends Component {
     Confirm(
       { title: "Are you sure?", text: "Do you want to delete a user?" },
       () => {
-        console.log("User deleted");
+        ChatApp.deleteUser(this.user.id);
+        this.backBtn();
       }
     );
   };
