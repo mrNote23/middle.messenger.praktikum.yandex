@@ -5,9 +5,12 @@ import { LoginPage } from "./pages/auth/login-page/LoginPage";
 import { RegisterPage } from "./pages/auth/register-page/RegisterPage";
 import { ErrorPage } from "./pages/misc/error-page/ErrorPage";
 import { ChatPage } from "./pages/chat/ChatPage";
+import { RouterLink } from "./shared/router-link/RouterLink";
 import ChatApp from "./core/ChatApp";
 
 import { rootRoutes } from "./core/config/rootRoutes";
+
+window.customElements.define("router-link", RouterLink);
 
 window.customElements.define("login-page", LoginPage);
 window.customElements.define("register-page", RegisterPage);

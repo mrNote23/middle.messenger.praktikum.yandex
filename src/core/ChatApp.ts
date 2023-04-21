@@ -38,16 +38,6 @@ class ChatApp {
   }
 
   start = () => {
-    document.addEventListener("click", <T>(e: T) => {
-      if (
-        e.target.tagName === "A" &&
-        e.target.classList.contains("router-link")
-      ) {
-        e.preventDefault();
-        const pathName = e.target.getAttribute("href");
-        this.navigate(pathName);
-      }
-    });
     window.addEventListener("popstate", <T>(e: T) => {
       this.navigate(e.currentTarget.location.pathname, false);
     });
