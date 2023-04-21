@@ -75,6 +75,7 @@ class ChatApp {
       await AuthApi.logout().catch((e) => false);
       await AuthApi.login(props).then(async (r) => {
         const res = await AuthApi.profile();
+        localStorage.setItem("authorized", "true");
         this.init();
         State.store(ADMIN, { ...res, role: "admin" });
         this.navigate("/");
@@ -87,6 +88,7 @@ class ChatApp {
   // logout
   async logout() {
     await AuthApi.logout().catch((e) => false);
+    localStorage.removeItem("authorized");
     this.navigate("/login");
     State.clear();
   }
