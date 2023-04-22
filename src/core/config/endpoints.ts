@@ -1,5 +1,6 @@
 export const API_URL = "https://ya-praktikum.tech/api/v2";
 export const RES_URL = "https://ya-praktikum.tech/api/v2/resources/";
+export const API_WS_URL = "wss://ya-praktikum.tech/ws/";
 
 export enum AUTH_ENDPOINTS {
   LOGIN = "/signin",

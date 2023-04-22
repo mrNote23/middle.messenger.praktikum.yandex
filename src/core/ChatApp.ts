@@ -1,5 +1,5 @@
 import State from "./State";
-import { IChat, IUser } from "./config/interfaces";
+import { IChat, IChatMessage, IUser } from "./config/interfaces";
 import { OnMobile } from "../utils/on-mobile";
 import { ModalWindowComponent } from "../shared/modal-window/ModalWindow";
 import { FormValidator } from "../shared/form-validator/FormValidator";
@@ -7,6 +7,7 @@ import AuthApi from "./AuthApi";
 import ChatApi from "./ChatApi";
 import UserApi from "./UserApi";
 import { RES_URL } from "./config/endpoints";
+import WS from "./WS";
 
 export enum STATES {
   CHATS_LIST = "chatsList",
@@ -31,6 +32,8 @@ export enum RIGHTMODE {
 }
 
 export const ADMIN = "admin";
+export const TOKEN = "token";
+export const NEW_MESSAGE = "new_message";
 
 class ChatApp {
   rootRoutes;
@@ -62,14 +65,17 @@ class ChatApp {
   // инициализация стэйта
   init = () => {
     State.store(ADMIN, null);
+    State.store(TOKEN, null);
+    State.store(NEW_MESSAGE, null);
     State.store(STATES.CHATS_LIST, null); // Список чатов (IChat[])
     State.store(STATES.CURRENT_CHAT, null); // текущий чат (IChat)
     State.store(STATES.CURRENT_USER, null); // текущий пользователь чата (IUser)
     State.store(STATES.CHAT_USERS, []); // пользователи текущего чата (IUser[])
-    State.store(STATES.CHAT_MESSAGES, null); // сообщения текущего чата
+    State.store(STATES.CHAT_MESSAGES, []); // сообщения текущего чата
 
     State.store(STATES.LEFT_MODE, LEFTMODE.CHATS); // режим левой панели ( chats/users )
     State.store(STATES.RIGHT_MODE, RIGHTMODE.CHAT); // режим правой панели (chat/adminProfile/userProfile/chatProfile)
+    WS.init();
   };
 
   // навигация на url
@@ -311,27 +317,65 @@ class ChatApp {
 
   // выбор чата - загрузка пользователей и сообщений
   setCurrentChat = (chat: IChat): void => {
-    State.dispatch(STATES.CURRENT_CHAT, "loading");
+    if (
+      !State.extract(STATES.CURRENT_CHAT) ||
+      chat.id !== State.extract(STATES.CURRENT_CHAT).id
+    ) {
+      State.dispatch(STATES.CHAT_MESSAGES, "loading");
+      ChatApi.users(chat.id).then((res: IUser[]) => {
+        State.dispatch(
+          STATES.CHAT_USERS,
+          this._prepareUsersList(
+            res.map((elm) => {
+              return {
+                ...elm,
+                avatar: elm.avatar
+                  ? `${RES_URL}${elm.avatar}`
+                  : `/images/no-avatar.jpg`,
+              };
+            })
+          )
+        );
+        State.dispatch(STATES.CHAT_MESSAGES, []);
+        State.dispatch(STATES.CURRENT_CHAT, chat);
+        State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
+        this._getToken(chat.id);
+      });
+    }
+    OnMobile.showRightPanel();
+  };
 
-    ChatApi.users(chat.id).then((res: IUser[]) => {
-      State.dispatch(
-        STATES.CHAT_USERS,
-        this._prepareUsersList(
-          res.map((elm) => {
-            return {
-              ...elm,
-              avatar: elm.avatar
-                ? `${RES_URL}${elm.avatar}`
-                : `/images/no-avatar.jpg`,
-            };
-          })
-        )
-      );
-      State.dispatch(STATES.CHAT_MESSAGES, []);
-      State.dispatch(STATES.CURRENT_CHAT, chat);
-      State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
-      OnMobile.showRightPanel();
-    });
+  // начальная загрузка сообщений
+  loadOldMessages(messages) {
+    const tmp =
+      State.extract(STATES.CHAT_MESSAGES) === "loading"
+        ? []
+        : State.extract(STATES.CHAT_MESSAGES);
+
+    State.dispatch(
+      STATES.CHAT_MESSAGES,
+      this._prepareChatMessages(
+        [...messages.reverse(), ...tmp],
+        State.extract(STATES.CHAT_USERS)
+      )
+    );
+  }
+
+  // получено новое сообщение
+  newMessage(message) {
+    const mess = {
+      ...message,
+      avatar: State.extract(STATES.CHAT_USERS)[message.user_id].avatar,
+    };
+    State.dispatch(NEW_MESSAGE, mess);
+  }
+
+  _getToken = (chatId: number) => {
+    ChatApi.token(chatId)
+      .then((res) => {
+        State.dispatch(TOKEN, res.token);
+      })
+      .catch(() => false);
   };
 
   _setAdminAvatar = (res) => {

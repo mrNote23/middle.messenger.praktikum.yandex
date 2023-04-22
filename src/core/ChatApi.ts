@@ -40,9 +40,8 @@ class ChatApi {
     return this.http.put(CHAT_ENDPOINTS.AVATAR, tmp);
   }
 
-  async token(chatId: number): Promise<string> {
-    const res = await this.http.post(`${CHAT_ENDPOINTS.TOKEN}/${chatId}`);
-    return res.token;
+  token(chatId: number): Promise<string> {
+    return this.http.post(`${CHAT_ENDPOINTS.TOKEN}/${chatId}`);
   }
 }
 
