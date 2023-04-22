@@ -38,7 +38,9 @@ export class ChatProfile extends Component {
   clearChat = (): void => {
     Confirm(
       { title: "Are you sure?", text: "Do you want to clear the chat?" },
-      () => {}
+      () => {
+        console.log("chat cleared");
+      }
     );
   };
 

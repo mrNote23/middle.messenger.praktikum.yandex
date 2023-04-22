@@ -10,7 +10,7 @@ customElements.define("chats-list-item", ChatsListItem);
 export class LeftChatsList extends Component {
   chatsList: IChat[] | null = null;
   currentChat: IChat | null = null;
-  listEmpty: boolean = true;
+  listEmpty = true;
 
   constructor() {
     super(view);

@@ -32,14 +32,14 @@ export class AdminProfile extends Component {
     });
   }
 
-  changeAvatar = (e) => {
+  changeAvatar = (e: unknown) => {
     if (e.target.files) {
       ChatApp.changeAdminAvatar(e.target.files[0]);
     }
   };
 
-  errorProfile = (e) => {
-    this.error!.textContent = e.reason;
+  errorProfile = (e: unknown) => {
+    this.error.textContent = e.reason;
     this.error.style.display = "block";
   };
 
@@ -73,7 +73,6 @@ export class AdminProfile extends Component {
           this.btnBack
         );
       }
-      // this.btnBack();
     });
   };
 

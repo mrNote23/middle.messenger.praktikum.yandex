@@ -1,7 +1,6 @@
 import { HTTPTransport } from "./HTTPTransport";
 import { CHAT_ENDPOINTS } from "./config/endpoints";
 import { IChat, IUser } from "./config/interfaces";
-import chatApp from "./ChatApp";
 
 class ChatApi {
   http: HTTPTransport;

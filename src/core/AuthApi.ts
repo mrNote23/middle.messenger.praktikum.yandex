@@ -1,5 +1,5 @@
 import { HTTPTransport } from "./HTTPTransport";
-import { AUTH_ENDPOINTS, USER_ENDPOINTS } from "./config/endpoints";
+import { AUTH_ENDPOINTS } from "./config/endpoints";
 import { IUser } from "./config/interfaces";
 
 type TLoginData = {

@@ -1,5 +1,4 @@
 import view from "./LeftUsersList.hbs";
-import State from "../../../../core/State";
 import { Component } from "../../../../core/Component";
 import { IChatUsers } from "../../../../core/config/interfaces";
 import ChatApp, { STATES } from "../../../../core/ChatApp";
@@ -16,7 +15,7 @@ export class LeftUsersList extends Component {
   }
 
   connected(): void {
-    this.addSubscriber(STATES.CHAT_USERS, (val) => {
+    this.addSubscriber(STATES.CHAT_USERS, (val: IChatUsers) => {
       this.usersList = val;
       this.render({ list: this.usersList });
     });

@@ -1,11 +1,9 @@
-import Api from "./Api";
 import State from "./State";
-import { IChat, IChatMessage, IChatUsers, IUser } from "./config/interfaces";
+import { IChat, IUser } from "./config/interfaces";
 import { OnMobile } from "../utils/on-mobile";
 import { ModalWindowComponent } from "../shared/modal-window/ModalWindow";
 import { FormValidator } from "../shared/form-validator/FormValidator";
 import AuthApi from "./AuthApi";
-import authApi from "./AuthApi";
 import ChatApi from "./ChatApi";
 import UserApi from "./UserApi";
 import { RES_URL } from "./config/endpoints";
@@ -50,10 +48,10 @@ class ChatApp {
 
     if (window.location.pathname === "/") {
       this.auth()
-        .then((r) => {
+        .then(() => {
           this.navigate(window.location.pathname);
         })
-        .catch((e) => {
+        .catch(() => {
           this.navigate("/login");
         });
     } else {
@@ -86,8 +84,8 @@ class ChatApp {
   // логин пользователя
   async login<T>(props: T, cbError: (e: object) => void) {
     try {
-      await AuthApi.logout().catch((e) => false);
-      await AuthApi.login(props).then(async (r) => {
+      await AuthApi.logout().catch(() => false);
+      await AuthApi.login(props).then(async () => {
         const res = this._setAdminAvatar(await AuthApi.profile());
         localStorage.setItem("admin", JSON.stringify(res));
         this.init();
@@ -113,8 +111,8 @@ class ChatApp {
   // регистрация пользователя
   async register<T>(props: T, cbError: (e: object) => void) {
     try {
-      await AuthApi.logout().catch((e) => false);
-      await AuthApi.register(props).then(async (r) => {
+      await AuthApi.logout().catch(() => false);
+      await AuthApi.register(props).then(async () => {
         const res = this._setAdminAvatar(await AuthApi.profile());
         localStorage.setItem("admin", JSON.stringify(res));
         this.init();
@@ -133,7 +131,7 @@ class ChatApp {
   // logout
   async logout() {
     localStorage.removeItem("admin");
-    await AuthApi.logout().catch((e) => false);
+    await AuthApi.logout().catch(() => false);
     this.navigate("/login");
     State.clear();
   }
@@ -155,13 +153,13 @@ class ChatApp {
           tmp,
         ]);
       })
-      .catch((e) => false);
+      .catch(() => false);
   }
 
   // удаление чата
   deleteChat(chatId: number) {
     ChatApi.delete(chatId)
-      .then((res) => {
+      .then(() => {
         const tmp = State.extract(STATES.CHATS_LIST).filter(
           (elm) => elm.id !== chatId
         );
@@ -173,7 +171,7 @@ class ChatApp {
         }
         State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
       })
-      .catch((e) => false);
+      .catch(() => false);
   }
 
   // установка аватара для чата
@@ -194,7 +192,7 @@ class ChatApp {
         });
         State.dispatch(STATES.CHATS_LIST, tmp);
       })
-      .catch((e) => false);
+      .catch(() => false);
   }
 
   // установка аватара админа
@@ -207,7 +205,7 @@ class ChatApp {
         };
         State.dispatch(ADMIN, tmp);
       })
-      .catch((e) => false);
+      .catch(() => false);
   }
 
   // редактирование профиля
@@ -238,7 +236,7 @@ class ChatApp {
     cbOk: () => void
   ) {
     UserApi.password(oldPassword, newPassword)
-      .then((res) => {
+      .then(() => {
         cbOk();
       })
       .catch((e) => {
@@ -258,7 +256,7 @@ class ChatApp {
   // добавление пользователя в чат
   addUser = (user: IUser) => {
     ChatApi.addUsers(State.extract(STATES.CURRENT_CHAT).id, [user.id]).then(
-      (res) => {
+      () => {
         const tmp = JSON.parse(
           JSON.stringify(State.extract(STATES.CHAT_USERS))
         );
@@ -275,14 +273,14 @@ class ChatApp {
   // удаление пользователя из чата
   deleteUser = (userId: number) => {
     ChatApi.deleteUsers(State.extract(STATES.CURRENT_CHAT).id, [userId])
-      .then((res) => {
+      .then(() => {
         const tmp = JSON.parse(
           JSON.stringify(State.extract(STATES.CHAT_USERS))
         );
         delete tmp[userId];
         State.dispatch(STATES.CHAT_USERS, tmp);
       })
-      .catch((e) => false);
+      .catch(() => false);
   };
 
   // загрузка списка чатов
@@ -301,14 +299,7 @@ class ChatApp {
           })
         );
       })
-      .catch((e) => false);
-
-    // Api.getChats()
-    //   .then((list) => {
-    //     console.log(list);
-    //     list.length && State.dispatch(STATES.CHATS_LIST, list);
-    //   })
-    //   .catch(e => false);
+      .catch(() => false);
   };
 
   // выбор текущего пользователя
@@ -341,20 +332,6 @@ class ChatApp {
       State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
       OnMobile.showRightPanel();
     });
-
-    // Promise.all([Api.getChatMessages(chat.id), Api.getChatUsers(chat.id)]).then(
-    //   (result) => {
-    //     // именно в таком порядке!!!
-    //     State.dispatch(STATES.CHAT_USERS, this._prepareUsersList(result[1]));
-    //     State.dispatch(
-    //       STATES.CHAT_MESSAGES,
-    //       this._prepareChatMessages(result[0], State.extract(STATES.CHAT_USERS))
-    //     );
-    //     State.dispatch(STATES.CURRENT_CHAT, chat);
-    //     State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
-    //     OnMobile.showRightPanel();
-    //   }
-    // );
   };
 
   _setAdminAvatar = (res) => {

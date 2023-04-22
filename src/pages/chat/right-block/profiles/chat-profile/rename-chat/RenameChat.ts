@@ -27,7 +27,7 @@ export const RenameChat = (): void => {
     }
   );
 
-  function formValidated(e: CustomEvent): void {
+  function formValidated(): void {
     modalWindow.remove();
   }
 };

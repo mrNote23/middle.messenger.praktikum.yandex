@@ -15,7 +15,7 @@ export class RegisterPage extends Component {
   }
 
   registerError = (e) => {
-    this.error!.textContent = e.reason;
+    this.error.textContent = e.reason;
     this.error.style.display = "block";
   };
 
