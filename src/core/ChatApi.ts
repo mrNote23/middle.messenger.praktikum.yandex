@@ -1,6 +1,7 @@
 import { HTTPTransport } from "./HTTPTransport";
 import { CHAT_ENDPOINTS } from "./config/endpoints";
 import { IChat, IUser } from "./config/interfaces";
+import chatApp from "./ChatApp";
 
 class ChatApi {
   http: HTTPTransport;
@@ -31,6 +32,13 @@ class ChatApi {
 
   deleteUsers(chatId: number, users: number[]) {
     return this.http.delete(CHAT_ENDPOINTS.USERS, { users, chatId });
+  }
+
+  avatar(chatId: number, avatar: File): Promise<IChat> {
+    const tmp = new FormData();
+    tmp.append("chatId", chatId.toString());
+    tmp.append("avatar", avatar);
+    return this.http.put(CHAT_ENDPOINTS.AVATAR, tmp);
   }
 
   async token(chatId: number): Promise<string> {

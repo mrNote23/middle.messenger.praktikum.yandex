@@ -15,11 +15,17 @@ export class ChatProfile extends Component {
   }
 
   connected(): void {
-    this.addSubscriber(STATES.CURRENT_CHAT, (val) => {
+    this.addSubscriber(STATES.CURRENT_CHAT, (val: IChat) => {
       this.chat = val;
       this.render({ ...this.chat });
     });
   }
+
+  changeAvatar = (e) => {
+    if (e.target.files) {
+      ChatApp.setChatAvatar(this.chat.id, e.target.files[0]);
+    }
+  };
 
   backBtn = () => {
     State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
@@ -32,9 +38,7 @@ export class ChatProfile extends Component {
   clearChat = (): void => {
     Confirm(
       { title: "Are you sure?", text: "Do you want to clear the chat?" },
-      () => {
-        console.log("Chat cleared");
-      }
+      () => {}
     );
   };
 

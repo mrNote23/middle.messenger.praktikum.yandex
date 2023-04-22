@@ -8,11 +8,10 @@ export const AddChat = (): void => {
   const formFields: TFormValidatorConfig = {
     chat_name: {
       required: true,
-      firstUC: true,
-      minLength: 10,
+      minLength: 3,
       maxLength: 50,
       filter: /[^а-яa-z0-9\-\s]+/gi,
-      message: "10 to 50 characters, letters, numbers, '-'",
+      message: "3 to 50 characters, letters, numbers, '-'",
     },
   };
   const modalWindow = new ModalWindow("Add new chat", view(), {

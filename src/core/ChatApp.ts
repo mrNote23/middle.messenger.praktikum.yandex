@@ -168,6 +168,27 @@ class ChatApp {
       .catch((e) => false);
   }
 
+  // установка аватара для чата
+  setChatAvatar(chatId: number, avatar: File) {
+    ChatApi.avatar(chatId, avatar)
+      .then((res) => {
+        let tmp = {
+          ...State.extract(STATES.CURRENT_CHAT),
+          avatar: `${RES_URL}${res.avatar}`,
+        };
+        State.dispatch(STATES.CURRENT_CHAT, tmp);
+        tmp = [...State.extract(STATES.CHATS_LIST)].map((elm) => {
+          if (elm.id === chatId) {
+            return { ...elm, avatar: `${RES_URL}${res.avatar}` };
+          } else {
+            return elm;
+          }
+        });
+        State.dispatch(STATES.CHATS_LIST, tmp);
+      })
+      .catch((e) => false);
+  }
+
   // поиск пользователя
   searchUser = (login: string) => {
     return UserApi.search(login);

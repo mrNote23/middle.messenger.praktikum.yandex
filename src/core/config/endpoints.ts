@@ -12,6 +12,7 @@ export enum CHAT_ENDPOINTS {
   CHAT = "",
   USERS = "/users",
   TOKEN = "/token",
+  AVATAR = "/avatar",
 }
 
 export enum USER_ENDPOINTS {
