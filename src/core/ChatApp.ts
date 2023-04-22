@@ -95,7 +95,11 @@ class ChatApp {
         this.navigate("/");
       });
     } catch (e) {
-      cbError(e);
+      if (e instanceof Object) {
+        cbError(e);
+      } else {
+        cbError({ reason: e });
+      }
     }
   }
 
@@ -118,7 +122,11 @@ class ChatApp {
         this.navigate("/");
       });
     } catch (e) {
-      cbError(e);
+      if (e instanceof Object) {
+        cbError(e);
+      } else {
+        cbError({ reason: e });
+      }
     }
   }
 
@@ -202,10 +210,49 @@ class ChatApp {
       .catch((e) => false);
   }
 
+  // редактирование профиля
+  changeAdminProfile(
+    data: IUser,
+    cbError: (e: unknown) => void,
+    cbOk: () => void
+  ) {
+    UserApi.profile(data)
+      .then((res) => {
+        State.dispatch(ADMIN, { ...res, role: "admin" });
+        cbOk();
+      })
+      .catch((e) => {
+        if (e instanceof Object) {
+          cbError(e);
+        } else {
+          cbError({ reason: e });
+        }
+      });
+  }
+
+  // изменение пароля
+  changeAdminPassword(
+    oldPassword: string,
+    newPassword: string,
+    cbError: (e: unknown) => void,
+    cbOk: () => void
+  ) {
+    UserApi.password(oldPassword, newPassword)
+      .then((res) => {
+        cbOk();
+      })
+      .catch((e) => {
+        if (e instanceof Object) {
+          cbError(e);
+        } else {
+          cbError({ reason: e });
+        }
+      });
+  }
+
   // поиск пользователя
   searchUser = (login: string) => {
     return UserApi.search(login);
-    console.log(login);
   };
 
   // добавление пользователя в чат
