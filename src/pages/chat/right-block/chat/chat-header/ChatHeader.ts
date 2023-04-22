@@ -10,7 +10,7 @@ export class ChatHeader extends Component {
   chat: IChat | null = null;
   usersAvatars: Array<string>;
   usersCountAvatar: number | string = 0;
-  chatUsers: IUser[] | null = [];
+  chatUsers: IUser[] | null = null;
 
   constructor() {
     super(view);
@@ -33,7 +33,7 @@ export class ChatHeader extends Component {
       this.usersAvatars = [];
       this.chatUsers = State.extract(STATES.CHAT_USERS);
       Object.values(this.chatUsers)
-        .slice(3)
+        .slice(0, 3)
         .forEach((u) => this.usersAvatars.push(u.avatar));
       this.usersCountAvatar =
         Object.keys(this.chatUsers).length < 10

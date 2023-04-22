@@ -29,6 +29,9 @@ export class ChatBody extends Component {
       this.loading();
       this.notSelected = false;
     } else {
+      if (State.extract(STATES.CURRENT_CHAT)) {
+        this.notSelected = false;
+      }
       this.messages = messages;
       this.adminId = State.extract(ADMIN).id | null;
       this.render({
@@ -49,18 +52,4 @@ export class ChatBody extends Component {
       this.scrollTop = Math.round(Number.MAX_SAFE_INTEGER / 10);
     }
   };
-
-  // chatChanged = (chat: IChat | "loading"): void => {
-  // console.log(chat);
-  // if (chat === "loading") {
-  // this.loading();
-  // } else {
-  //   this.messages = <IChatMessageItem[]>State.extract(STATES.CHAT_MESSAGES);
-  //   this.adminId = State.extract(ADMIN).id | null;
-  //   this.render({
-  //     messages: this.messages,
-  //     notSelected: !State.extract(STATES.CHAT_MESSAGES),
-  //   });
-  // }
-  // };
 }

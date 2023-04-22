@@ -19,11 +19,27 @@ export class ChatFooter extends Component {
   sendMessage = (): void => {
     if (this.message.length) {
       WS.send({ type: "message", content: this.message });
-      console.log(`Message: ${this.message}`);
       this.message = "";
       this.render();
       this.getElementsByTagName("input")[0].focus();
     }
+  };
+
+  addAttachment = (e) => {
+    this.querySelector<unknown>("#attachment")["click"]();
+  };
+
+  onAttachment = (e) => {
+    console.log(e.target.files[0]);
+    const img = document.createElement("img");
+    img.style.width = "100px";
+    img.style.height = "100px";
+    const reader = new FileReader();
+    reader.onload = function () {
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(e.target.files[0]);
+    this.querySelector(".message-attach").appendChild(img);
   };
 
   connected(): void {

@@ -49,17 +49,34 @@ class ChatApp {
       this.navigate(e.currentTarget.location.pathname, false);
     });
 
-    if (window.location.pathname === "/") {
-      this.auth()
-        .then(() => {
-          this.navigate(window.location.pathname);
+    const url = window.location.pathname;
+
+    if (["/", "/login", "/register"].includes(url)) {
+      AuthApi.profile()
+        .then((res) => {
+          State.store(ADMIN, { ...this._setAdminAvatar(res), role: "admin" });
+          this.navigate("/");
         })
-        .catch(() => {
-          this.navigate("/login");
+        .catch((e) => {
+          if (url === "/") {
+            this.navigate("/login");
+          } else {
+            this.navigate(url);
+          }
         });
-    } else {
-      this.navigate(window.location.pathname);
     }
+
+    // if (window.location.pathname === "/") {
+    //   this.auth()
+    //     .then((e) => {
+    //       this.navigate(window.location.pathname);
+    //     })
+    //     .catch((e) => {
+    //       this.navigate("/login");
+    //     });
+    // } else {
+    //   this.navigate(window.location.pathname);
+    // }
   };
 
   // инициализация стэйта
@@ -90,7 +107,6 @@ class ChatApp {
   // логин пользователя
   async login<T>(props: T, cbError: (e: object) => void) {
     try {
-      await AuthApi.logout().catch(() => false);
       await AuthApi.login(props).then(async () => {
         const res = this._setAdminAvatar(await AuthApi.profile());
         localStorage.setItem("admin", JSON.stringify(res));
@@ -107,17 +123,9 @@ class ChatApp {
     }
   }
 
-  // авторизация пользователя
-  auth(): Promise<IUser> {
-    return AuthApi.profile().then((res) => {
-      State.store(ADMIN, { ...this._setAdminAvatar(res), role: "admin" });
-    });
-  }
-
   // регистрация пользователя
   async register<T>(props: T, cbError: (e: object) => void) {
     try {
-      await AuthApi.logout().catch(() => false);
       await AuthApi.register(props).then(async () => {
         const res = this._setAdminAvatar(await AuthApi.profile());
         localStorage.setItem("admin", JSON.stringify(res));
@@ -385,10 +393,7 @@ class ChatApp {
     };
   };
 
-  _prepareUsersList = (
-    // users: Awaited<IChatMessage[] | IChatUsers[]>
-    users: Awaited<IUser[]>
-  ): object => {
+  _prepareUsersList = (users: Awaited<IUser[]>): object => {
     const res = {};
     users.forEach((user) => (res[user["id"]] = user));
     return res;
