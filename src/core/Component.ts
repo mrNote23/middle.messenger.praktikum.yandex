@@ -133,6 +133,7 @@ export class Component extends HTMLElement {
 
   private _addPropsAndEvents(node) {
     const removeAttributes = [];
+    /* eslint-disable */
     for (const [key, attr] of Object.entries(node.attributes)) {
       // props-data mounting
       if (attr.nodeName.match(/^props-(\w)+$/gi)) {
@@ -143,6 +144,7 @@ export class Component extends HTMLElement {
         // check props on object/array
         const args = propsValue.match(/(\[\S+\])|(\(\S+\))/gi);
         if (args) {
+          /* eslint-disable */
           const _propsValue = propsValue.match(/^[a-z0-9_-]+/gi)![0];
           node.props[propsName] = eval("this[_propsValue]" + args.join(""));
         } else {
@@ -164,6 +166,7 @@ export class Component extends HTMLElement {
         ];
         const args = eventCallback.match(/(\[\S+\])|(\(\S+\))/gi);
         if (args) {
+          /* eslint-disable */
           const _eventCallback = eventCallback.match(/^[a-z0-9_-]+/gi)![0];
           if (this[_eventCallback]) {
             node.setEvent(eventName, () => {

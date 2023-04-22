@@ -104,7 +104,7 @@ export class HTTPTransport {
         }
       }
 
-      xhr.open(method, url);
+      xhr.open(method, url, true);
       if (typeof timeout === "number") {
         xhr.timeout = timeout;
       }

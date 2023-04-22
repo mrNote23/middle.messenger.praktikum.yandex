@@ -21,8 +21,8 @@ export const formFields: TFormValidatorConfig = {
   display_name: {
     required: true,
     maxLength: 20,
-    filter: /[^а-яa-z-]+/gi,
-    message: "letters only (no spaces) or '-'",
+    filter: /[^а-яa-z0-9-]+/gi,
+    message: "letters, digits, '-' only (no spaces)",
   },
   login: {
     required: true,

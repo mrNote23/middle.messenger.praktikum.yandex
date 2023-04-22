@@ -1,12 +1,17 @@
-<ul class="chats-list">
-  {{#each chatsList}}
-    <li>
-      <chats-list-item
-        class="chats-item"
-        props-chat="[[chatsList[{{id}}]]]"
-        event-select="[[selectChat({{id}})]]"
-      >
-      </chats-list-item>
-    </li>
-  {{/each}}
-</ul>
+{{#if listEmpty}}
+  <p class="color-dark-gray">chats not found...</p>
+  <p class="color-dark-gray">you can create a new chat by clicking on the plus button</p>
+{{else}}
+  <ul class="chats-list">
+    {{#each chatsList}}
+      <li>
+        <chats-list-item
+          class="chats-item"
+          props-chat="[[chatsList[{{index}}]]]"
+          event-select="[[selectChat]]"
+        >
+        </chats-list-item>
+      </li>
+    {{/each}}
+  </ul>
+{{/if}}

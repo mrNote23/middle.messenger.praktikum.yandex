@@ -15,7 +15,7 @@ export class LoginPage extends Component {
   }
 
   loginError = (e) => {
-    this.error!.textContent = e.reason;
+    this.error.textContent = e.reason;
     this.error.style.display = "block";
   };
 

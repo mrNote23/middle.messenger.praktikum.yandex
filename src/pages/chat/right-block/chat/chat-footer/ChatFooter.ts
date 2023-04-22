@@ -2,6 +2,7 @@ import view from "./ChatFooter.hbs";
 import { Component } from "../../../../../core/Component";
 import { STATES } from "../../../../../core/ChatApp";
 import "./ChatFooter.scss";
+import WS from "../../../../../core/WS";
 
 export class ChatFooter extends Component {
   message = "";
@@ -17,6 +18,7 @@ export class ChatFooter extends Component {
 
   sendMessage = (): void => {
     if (this.message.length) {
+      WS.send({ type: "message", content: this.message });
       console.log(`Message: ${this.message}`);
       this.message = "";
       this.render();
