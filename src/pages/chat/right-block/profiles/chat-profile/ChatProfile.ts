@@ -4,7 +4,7 @@ import { Confirm } from "../../../../../shared/confirm/confirm";
 import { Component } from "../../../../../core/Component";
 import "./ChatProfile.scss";
 import { IChat } from "../../../../../core/config/interfaces";
-import { RIGHTMODE, STATES } from "../../../../../core/ChatApp";
+import ChatApp, { RIGHTMODE, STATES } from "../../../../../core/ChatApp";
 import { RenameChat } from "./rename-chat/RenameChat";
 
 export class ChatProfile extends Component {
@@ -42,7 +42,7 @@ export class ChatProfile extends Component {
     Confirm(
       { title: "Are you sure?", text: "Do you want to delete a chat?" },
       () => {
-        console.log("Chat deleted");
+        ChatApp.deleteChat(this.chat.id);
       }
     );
   };

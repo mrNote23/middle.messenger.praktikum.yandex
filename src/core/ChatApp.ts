@@ -64,7 +64,7 @@ class ChatApp {
   // инициализация стэйта
   init = () => {
     State.store(ADMIN, null);
-    State.store(STATES.CHATS_LIST, []); // Список чатов (IChat[])
+    State.store(STATES.CHATS_LIST, null); // Список чатов (IChat[])
     State.store(STATES.CURRENT_CHAT, null); // текущий чат (IChat)
     State.store(STATES.CURRENT_USER, null); // текущий пользователь чата (IUser)
     State.store(STATES.CHAT_USERS, []); // пользователи текущего чата (IUser[])
@@ -88,7 +88,7 @@ class ChatApp {
     try {
       await AuthApi.logout().catch((e) => false);
       await AuthApi.login(props).then(async (r) => {
-        const res = await AuthApi.profile();
+        const res = this._setAdminAvatar(await AuthApi.profile());
         localStorage.setItem("admin", JSON.stringify(res));
         this.init();
         State.store(ADMIN, { ...res, role: "admin" });
@@ -102,7 +102,7 @@ class ChatApp {
   // авторизация пользователя
   auth(): Promise<IUser> {
     return AuthApi.profile().then((res) => {
-      State.store(ADMIN, { ...res, role: "admin" });
+      State.store(ADMIN, { ...this._setAdminAvatar(res), role: "admin" });
     });
   }
 
@@ -111,7 +111,7 @@ class ChatApp {
     try {
       await AuthApi.logout().catch((e) => false);
       await AuthApi.register(props).then(async (r) => {
-        const res = await AuthApi.profile();
+        const res = this._setAdminAvatar(await AuthApi.profile());
         localStorage.setItem("admin", JSON.stringify(res));
         this.init();
         State.store(ADMIN, { ...res, role: "admin" });
@@ -132,13 +132,12 @@ class ChatApp {
 
   // добавление нового чата
   addChat(title: string) {
-    console.log(title);
     ChatApi.add(title)
       .then((res) => {
         const tmp = {
           id: res.id,
           title,
-          avatar: null,
+          avatar: "/images/no-avatar.jpg",
           created_by: State.extract(ADMIN).id,
           unread_count: 0,
           last_message: null,
@@ -147,6 +146,24 @@ class ChatApp {
           ...State.extract(STATES.CHATS_LIST),
           tmp,
         ]);
+      })
+      .catch((e) => false);
+  }
+
+  // удаление чата
+  deleteChat(chatId: number) {
+    ChatApi.delete(chatId)
+      .then((res) => {
+        const tmp = State.extract(STATES.CHATS_LIST).filter(
+          (elm) => elm.id !== chatId
+        );
+        State.dispatch(STATES.CHATS_LIST, tmp);
+        if (tmp.length) {
+          State.dispatch(STATES.CURRENT_CHAT, tmp[0]);
+        } else {
+          State.dispatch(STATES.CURRENT_CHAT, null);
+        }
+        State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
       })
       .catch((e) => false);
   }
@@ -165,7 +182,9 @@ class ChatApp {
           JSON.stringify(State.extract(STATES.CHAT_USERS))
         );
 
-        user.avatar = `${RES_URL}${user.avatar}`;
+        user.avatar = user.avatar
+          ? `${RES_URL}${user.avatar}`
+          : `/images/no-avatar.jpg`;
         tmp[user.id] = user;
         State.dispatch(STATES.CHAT_USERS, tmp);
       }
@@ -189,13 +208,17 @@ class ChatApp {
   loadChatsList = (): void => {
     ChatApi.list()
       .then((list: IChat[]) => {
-        list.length &&
-          State.dispatch(
-            STATES.CHATS_LIST,
-            list.map((elm) => {
-              return { ...elm, avatar: `${RES_URL}${elm.avatar}` };
-            })
-          );
+        State.dispatch(
+          STATES.CHATS_LIST,
+          list.map((elm) => {
+            return {
+              ...elm,
+              avatar: elm.avatar
+                ? `${RES_URL}${elm.avatar}`
+                : `/images/no-avatar.jpg`,
+            };
+          })
+        );
       })
       .catch((e) => false);
 
@@ -223,7 +246,12 @@ class ChatApp {
         STATES.CHAT_USERS,
         this._prepareUsersList(
           res.map((elm) => {
-            return { ...elm, avatar: `${RES_URL}${elm.avatar}` };
+            return {
+              ...elm,
+              avatar: elm.avatar
+                ? `${RES_URL}${elm.avatar}`
+                : `/images/no-avatar.jpg`,
+            };
           })
         )
       );
@@ -246,6 +274,13 @@ class ChatApp {
     //     OnMobile.showRightPanel();
     //   }
     // );
+  };
+
+  _setAdminAvatar = (res) => {
+    return {
+      ...res,
+      avatar: res.avatar ? `${RES_URL}${res.avatar}` : `/images/no-avatar.jpg`,
+    };
   };
 
   _prepareUsersList = (
