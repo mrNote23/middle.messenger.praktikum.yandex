@@ -11,6 +11,12 @@ class UserApi {
   search(login: string) {
     return this.http.post(USER_ENDPOINTS.SEARCH, { login });
   }
+
+  avatar(avatar: File) {
+    const tmp = new FormData();
+    tmp.append("avatar", avatar);
+    return this.http.put(USER_ENDPOINTS.AVATAR, tmp);
+  }
 }
 
 export default new UserApi();

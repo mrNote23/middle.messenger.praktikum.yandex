@@ -23,7 +23,7 @@ export class ChatProfile extends Component {
 
   changeAvatar = (e) => {
     if (e.target.files) {
-      ChatApp.setChatAvatar(this.chat.id, e.target.files[0]);
+      ChatApp.changeChatAvatar(this.chat.id, e.target.files[0]);
     }
   };
 

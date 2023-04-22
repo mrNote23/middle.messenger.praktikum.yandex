@@ -23,7 +23,7 @@
   <div class="profile-avatar">
     <img src="{{avatar}}" alt="">
     <label for="avatar">Click to change
-      <input hidden accept="image/*" type="file" id="avatar" name="avatar">
+      <input hidden accept="image/*" type="file" id="avatar" name="avatar" event-change="[[changeAvatar]]">
     </label>
   </div>
 

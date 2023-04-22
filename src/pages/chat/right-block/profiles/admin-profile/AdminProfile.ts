@@ -11,9 +11,10 @@ import ChatApp, {
 } from "../../../../../core/ChatApp";
 import { TFormValidatorConfig } from "../../../../../shared/form-validator/FormValidator";
 import { formFields } from "./formFields";
+import { IUser } from "../../../../../core/config/interfaces";
 
 export class AdminProfile extends Component {
-  admin: string | null;
+  admin: IUser | null;
   formFields: TFormValidatorConfig;
 
   constructor() {
@@ -22,9 +23,17 @@ export class AdminProfile extends Component {
   }
 
   connected(): void {
-    this.admin = State.extract(ADMIN);
-    this.render({ ...this.admin });
+    this.addSubscriber(ADMIN, (val) => {
+      this.admin = <IUser>val;
+      this.render({ ...this.admin });
+    });
   }
+
+  changeAvatar = (e) => {
+    if (e.target.files) {
+      ChatApp.changeAdminAvatar(e.target.files[0]);
+    }
+  };
 
   formValidated = (e: CustomEvent): void => {
     Confirm({ title: "Are you sure?", text: "Update profile?" }, () => {

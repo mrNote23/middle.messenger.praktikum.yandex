@@ -169,7 +169,7 @@ class ChatApp {
   }
 
   // установка аватара для чата
-  setChatAvatar(chatId: number, avatar: File) {
+  changeChatAvatar(chatId: number, avatar: File) {
     ChatApi.avatar(chatId, avatar)
       .then((res) => {
         let tmp = {
@@ -185,6 +185,19 @@ class ChatApp {
           }
         });
         State.dispatch(STATES.CHATS_LIST, tmp);
+      })
+      .catch((e) => false);
+  }
+
+  // установка аватара админа
+  changeAdminAvatar(avatar: File) {
+    UserApi.avatar(avatar)
+      .then((res) => {
+        const tmp = {
+          ...State.extract(ADMIN),
+          avatar: `${RES_URL}${res.avatar}`,
+        };
+        State.dispatch(ADMIN, tmp);
       })
       .catch((e) => false);
   }
