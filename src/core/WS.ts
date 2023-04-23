@@ -37,9 +37,12 @@ class WS {
 
   private _open() {
     this.send({ content: "0", type: "get old" });
-    this._pingPong = setInterval(() => {
-      this.send({ type: "ping" });
-    }, 10000);
+    if (!this._pingPong) {
+      this._pingPong = setInterval(() => {
+        this.send({ type: "ping" });
+        console.log("send ping");
+      }, 5000);
+    }
   }
 
   private _message(response: MessageEvent) {
@@ -59,9 +62,13 @@ class WS {
     }
   }
 
-  private _error() {}
+  private _error(e: ErrorEvent) {}
 
-  private _close() {}
+  private _close(e: ErrorEvent) {
+    if (e.code === 1006) {
+      this._connect();
+    }
+  }
 
   public send(content) {
     this._connection.send(JSON.stringify(content));
@@ -71,7 +78,6 @@ class WS {
     try {
       clearInterval(this._pingPong);
       this._connection?.close();
-      // this._connection = null;
     } catch (e) {
       console.log(e);
     }

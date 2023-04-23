@@ -1,5 +1,5 @@
-import { Component } from "../../../../../../core/Component";
 import view from "./ChatMessageItem.hbs";
+import { Component } from "../../../../../../core/Component";
 import { IChatMessageItem } from "../../../../../../core/config/interfaces";
 import { dateConvert } from "../../../../../../utils/date-convert";
 
