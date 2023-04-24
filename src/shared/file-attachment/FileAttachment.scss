@@ -1,0 +1,16 @@
+.file-container {
+  text-align: left;
+
+  img {
+    height: 100px;
+  }
+
+  .title {
+    width: 99%;
+    text-align: left;
+    color: var(--primary-color);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}

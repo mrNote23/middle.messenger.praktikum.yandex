@@ -23,3 +23,7 @@ export enum USER_ENDPOINTS {
   USER = "",
   SEARCH = "/search",
 }
+
+export enum RESOURCE_ENDPOINTS {
+  UPLOAD = "",
+}

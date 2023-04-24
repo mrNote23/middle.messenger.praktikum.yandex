@@ -28,6 +28,26 @@
 
   .message-attach {
     display: flex;
+    padding-bottom: 5px;
+
+    &.hidden {
+      display: none
+    }
+
+    .attach-container {
+      width: 100%;
+    }
+
+    .attach-remove {
+      width: 100%;
+      text-align: right;
+      margin-left: 10px;
+
+      svg {
+        cursor: pointer;
+        fill: var(--primary-color)
+      }
+    }
   }
 
 }

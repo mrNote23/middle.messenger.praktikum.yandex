@@ -40,7 +40,6 @@ class WS {
     if (!this._pingPong) {
       this._pingPong = setInterval(() => {
         this.send({ type: "ping" });
-        console.log("send ping");
       }, 5000);
     }
   }
@@ -53,10 +52,12 @@ class WS {
       switch (income.type) {
         case "pong":
           break;
+        case "file":
         case "message":
           ChatApp.newMessage(income);
           break;
         default:
+          console.log(income);
           break;
       }
     }
@@ -65,6 +66,7 @@ class WS {
   private _error(e: ErrorEvent) {}
 
   private _close(e: ErrorEvent) {
+    console.log(e.code);
     if (e.code === 1006) {
       this._connect();
     }

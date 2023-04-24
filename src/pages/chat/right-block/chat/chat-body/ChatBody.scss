@@ -15,9 +15,10 @@
     .message {
       text-align: left;
       background-color: white;
-      border-radius: 35px;
+      border-radius: 10px;
       padding: 10px 20px;
       box-shadow: 0 8px 24px rgb(0 0 0 / 10%);
+
     }
 
     .time {
@@ -36,6 +37,11 @@
       .message {
         background-color: var(--accent-color);
         color: white;
+
+        &.file {
+          background-color: inherit;
+          color: inherit;
+        }
       }
 
       .time {

@@ -8,6 +8,7 @@ import ChatApi from "./ChatApi";
 import UserApi from "./UserApi";
 import { RES_URL } from "./config/endpoints";
 import WS from "./WS";
+import ResourceApi from "./ResourceApi";
 
 export enum STATES {
   CHATS_LIST = "chatsList",
@@ -369,8 +370,34 @@ class ChatApp {
     );
   }
 
+  // отправка сообщений
+  async sendMessage(message: string, attach: File | null = null) {
+    if (attach) {
+      const uploaded = await this._uploadResource(attach);
+      if (uploaded) {
+        WS.send({ type: "file", content: `${uploaded.id}` });
+      }
+    }
+    if (message.length) {
+      WS.send({ type: "message", content: message });
+    }
+  }
+
+  // загрузка файла
+  async _uploadResource(file: File) {
+    let res;
+    try {
+      res = await ResourceApi.upload(file);
+    } catch (e) {
+      console.log(e);
+      res = false;
+    }
+    return res;
+  }
+
   // получено новое сообщение
   newMessage(message) {
+    console.log(message);
     const mess = {
       ...message,
       avatar: State.extract(STATES.CHAT_USERS)[message.user_id].avatar,
