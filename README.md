@@ -86,7 +86,7 @@ flowchart TD
 Перед использованием созданного компонента, его необходимо объявить:
 
 ```typescript
-window.customElements.define('main-component', MainComponent)
+customElements.define('main-component', MainComponent)
 ```
 
 ### Методы используемые внутри компонента
@@ -185,7 +185,7 @@ import view from "./App.hbs";
 import {Component} from "./Component";
 import {RouterComponent} from "./RouterComponent";
 
-window.customElements.define("main-router", RouterComponent);
+customElements.define("main-router", RouterComponent);
 
 type TRoute = {
   path: string;
@@ -246,7 +246,7 @@ import view from "./Login.hbs";
 import {Component} from "./Component";
 import {FormValidator} from "./FormValidator";
 
-window.customElements.define("form-validator", FormValidator);
+customElements.define("form-validator", FormValidator);
 
 enum MATCH {
   PHONE = "phone", // телефон в формате +78217348374, '+' - не обязателен

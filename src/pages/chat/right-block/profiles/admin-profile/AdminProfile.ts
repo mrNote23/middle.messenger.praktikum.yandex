@@ -11,10 +11,13 @@ import ChatApp, {
 } from "../../../../../core/ChatApp";
 import { TFormValidatorConfig } from "../../../../../shared/form-validator/FormValidator";
 import { formFields } from "./formFields";
+import { IUser } from "../../../../../core/config/interfaces";
+import "./AdminProfile.scss";
 
 export class AdminProfile extends Component {
-  admin: string | null;
+  admin: IUser | null;
   formFields: TFormValidatorConfig;
+  error: HTMLElement;
 
   constructor() {
     super(view);
@@ -22,15 +25,69 @@ export class AdminProfile extends Component {
   }
 
   connected(): void {
-    this.admin = State.extract(ADMIN);
-    this.render({ ...this.admin });
+    this.addSubscriber(ADMIN, (val) => {
+      this.admin = <IUser>val;
+      this.render({ ...this.admin });
+      this.error = this.querySelector(".profile-error");
+    });
   }
 
+  changeAvatar = (e: unknown) => {
+    if (e.target.files) {
+      ChatApp.changeAdminAvatar(e.target.files[0]);
+    }
+  };
+
+  errorProfile = (e: unknown) => {
+    this.error.textContent = e.reason;
+    this.error.style.display = "block";
+  };
+
   formValidated = (e: CustomEvent): void => {
+    this.error.style.display = "none";
     Confirm({ title: "Are you sure?", text: "Update profile?" }, () => {
-      console.log(e.detail);
-      this.btnBack();
+      // если были изменения в профиле, то обновим его
+      if (
+        !this._compareFields(
+          [
+            "first_name",
+            "second_name",
+            "display_name",
+            "login",
+            "email",
+            "phone",
+          ],
+          this.admin,
+          e.detail
+        )
+      ) {
+        ChatApp.changeAdminProfile(e.detail, this.errorProfile, this.btnBack);
+      }
+
+      // при необходимости обновим пароль
+      if (e.detail.newPassword !== "") {
+        ChatApp.changeAdminPassword(
+          e.detail.oldPassword,
+          e.detail.newPassword,
+          this.errorProfile,
+          this.btnBack
+        );
+      }
     });
+  };
+
+  _compareFields = (
+    fields: string[],
+    oldObj: object,
+    newObj: object
+  ): boolean => {
+    let res = true;
+    fields.forEach((field) => {
+      if (oldObj[field] !== newObj[field]) {
+        res = false;
+      }
+    });
+    return res;
   };
 
   btnLogout = (): void => {

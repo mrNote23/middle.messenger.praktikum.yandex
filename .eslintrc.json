@@ -14,7 +14,7 @@
   "rules":{
     "max-params":[
       2,
-      3
+      4
     ],
     "quotes":[
       "error",

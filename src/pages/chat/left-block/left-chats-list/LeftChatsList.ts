@@ -5,11 +5,12 @@ import ChatApp, { STATES } from "../../../../core/ChatApp";
 import { ChatsListItem } from "./chats-list-item/ChatsListItem";
 import "./LeftChatsList.scss";
 
-window.customElements.define("chats-list-item", ChatsListItem);
+customElements.define("chats-list-item", ChatsListItem);
 
 export class LeftChatsList extends Component {
-  chatsList: IChat[] = [];
+  chatsList: IChat[] | null = null;
   currentChat: IChat | null = null;
+  listEmpty = true;
 
   constructor() {
     super(view);
@@ -24,21 +25,30 @@ export class LeftChatsList extends Component {
 
     // подписка на изменения списка чатов
     this.addSubscriber(STATES.CHATS_LIST, (val: IChat[]) => {
+      this.listEmpty = true;
       this.chatsList = val;
-      if (!val.length) {
-        this.loading();
-        ChatApp.loadChatsList();
-      } else {
+      if (this.chatsList !== null) {
+        this.listEmpty = !(this.chatsList.length > 0);
         this.render({
-          chatsList: this.chatsList,
+          chatsList: this.chatsList.map((elm, index: number) => {
+            return { ...elm, index };
+          }),
           currentChatId: this.currentChat ? this.currentChat.id : null,
+          listEmpty: this.listEmpty,
         });
       }
     });
+
+    if (this.chatsList === null) {
+      this.loading();
+      ChatApp.loadChatsList();
+    }
   }
 
   // выбор чата
-  selectChat(id) {
-    ChatApp.setCurrentChat(this.chatsList[id]);
-  }
+  selectChat = (id) => {
+    ChatApp.setCurrentChat(
+      this.chatsList.filter((elm) => elm.id === id.detail)[0]
+    );
+  };
 }

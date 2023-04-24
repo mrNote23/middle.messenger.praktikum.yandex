@@ -14,10 +14,12 @@ export class ChatsListItem extends Component {
 
   propsChanged() {
     if (this.props) {
-      this.props.chat.last_message = {
-        ...this.props.chat.last_message,
-        time: dateConvert(this.props.chat.last_message.time),
-      };
+      if (this.props.chat.last_message) {
+        this.props.chat.last_message = {
+          ...this.props.chat.last_message,
+          time: dateConvert(this.props.chat.last_message.time),
+        };
+      }
       this.render(<IChat>this.props.chat);
       this.onChangeChat(<IChat>State.extract(STATES.CURRENT_CHAT));
     }

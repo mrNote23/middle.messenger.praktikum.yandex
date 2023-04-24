@@ -7,17 +7,25 @@ import "../auth.scss";
 
 export class LoginPage extends Component {
   formFields: TFormValidatorConfig;
+  error: HTMLElement;
 
   constructor() {
     super(view);
     this.formFields = formFields;
   }
 
+  loginError = (e) => {
+    this.error.textContent = e.reason;
+    this.error.style.display = "block";
+  };
+
   formValidated = (e: CustomEvent): void => {
-    ChatApp.login(e.detail);
+    this.error.style.display = "none";
+    ChatApp.login(e.detail, this.loginError);
   };
 
   connected(): void {
     this.render();
+    this.error = this.querySelector(".auth-error");
   }
 }

@@ -1,9 +1,13 @@
-import Api from "./Api";
 import State from "./State";
-import { IChat, IChatMessage, IChatUsers, IUser } from "./config/interfaces";
+import { IChat, IChatMessage, IUser } from "./config/interfaces";
 import { OnMobile } from "../utils/on-mobile";
 import { ModalWindowComponent } from "../shared/modal-window/ModalWindow";
 import { FormValidator } from "../shared/form-validator/FormValidator";
+import AuthApi from "./AuthApi";
+import ChatApi from "./ChatApi";
+import UserApi from "./UserApi";
+import { RES_URL } from "./config/endpoints";
+import WS from "./WS";
 
 export enum STATES {
   CHATS_LIST = "chatsList",
@@ -28,58 +32,67 @@ export enum RIGHTMODE {
 }
 
 export const ADMIN = "admin";
+export const TOKEN = "token";
+export const NEW_MESSAGE = "new_message";
 
 class ChatApp {
   rootRoutes;
 
   constructor() {
-    window.customElements.define("form-validator", FormValidator);
-    window.customElements.define("modal-window", ModalWindowComponent);
+    customElements.define("form-validator", FormValidator);
+    customElements.define("modal-window", ModalWindowComponent);
   }
 
+  // запуск приложения
   start = () => {
-    const test: Temp<string, 3>[] = [];
-
-    document.addEventListener("click", <T>(e: T) => {
-      if (
-        e.target.tagName === "A" &&
-        e.target.classList.contains("router-link")
-      ) {
-        e.preventDefault();
-        const pathName = e.target.getAttribute("href");
-        this.navigate(pathName);
-      }
-    });
     window.addEventListener("popstate", <T>(e: T) => {
       this.navigate(e.currentTarget.location.pathname, false);
     });
 
-    this.navigate(window.location.pathname);
+    const url = window.location.pathname;
+
+    if (["/", "/login", "/register"].includes(url)) {
+      AuthApi.profile()
+        .then((res) => {
+          State.store(ADMIN, { ...this._setAdminAvatar(res), role: "admin" });
+          this.navigate("/");
+        })
+        .catch((e) => {
+          if (url === "/") {
+            this.navigate("/login");
+          } else {
+            this.navigate(url);
+          }
+        });
+    }
+
+    // if (window.location.pathname === "/") {
+    //   this.auth()
+    //     .then((e) => {
+    //       this.navigate(window.location.pathname);
+    //     })
+    //     .catch((e) => {
+    //       this.navigate("/login");
+    //     });
+    // } else {
+    //   this.navigate(window.location.pathname);
+    // }
   };
 
   // инициализация стэйта
   init = () => {
-    // TODO: Потом убрать
-    State.store(ADMIN, {
-      id: 8,
-      first_name: "Андрей",
-      second_name: "Суворов",
-      display_name: "Andrey.S",
-      login: "andrey.s",
-      email: "andrey.s@email.com",
-      phone: "89223332218",
-      avatar: "/images/avatars/avatar-8.jpg",
-      role: "admin",
-    });
-
-    State.store(STATES.CHATS_LIST, []); // Список чатов (IChat[])
+    State.store(ADMIN, null);
+    State.store(TOKEN, null);
+    State.store(NEW_MESSAGE, null);
+    State.store(STATES.CHATS_LIST, null); // Список чатов (IChat[])
     State.store(STATES.CURRENT_CHAT, null); // текущий чат (IChat)
     State.store(STATES.CURRENT_USER, null); // текущий пользователь чата (IUser)
     State.store(STATES.CHAT_USERS, []); // пользователи текущего чата (IUser[])
-    State.store(STATES.CHAT_MESSAGES, null); // сообщения текущего чата
+    State.store(STATES.CHAT_MESSAGES, []); // сообщения текущего чата
 
     State.store(STATES.LEFT_MODE, LEFTMODE.CHATS); // режим левой панели ( chats/users )
     State.store(STATES.RIGHT_MODE, RIGHTMODE.CHAT); // режим правой панели (chat/adminProfile/userProfile/chatProfile)
+    WS.init();
   };
 
   // навигация на url
@@ -92,57 +105,215 @@ class ChatApp {
   };
 
   // логин пользователя
-  login = <T>(props: T): void => {
-    console.log(props);
-    this.init();
-    // admin info ВРЕМЕННО!
-    State.store(ADMIN, {
-      id: 8,
-      first_name: "Андрей",
-      second_name: "Суворов",
-      display_name: "Andrey.S",
-      login: "andrey.s",
-      email: "andrey.s@email.com",
-      phone: "89223332218",
-      avatar: "/images/avatars/avatar-8.jpg",
-      role: "admin",
-    });
+  async login<T>(props: T, cbError: (e: object) => void) {
+    try {
+      await AuthApi.login(props).then(async () => {
+        const res = this._setAdminAvatar(await AuthApi.profile());
+        localStorage.setItem("admin", JSON.stringify(res));
+        this.init();
+        State.store(ADMIN, { ...res, role: "admin" });
+        this.navigate("/");
+      });
+    } catch (e) {
+      if (e instanceof Object) {
+        cbError(e);
+      } else {
+        cbError({ reason: e });
+      }
+    }
+  }
 
-    this.navigate("/");
-  };
+  // регистрация пользователя
+  async register<T>(props: T, cbError: (e: object) => void) {
+    try {
+      await AuthApi.register(props).then(async () => {
+        const res = this._setAdminAvatar(await AuthApi.profile());
+        localStorage.setItem("admin", JSON.stringify(res));
+        this.init();
+        State.store(ADMIN, { ...res, role: "admin" });
+        this.navigate("/");
+      });
+    } catch (e) {
+      if (e instanceof Object) {
+        cbError(e);
+      } else {
+        cbError({ reason: e });
+      }
+    }
+  }
 
   // logout
-  logout = () => {
+  async logout() {
+    localStorage.removeItem("admin");
+    await AuthApi.logout().catch(() => false);
     this.navigate("/login");
     State.clear();
-  };
-  // регистрация пользователя
-  register = <T>(props: T): void => {
-    this.init();
-    console.log(props);
-    // admin info ВРЕМЕННО!
-    State.store(ADMIN, {
-      id: 8,
-      first_name: "Андрей",
-      second_name: "Суворов",
-      display_name: "Andrey.S",
-      login: "andrey.s",
-      email: "andrey.s@email.com",
-      phone: "89223332218",
-      avatar: "/images/avatars/avatar-8.jpg",
-      role: "admin",
-    });
+  }
 
-    this.navigate("/");
+  // добавление нового чата
+  addChat(title: string) {
+    ChatApi.add(title)
+      .then((res) => {
+        const tmp = {
+          id: res.id,
+          title,
+          avatar: "/images/no-avatar.jpg",
+          created_by: State.extract(ADMIN).id,
+          unread_count: 0,
+          last_message: null,
+        };
+        State.dispatch(STATES.CHATS_LIST, [
+          ...State.extract(STATES.CHATS_LIST),
+          tmp,
+        ]);
+      })
+      .catch(() => false);
+  }
+
+  // удаление чата
+  deleteChat(chatId: number) {
+    ChatApi.delete(chatId)
+      .then(() => {
+        const tmp = State.extract(STATES.CHATS_LIST).filter(
+          (elm) => elm.id !== chatId
+        );
+        State.dispatch(STATES.CHATS_LIST, tmp);
+        if (tmp.length) {
+          State.dispatch(STATES.CURRENT_CHAT, tmp[0]);
+        } else {
+          State.dispatch(STATES.CURRENT_CHAT, null);
+        }
+        State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
+      })
+      .catch(() => false);
+  }
+
+  // установка аватара для чата
+  changeChatAvatar(chatId: number, avatar: File) {
+    ChatApi.avatar(chatId, avatar)
+      .then((res) => {
+        let tmp = {
+          ...State.extract(STATES.CURRENT_CHAT),
+          avatar: `${RES_URL}${res.avatar}`,
+        };
+        State.dispatch(STATES.CURRENT_CHAT, tmp);
+        tmp = [...State.extract(STATES.CHATS_LIST)].map((elm) => {
+          if (elm.id === chatId) {
+            return { ...elm, avatar: `${RES_URL}${res.avatar}` };
+          } else {
+            return elm;
+          }
+        });
+        State.dispatch(STATES.CHATS_LIST, tmp);
+      })
+      .catch(() => false);
+  }
+
+  // установка аватара админа
+  changeAdminAvatar(avatar: File) {
+    UserApi.avatar(avatar)
+      .then((res) => {
+        const tmp = {
+          ...State.extract(ADMIN),
+          avatar: `${RES_URL}${res.avatar}`,
+        };
+        State.dispatch(ADMIN, tmp);
+      })
+      .catch(() => false);
+  }
+
+  // редактирование профиля
+  changeAdminProfile(
+    data: IUser,
+    cbError: (e: unknown) => void,
+    cbOk: () => void
+  ) {
+    UserApi.profile(data)
+      .then((res) => {
+        State.dispatch(ADMIN, { ...res, role: "admin" });
+        cbOk();
+      })
+      .catch((e) => {
+        if (e instanceof Object) {
+          cbError(e);
+        } else {
+          cbError({ reason: e });
+        }
+      });
+  }
+
+  // изменение пароля
+  changeAdminPassword(
+    oldPassword: string,
+    newPassword: string,
+    cbError: (e: unknown) => void,
+    cbOk: () => void
+  ) {
+    UserApi.password(oldPassword, newPassword)
+      .then(() => {
+        cbOk();
+      })
+      .catch((e) => {
+        if (e instanceof Object) {
+          cbError(e);
+        } else {
+          cbError({ reason: e });
+        }
+      });
+  }
+
+  // поиск пользователя
+  searchUser = (login: string) => {
+    return UserApi.search(login);
+  };
+
+  // добавление пользователя в чат
+  addUser = (user: IUser) => {
+    ChatApi.addUsers(State.extract(STATES.CURRENT_CHAT).id, [user.id]).then(
+      () => {
+        const tmp = JSON.parse(
+          JSON.stringify(State.extract(STATES.CHAT_USERS))
+        );
+
+        user.avatar = user.avatar
+          ? `${RES_URL}${user.avatar}`
+          : `/images/no-avatar.jpg`;
+        tmp[user.id] = user;
+        State.dispatch(STATES.CHAT_USERS, tmp);
+      }
+    );
+  };
+
+  // удаление пользователя из чата
+  deleteUser = (userId: number) => {
+    ChatApi.deleteUsers(State.extract(STATES.CURRENT_CHAT).id, [userId])
+      .then(() => {
+        const tmp = JSON.parse(
+          JSON.stringify(State.extract(STATES.CHAT_USERS))
+        );
+        delete tmp[userId];
+        State.dispatch(STATES.CHAT_USERS, tmp);
+      })
+      .catch(() => false);
   };
 
   // загрузка списка чатов
   loadChatsList = (): void => {
-    Api.getChats()
-      .then((list) => {
-        list.length && State.dispatch(STATES.CHATS_LIST, list);
+    ChatApi.list()
+      .then((list: IChat[]) => {
+        State.dispatch(
+          STATES.CHATS_LIST,
+          list.map((elm) => {
+            return {
+              ...elm,
+              avatar: elm.avatar
+                ? `${RES_URL}${elm.avatar}`
+                : `/images/no-avatar.jpg`,
+            };
+          })
+        );
       })
-      .catch();
+      .catch(() => false);
   };
 
   // выбор текущего пользователя
@@ -154,25 +325,75 @@ class ChatApp {
 
   // выбор чата - загрузка пользователей и сообщений
   setCurrentChat = (chat: IChat): void => {
-    State.dispatch(STATES.CURRENT_CHAT, "loading");
-    Promise.all([Api.getChatMessages(chat.id), Api.getChatUsers(chat.id)]).then(
-      (result) => {
-        // именно в таком порядке!!!
-        State.dispatch(STATES.CHAT_USERS, this._prepareUsersList(result[1]));
+    if (
+      !State.extract(STATES.CURRENT_CHAT) ||
+      chat.id !== State.extract(STATES.CURRENT_CHAT).id
+    ) {
+      State.dispatch(STATES.CHAT_MESSAGES, "loading");
+      ChatApi.users(chat.id).then((res: IUser[]) => {
         State.dispatch(
-          STATES.CHAT_MESSAGES,
-          this._prepareChatMessages(result[0], State.extract(STATES.CHAT_USERS))
+          STATES.CHAT_USERS,
+          this._prepareUsersList(
+            res.map((elm) => {
+              return {
+                ...elm,
+                avatar: elm.avatar
+                  ? `${RES_URL}${elm.avatar}`
+                  : `/images/no-avatar.jpg`,
+              };
+            })
+          )
         );
+        State.dispatch(STATES.CHAT_MESSAGES, []);
         State.dispatch(STATES.CURRENT_CHAT, chat);
         State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
-        OnMobile.showRightPanel();
-      }
-    );
+        this._getToken(chat.id);
+      });
+    }
+    OnMobile.showRightPanel();
   };
 
-  _prepareUsersList = (
-    users: Awaited<IChatMessage[] | IChatUsers[]>
-  ): object => {
+  // начальная загрузка сообщений
+  loadOldMessages(messages) {
+    const tmp =
+      State.extract(STATES.CHAT_MESSAGES) === "loading"
+        ? []
+        : State.extract(STATES.CHAT_MESSAGES);
+
+    State.dispatch(
+      STATES.CHAT_MESSAGES,
+      this._prepareChatMessages(
+        [...messages.reverse(), ...tmp],
+        State.extract(STATES.CHAT_USERS)
+      )
+    );
+  }
+
+  // получено новое сообщение
+  newMessage(message) {
+    const mess = {
+      ...message,
+      avatar: State.extract(STATES.CHAT_USERS)[message.user_id].avatar,
+    };
+    State.dispatch(NEW_MESSAGE, mess);
+  }
+
+  _getToken = (chatId: number) => {
+    ChatApi.token(chatId)
+      .then((res) => {
+        State.dispatch(TOKEN, res.token);
+      })
+      .catch(() => false);
+  };
+
+  _setAdminAvatar = (res) => {
+    return {
+      ...res,
+      avatar: res.avatar ? `${RES_URL}${res.avatar}` : `/images/no-avatar.jpg`,
+    };
+  };
+
+  _prepareUsersList = (users: Awaited<IUser[]>): object => {
     const res = {};
     users.forEach((user) => (res[user["id"]] = user));
     return res;

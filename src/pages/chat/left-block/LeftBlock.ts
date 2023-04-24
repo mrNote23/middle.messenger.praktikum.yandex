@@ -9,10 +9,10 @@ import { leftRoutes } from "./leftRoutes";
 import { LeftHeader } from "./left-header/LeftHeader";
 import "./LeftBlock.scss";
 
-window.customElements.define("left-header", LeftHeader);
-window.customElements.define("left-search", LeftSearch);
-window.customElements.define("left-chats-list", LeftChatsList);
-window.customElements.define("left-users-list", LeftUsersList);
+customElements.define("left-header", LeftHeader);
+customElements.define("left-search", LeftSearch);
+customElements.define("left-chats-list", LeftChatsList);
+customElements.define("left-users-list", LeftUsersList);
 
 export class LeftBlock extends Component {
   router: HTMLElement;
