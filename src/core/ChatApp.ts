@@ -38,6 +38,8 @@ class ChatApp {
   }
 
   start = () => {
+    const test: Temp<string, 3>[] = [];
+
     document.addEventListener("click", <T>(e: T) => {
       if (
         e.target.tagName === "A" &&
