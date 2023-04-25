@@ -41,7 +41,7 @@ class WS {
     if (!this._pingPong) {
       this._pingPong = setInterval(() => {
         this.send({ type: "ping" });
-      }, 5000);
+      }, 15000);
     }
   }
 
@@ -69,7 +69,6 @@ class WS {
   }
 
   private _close(e: ErrorEvent) {
-    console.log(e.code);
     if (e.code === 1006) {
       this._connect();
     }
@@ -82,7 +81,7 @@ class WS {
   private _disconnect() {
     try {
       clearInterval(this._pingPong);
-      this._connection?.close();
+      this._connection.close(1000);
     } catch (e) {
       console.log(e);
     }

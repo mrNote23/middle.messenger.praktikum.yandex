@@ -104,11 +104,12 @@ export class HTTPTransport {
         }
       }
 
-      xhr.open(method, url);
+      xhr.withCredentials = true;
       if (typeof timeout === "number") {
         xhr.timeout = timeout;
       }
-      xhr.withCredentials = true;
+
+      xhr.open(method, url);
 
       if (headers) {
         headers.forEach((item) => {

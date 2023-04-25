@@ -1,5 +1,5 @@
 import view from "./FileAttachment.hbs";
-import { Component } from "../../core/Component";
+import { Component } from "../../../core/Component";
 import "./FileAttachment.scss";
 
 export class FileAttachment extends Component {

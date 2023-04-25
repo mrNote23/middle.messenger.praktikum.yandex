@@ -39,6 +39,7 @@ export const LAST_MESSAGE_TIME = "las_message_time";
 
 class ChatApp {
   rootRoutes;
+  tmpMessages = [];
 
   constructor() {
     customElements.define("form-validator", FormValidator);
@@ -222,7 +223,13 @@ class ChatApp {
   ) {
     UserApi.profile(data)
       .then((res) => {
-        State.dispatch(ADMIN, { ...res, role: "admin" });
+        State.dispatch(ADMIN, {
+          ...res,
+          role: "admin",
+          avatar: res.avatar
+            ? `${RES_URL}${res.avatar}`
+            : `/images/no-avatar.jpg`,
+        });
         cbOk();
       })
       .catch((e) => {
@@ -267,9 +274,6 @@ class ChatApp {
           JSON.stringify(State.extract(STATES.CHAT_USERS))
         );
 
-        user.avatar = user.avatar
-          ? `${RES_URL}${user.avatar}`
-          : `/images/no-avatar.jpg`;
         tmp[user.id] = user;
         State.dispatch(STATES.CHAT_USERS, tmp);
       }
@@ -336,8 +340,7 @@ class ChatApp {
             })
           )
         );
-        State.dispatch(STATES.CHAT_MESSAGES, []);
-        State.dispatch(STATES.CURRENT_CHAT, chat);
+        State.dispatch(STATES.CURRENT_CHAT, { ...chat, unread_count: 0 });
         State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
         this._getToken(chat.id);
       });
@@ -347,18 +350,19 @@ class ChatApp {
 
   // начальная загрузка сообщений
   loadOldMessages(messages) {
-    const tmp =
-      State.extract(STATES.CHAT_MESSAGES) === "loading"
-        ? []
-        : State.extract(STATES.CHAT_MESSAGES);
-
-    State.dispatch(
-      STATES.CHAT_MESSAGES,
-      this._prepareChatMessages(
-        [...messages.reverse(), ...tmp],
+    if (messages.length) {
+      this.tmpMessages = this._prepareChatMessages(
+        [...messages.reverse(), ...this.tmpMessages],
         State.extract(STATES.CHAT_USERS)
-      )
-    );
+      );
+      WS.send({
+        content: this.tmpMessages.length.toString(),
+        type: "get old",
+      });
+    } else {
+      State.dispatch(STATES.CHAT_MESSAGES, [...this.tmpMessages]);
+      this.tmpMessages.length = 0;
+    }
   }
 
   // отправка сообщений
@@ -374,6 +378,17 @@ class ChatApp {
     }
   }
 
+  // получено новое сообщение
+  newMessage(message) {
+    const user = State.extract(STATES.CHAT_USERS)[message.user_id];
+    const mess = {
+      ...message,
+      avatar: State.extract(STATES.CHAT_USERS)[message.user_id].avatar,
+      display_name: user.display_name,
+    };
+    State.dispatch(NEW_MESSAGE, mess);
+  }
+
   // загрузка файла
   async _uploadResource(file: File) {
     let res;
@@ -384,17 +399,6 @@ class ChatApp {
       res = false;
     }
     return res;
-  }
-
-  // получено новое сообщение
-  newMessage(message) {
-    const user = State.extract(STATES.CHAT_USERS)[message.user_id];
-    const mess = {
-      ...message,
-      avatar: State.extract(STATES.CHAT_USERS)[message.user_id].avatar,
-      display_name: user.display_name,
-    };
-    State.dispatch(NEW_MESSAGE, mess);
   }
 
   _getToken = (chatId: number) => {
