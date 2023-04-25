@@ -1,0 +1,13 @@
+.messages-divider {
+  border-bottom: 1px dotted var(--light-gray-color);
+  margin: 10px 0;
+
+  span {
+    position: relative;
+    top: 7px;
+    background-color: white;
+    padding: 0 10px;
+    color: var(--gray-color);
+    font-size: 10px;
+  }
+}

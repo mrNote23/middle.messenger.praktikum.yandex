@@ -17,6 +17,9 @@ export class RouterComponent extends Component {
   }
 
   private _fill(path: string): void {
+    if (!path) {
+      return;
+    }
     if (this.props.routes) {
       let res = this._findRoute(path);
       if (res) {

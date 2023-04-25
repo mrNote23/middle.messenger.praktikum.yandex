@@ -1,23 +1,53 @@
-.message-control {
-	font-size: 16px;
-	margin-bottom: 0;
-	padding: 5px 10px
-}
+.chat-footer {
+  .message-control {
+    font-size: 16px;
+    margin-bottom: 0;
+    padding: 5px 10px
+  }
 
-.message-form-buttons {
-	display: flex;
-	padding-left: 20px;
+  .message-form-buttons {
+    display: flex;
+    padding-left: 20px;
 
-	.attach-btn, .send-btn {
-		background: transparent;
-		width: 30px;
-		height: 30px;
-		border: 0;
-		cursor: pointer;
-	}
+    .attach-btn, .send-btn {
+      background: transparent;
+      width: 30px;
+      height: 30px;
+      border: 0;
+      cursor: pointer;
+    }
 
-	.send-btn {
-		margin-left: 20px;
-	}
+    .send-btn {
+      margin-left: 20px;
+    }
+  }
+
+  .message {
+    display: flex;
+  }
+
+  .message-attach {
+    display: flex;
+    padding-bottom: 5px;
+
+    &.hidden {
+      display: none
+    }
+
+    .attach-container {
+      width: 100%;
+    }
+
+    .attach-remove {
+      width: 100%;
+      text-align: right;
+      margin-left: 10px;
+
+      svg {
+        cursor: pointer;
+        fill: var(--primary-color)
+      }
+    }
+  }
 
 }

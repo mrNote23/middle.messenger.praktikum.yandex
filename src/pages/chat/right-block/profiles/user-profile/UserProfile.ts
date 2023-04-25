@@ -16,7 +16,7 @@ export class UserProfile extends Component {
 
   connected(): void {
     this.addSubscriber(STATES.CURRENT_CHAT, (val) => (this.currentChat = val));
-    this.addSubscriber(STATES.CURRENT_USER, (val) => {
+    this.addSubscriber(STATES.CURRENT_USER, (val: IUser) => {
       this.user = val;
       this.render({
         ...this.user,

@@ -2,7 +2,7 @@ import view from "./ChatBody.hbs";
 import State from "../../../../../core/State";
 import { Component } from "../../../../../core/Component";
 import "./ChatBody.scss";
-import { IChat, IChatMessageItem } from "../../../../../core/config/interfaces";
+import { IChatMessageItem } from "../../../../../core/config/interfaces";
 import { ADMIN, NEW_MESSAGE, STATES } from "../../../../../core/ChatApp";
 import { ChatMessageItem } from "./chat-message-item/ChatMessageItem";
 
@@ -19,7 +19,6 @@ export class ChatBody extends Component {
   }
 
   connected(): void {
-    // this.addSubscriber(STATES.CURRENT_CHAT, this.chatChanged);
     this.addSubscriber(STATES.CHAT_MESSAGES, this.loadMessages);
     this.addSubscriber(NEW_MESSAGE, this.newMessage);
   }
@@ -29,6 +28,9 @@ export class ChatBody extends Component {
       this.loading();
       this.notSelected = false;
     } else {
+      if (State.extract(STATES.CURRENT_CHAT)) {
+        this.notSelected = false;
+      }
       this.messages = messages;
       this.adminId = State.extract(ADMIN).id | null;
       this.render({
@@ -43,24 +45,9 @@ export class ChatBody extends Component {
   newMessage = (message) => {
     if (message) {
       const tmp = document.createElement("chat-message-item");
-      tmp.props["message"] = message;
-      tmp.props["adminid"] = this.adminId;
       this.container.appendChild(tmp);
+      tmp.props["message"] = message;
       this.scrollTop = Math.round(Number.MAX_SAFE_INTEGER / 10);
     }
   };
-
-  // chatChanged = (chat: IChat | "loading"): void => {
-  // console.log(chat);
-  // if (chat === "loading") {
-  // this.loading();
-  // } else {
-  //   this.messages = <IChatMessageItem[]>State.extract(STATES.CHAT_MESSAGES);
-  //   this.adminId = State.extract(ADMIN).id | null;
-  //   this.render({
-  //     messages: this.messages,
-  //     notSelected: !State.extract(STATES.CHAT_MESSAGES),
-  //   });
-  // }
-  // };
 }

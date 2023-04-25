@@ -1,5 +1,5 @@
 import State from "./State";
-import { IChat, IChatMessage, IUser } from "./config/interfaces";
+import { IChat, IUser } from "./config/interfaces";
 import { OnMobile } from "../utils/on-mobile";
 import { ModalWindowComponent } from "../shared/modal-window/ModalWindow";
 import { FormValidator } from "../shared/form-validator/FormValidator";
@@ -8,6 +8,7 @@ import ChatApi from "./ChatApi";
 import UserApi from "./UserApi";
 import { RES_URL } from "./config/endpoints";
 import WS from "./WS";
+import ResourceApi from "./ResourceApi";
 
 export enum STATES {
   CHATS_LIST = "chatsList",
@@ -34,6 +35,7 @@ export enum RIGHTMODE {
 export const ADMIN = "admin";
 export const TOKEN = "token";
 export const NEW_MESSAGE = "new_message";
+export const LAST_MESSAGE_TIME = "las_message_time";
 
 class ChatApp {
   rootRoutes;
@@ -49,16 +51,21 @@ class ChatApp {
       this.navigate(e.currentTarget.location.pathname, false);
     });
 
-    if (window.location.pathname === "/") {
-      this.auth()
-        .then(() => {
-          this.navigate(window.location.pathname);
+    const url = window.location.pathname;
+
+    if (["/", "/login", "/register"].includes(url)) {
+      AuthApi.profile()
+        .then((res) => {
+          State.store(ADMIN, { ...this._setAdminAvatar(res), role: "admin" });
+          this.navigate("/");
         })
         .catch(() => {
-          this.navigate("/login");
+          if (url === "/") {
+            this.navigate("/login");
+          } else {
+            this.navigate(url);
+          }
         });
-    } else {
-      this.navigate(window.location.pathname);
     }
   };
 
@@ -67,6 +74,7 @@ class ChatApp {
     State.store(ADMIN, null);
     State.store(TOKEN, null);
     State.store(NEW_MESSAGE, null);
+    State.store(LAST_MESSAGE_TIME, null);
     State.store(STATES.CHATS_LIST, null); // Список чатов (IChat[])
     State.store(STATES.CURRENT_CHAT, null); // текущий чат (IChat)
     State.store(STATES.CURRENT_USER, null); // текущий пользователь чата (IUser)
@@ -90,7 +98,6 @@ class ChatApp {
   // логин пользователя
   async login<T>(props: T, cbError: (e: object) => void) {
     try {
-      await AuthApi.logout().catch(() => false);
       await AuthApi.login(props).then(async () => {
         const res = this._setAdminAvatar(await AuthApi.profile());
         localStorage.setItem("admin", JSON.stringify(res));
@@ -107,17 +114,9 @@ class ChatApp {
     }
   }
 
-  // авторизация пользователя
-  auth(): Promise<IUser> {
-    return AuthApi.profile().then((res) => {
-      State.store(ADMIN, { ...this._setAdminAvatar(res), role: "admin" });
-    });
-  }
-
   // регистрация пользователя
   async register<T>(props: T, cbError: (e: object) => void) {
     try {
-      await AuthApi.logout().catch(() => false);
       await AuthApi.register(props).then(async () => {
         const res = this._setAdminAvatar(await AuthApi.profile());
         localStorage.setItem("admin", JSON.stringify(res));
@@ -361,11 +360,38 @@ class ChatApp {
     );
   }
 
+  // отправка сообщений
+  async sendMessage(message: string, attach: File | null = null) {
+    if (attach) {
+      const uploaded = await this._uploadResource(attach);
+      if (uploaded) {
+        WS.send({ type: "file", content: `${uploaded.id}` });
+      }
+    }
+    if (message.length) {
+      WS.send({ type: "message", content: message });
+    }
+  }
+
+  // загрузка файла
+  async _uploadResource(file: File) {
+    let res;
+    try {
+      res = await ResourceApi.upload(file);
+    } catch (e) {
+      console.log(e);
+      res = false;
+    }
+    return res;
+  }
+
   // получено новое сообщение
   newMessage(message) {
+    const user = State.extract(STATES.CHAT_USERS)[message.user_id];
     const mess = {
       ...message,
       avatar: State.extract(STATES.CHAT_USERS)[message.user_id].avatar,
+      display_name: user.display_name,
     };
     State.dispatch(NEW_MESSAGE, mess);
   }
@@ -385,12 +411,15 @@ class ChatApp {
     };
   };
 
-  _prepareUsersList = (
-    // users: Awaited<IChatMessage[] | IChatUsers[]>
-    users: Awaited<IUser[]>
-  ): object => {
+  _prepareUsersList = (users: Awaited<IUser[]>): object => {
     const res = {};
-    users.forEach((user) => (res[user["id"]] = user));
+    users.forEach(
+      (user) =>
+        (res[user["id"]] = {
+          ...user,
+          display_name: user.display_name ? user.display_name : user.first_name,
+        })
+    );
     return res;
   };
 

@@ -9,6 +9,11 @@ import { ChatFooter } from "./right-block/chat/chat-footer/ChatFooter";
 import { AdminProfile } from "./right-block/profiles/admin-profile/AdminProfile";
 import { UserProfile } from "./right-block/profiles/user-profile/UserProfile";
 import { ChatProfile } from "./right-block/profiles/chat-profile/ChatProfile";
+import { AudioAttachment } from "../../shared/audio-attachment/AudioAttachment";
+import { VideoAttachment } from "../../shared/video-attachment/VideoAttachment";
+import { FileAttachment } from "../../shared/file-attachment/FileAttachment";
+import { ImageAttachment } from "../../shared/image-attachment/ImageAttachment";
+import { MessagesDivider } from "../../shared/messages-divider/MessagesDivider";
 import { rightRoutes } from "./right-block/rightRoutes";
 import "./ChatPage.scss";
 
@@ -20,6 +25,12 @@ customElements.define("chat-footer", ChatFooter);
 customElements.define("admin-profile", AdminProfile);
 customElements.define("user-profile", UserProfile);
 customElements.define("chat-profile", ChatProfile);
+
+customElements.define("audio-attachment", AudioAttachment);
+customElements.define("video-attachment", VideoAttachment);
+customElements.define("image-attachment", ImageAttachment);
+customElements.define("file-attachment", FileAttachment);
+customElements.define("messages-divider", MessagesDivider);
 
 export class ChatPage extends Component {
   router: HTMLElement;

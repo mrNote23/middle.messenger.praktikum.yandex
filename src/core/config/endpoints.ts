@@ -2,6 +2,9 @@ export const API_URL = "https://ya-praktikum.tech/api/v2";
 export const RES_URL = "https://ya-praktikum.tech/api/v2/resources/";
 export const API_WS_URL = "wss://ya-praktikum.tech/ws/";
 
+export const MAX_UFS = 1024 * 1024;
+export const MAX_UFSS = "1Mb";
+
 export enum AUTH_ENDPOINTS {
   LOGIN = "/signin",
   REGISTER = "/signup",
@@ -22,4 +25,8 @@ export enum USER_ENDPOINTS {
   PASSWORD = "/password",
   USER = "",
   SEARCH = "/search",
+}
+
+export enum RESOURCE_ENDPOINTS {
+  UPLOAD = "",
 }

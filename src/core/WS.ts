@@ -5,20 +5,19 @@ import { API_WS_URL } from "./config/endpoints";
 class WS {
   _connection: WebSocket;
   _token: string;
-  _pingPong: unknown;
+  _pingPong: number;
   _userId: number;
   _chatId: number;
 
-  constructor() {}
+  // constructor() {}
 
   public init() {
-    console.log("WS init");
     State.subscribe(TOKEN, (token: string | null) => {
       if (token !== null) {
+        /* eslint-disable */
         this._userId = State.extract(ADMIN)!.id;
         this._chatId = State.extract(STATES.CURRENT_CHAT)!.id;
         this._token = token;
-        console.log(this._chatId, this._userId, this._token);
         if (this._connection) {
           this._disconnect();
         }
@@ -39,42 +38,51 @@ class WS {
 
   private _open() {
     this.send({ content: "0", type: "get old" });
-    this._pingPong = setInterval(() => {
-      this.send({ type: "ping" });
-    }, 10000);
+    if (!this._pingPong) {
+      this._pingPong = setInterval(() => {
+        this.send({ type: "ping" });
+      }, 5000);
+    }
   }
 
   private _message(response: MessageEvent) {
     const income = JSON.parse(response.data);
     if (Array.isArray(income)) {
-      console.log(income);
       ChatApp.loadOldMessages(income);
     } else {
       switch (income.type) {
         case "pong":
           break;
-        default:
+        case "file":
+        case "message":
           ChatApp.newMessage(income);
+          break;
+        default:
+          console.log(income);
           break;
       }
     }
   }
 
-  private _error() {}
+  private _error(e: ErrorEvent) {
+    console.log(e);
+  }
 
-  private _close() {}
+  private _close(e: ErrorEvent) {
+    console.log(e.code);
+    if (e.code === 1006) {
+      this._connect();
+    }
+  }
 
   public send(content) {
     this._connection.send(JSON.stringify(content));
   }
 
-  private _getMessages;
-
   private _disconnect() {
     try {
       clearInterval(this._pingPong);
       this._connection?.close();
-      this._connection = null;
     } catch (e) {
       console.log(e);
     }

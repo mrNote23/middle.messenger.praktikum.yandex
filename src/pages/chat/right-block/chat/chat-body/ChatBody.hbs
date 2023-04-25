@@ -3,7 +3,7 @@
 {{else}}
   <div id="messages_container">
     {{#each messages}}
-      <chat-message-item props-message="[[messages[{{@index}}]]]" props-adminid="[[adminId]]"></chat-message-item>
+      <chat-message-item props-message="[[messages[{{@index}}]]]"></chat-message-item>
     {{/each}}
   </div>
 {{/if}}
