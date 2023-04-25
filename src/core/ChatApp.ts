@@ -98,13 +98,13 @@ class ChatApp {
   // логин пользователя
   async login<T>(props: T, cbError: (e: object) => void) {
     try {
-      await AuthApi.login(props).then(async () => {
-        const res = this._setAdminAvatar(await AuthApi.profile());
-        localStorage.setItem("admin", JSON.stringify(res));
-        this.init();
-        State.store(ADMIN, { ...res, role: "admin" });
-        this.navigate("/");
-      });
+      await AuthApi.login(props);
+      const userData = await AuthApi.profile();
+      const res = this._setAdminAvatar(userData);
+      localStorage.setItem("admin", JSON.stringify(res));
+      this.init();
+      State.store(ADMIN, { ...res, role: "admin" });
+      this.navigate("/");
     } catch (e) {
       if (e instanceof Object) {
         cbError(e);
@@ -117,13 +117,14 @@ class ChatApp {
   // регистрация пользователя
   async register<T>(props: T, cbError: (e: object) => void) {
     try {
-      await AuthApi.register(props).then(async () => {
-        const res = this._setAdminAvatar(await AuthApi.profile());
-        localStorage.setItem("admin", JSON.stringify(res));
-        this.init();
-        State.store(ADMIN, { ...res, role: "admin" });
-        this.navigate("/");
-      });
+      await AuthApi.register(props);
+
+      const userData = await AuthApi.profile();
+      const res = this._setAdminAvatar(userData);
+      localStorage.setItem("admin", JSON.stringify(res));
+      this.init();
+      State.store(ADMIN, { ...res, role: "admin" });
+      this.navigate("/");
     } catch (e) {
       if (e instanceof Object) {
         cbError(e);
