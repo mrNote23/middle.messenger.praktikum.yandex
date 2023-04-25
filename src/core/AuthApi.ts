@@ -24,22 +24,22 @@ class AuthApi {
   }
 
   // user login
-  async login(data: TLoginData): Promise<unknown> {
+  login(data: TLoginData): Promise<unknown> {
     return this.http.post(AUTH_ENDPOINTS.LOGIN, data);
   }
 
   // user register
-  async register(data: TRegisterData): Promise<unknown> {
+  register(data: TRegisterData): Promise<unknown> {
     return this.http.post(AUTH_ENDPOINTS.REGISTER, data);
   }
 
   // user logout
-  async logout(): Promise<void> {
+  logout(): Promise<void> {
     return this.http.post(AUTH_ENDPOINTS.LOGOUT);
   }
 
   // get user's profile
-  async profile(): Promise<IUser> {
+  profile(): Promise<IUser> {
     return this.http.get(AUTH_ENDPOINTS.PROFILE);
   }
 }
