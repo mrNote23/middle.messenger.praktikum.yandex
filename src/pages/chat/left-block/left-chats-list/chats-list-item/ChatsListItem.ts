@@ -14,17 +14,18 @@ export class ChatsListItem extends Component {
 
   propsChanged() {
     if (this.props) {
-      if (this.props.chat.last_message) {
-        this.props.chat.last_message = {
-          ...this.props.chat.last_message,
-          time:
+      this.chat = <IChat>this.props.chat;
+      if (this.chat.last_message) {
+        this.chat.last_message = <any>{
+          ...this.chat.last_message,
+          timeDisplay:
             new Date(Date.now()).getDay() !==
-            new Date(this.props.chat.last_message.time).getDay()
-              ? dateConvert(this.props.chat.last_message.time, "D-M-Y h:i")
-              : dateConvert(this.props.chat.last_message.time, "h:i"),
+            new Date(this.chat.last_message.time).getDay()
+              ? dateConvert(this.chat.last_message.time, "D-M-Y h:i")
+              : dateConvert(this.chat.last_message.time, "h:i"),
         };
       }
-      this.render(<IChat>this.props.chat);
+      this.render(<IChat>this.chat);
       this.onChangeChat(<IChat>State.extract(STATES.CURRENT_CHAT));
     }
   }
@@ -32,14 +33,16 @@ export class ChatsListItem extends Component {
   connected() {
     this.onclick = (e: MouseEvent) => {
       e.preventDefault();
-      this.createEvent("select", this.props.chat.id);
+      this.createEvent("select", this.chat.id);
     };
     this.addSubscriber(STATES.CURRENT_CHAT, this.onChangeChat);
   }
 
   onChangeChat = (chat: IChat) => {
-    if (chat instanceof Object && this.props.chat) {
-      if (this.props.chat.id === chat.id) {
+    if (chat instanceof Object && this.chat) {
+      if (this.chat.id === chat.id) {
+        this.chat = { ...this.chat, unread_count: 0 };
+        this.render(<IChat>this.chat);
         this.classList.add("active");
       } else {
         this.classList.remove("active");

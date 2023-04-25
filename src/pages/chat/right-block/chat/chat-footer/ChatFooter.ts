@@ -8,9 +8,6 @@ import { MAX_UFS, MAX_UFSS } from "../../../../../core/config/endpoints";
 export class ChatFooter extends Component {
   message = "";
   attach: File | null = null;
-  attachContainer: HTMLElement;
-  messageAttach: HTMLElement;
-  errorContainer: HTMLElement;
 
   constructor() {
     super(view);
@@ -25,9 +22,6 @@ export class ChatFooter extends Component {
     if (val && val !== "loading") {
       this.style.display = "flex";
       this.render({ message: this.message });
-      this.attachContainer = this.querySelector(".attach-container");
-      this.errorContainer = this.querySelector(".error-container");
-      this.messageAttach = this.querySelector(".message-attach");
       this.getElementsByTagName("input")[0].focus();
     } else {
       this.style.display = "none";
@@ -50,13 +44,13 @@ export class ChatFooter extends Component {
   };
 
   removeAttachment = () => {
-    this.attachContainer.innerHTML = "";
-    this.messageAttach.classList.add("hidden");
+    this.querySelector(".attach-container").innerHTML = "";
+    this.querySelector(".message-attach").classList.add("hidden");
     this.attach = null;
+    this.querySelector("#attachment").value = "";
   };
 
   addAttachment = () => {
-    this.querySelector("#attachment").value = "";
     this.querySelector<unknown>("#attachment")["click"]();
   };
 
@@ -64,14 +58,17 @@ export class ChatFooter extends Component {
     if (!e.target.files.length) {
       return;
     }
-    this.attachContainer.innerHTML = "";
+    this.querySelector(".attach-container").innerHTML = "";
     this.attach = <File>e.target.files[0];
 
     if (this.attach.size > MAX_UFS) {
-      this.errorContainer.innerHTML = `<p class="color-danger text-left">File too large! Max file size ${MAX_UFSS}</p>`;
+      this.querySelector(
+        ".error-container"
+      ).innerHTML = `<p class="color-danger text-left">File too large! Max file size ${MAX_UFSS}</p>`;
       setTimeout(() => {
-        this.errorContainer.innerHTML = "";
+        this.querySelector(".error-container").innerHTML = "";
       }, 5000);
+      this.removeAttachment();
       return;
     }
     const media: HTMLElement = mediaContainer(this.attach.type.split("/")[0]);
@@ -86,7 +83,7 @@ export class ChatFooter extends Component {
     reader.readAsDataURL(this.attach);
 
     media.props.fileName = this.attach.name;
-    this.attachContainer.appendChild(media);
-    this.messageAttach.classList.remove("hidden");
+    this.querySelector(".attach-container").appendChild(media);
+    this.querySelector(".message-attach").classList.remove("hidden");
   };
 }
