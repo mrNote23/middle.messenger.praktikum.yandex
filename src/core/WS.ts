@@ -9,11 +9,12 @@ class WS {
   _userId: number;
   _chatId: number;
 
-  constructor() {}
+  // constructor() {}
 
   public init() {
     State.subscribe(TOKEN, (token: string | null) => {
       if (token !== null) {
+        /* eslint-disable */
         this._userId = State.extract(ADMIN)!.id;
         this._chatId = State.extract(STATES.CURRENT_CHAT)!.id;
         this._token = token;
@@ -63,7 +64,9 @@ class WS {
     }
   }
 
-  private _error(e: ErrorEvent) {}
+  private _error(e: ErrorEvent) {
+    console.log(e);
+  }
 
   private _close(e: ErrorEvent) {
     console.log(e.code);

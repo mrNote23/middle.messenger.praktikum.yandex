@@ -87,7 +87,8 @@
 
 .profile {
   height: 100%;
-  overflow: auto;
+  overflow: hidden;
+  position: relative;
 
 
   .profile-header {
@@ -113,12 +114,11 @@
   }
 
   .profile-body {
-    margin-top: 73px;
     display: flex;
     flex-direction: column;
     background-color: white;
     height: 100%;
-    padding: 10px 20px 10px 10px;
+    padding: 73px 20px 10px 10px;
     overflow: auto;
     text-align: left;
 

@@ -1,5 +1,5 @@
 import State from "./State";
-import { IChat, IChatMessage, IUser } from "./config/interfaces";
+import { IChat, IUser } from "./config/interfaces";
 import { OnMobile } from "../utils/on-mobile";
 import { ModalWindowComponent } from "../shared/modal-window/ModalWindow";
 import { FormValidator } from "../shared/form-validator/FormValidator";
@@ -35,6 +35,7 @@ export enum RIGHTMODE {
 export const ADMIN = "admin";
 export const TOKEN = "token";
 export const NEW_MESSAGE = "new_message";
+export const LAST_MESSAGE_TIME = "las_message_time";
 
 class ChatApp {
   rootRoutes;
@@ -58,7 +59,7 @@ class ChatApp {
           State.store(ADMIN, { ...this._setAdminAvatar(res), role: "admin" });
           this.navigate("/");
         })
-        .catch((e) => {
+        .catch(() => {
           if (url === "/") {
             this.navigate("/login");
           } else {
@@ -66,18 +67,6 @@ class ChatApp {
           }
         });
     }
-
-    // if (window.location.pathname === "/") {
-    //   this.auth()
-    //     .then((e) => {
-    //       this.navigate(window.location.pathname);
-    //     })
-    //     .catch((e) => {
-    //       this.navigate("/login");
-    //     });
-    // } else {
-    //   this.navigate(window.location.pathname);
-    // }
   };
 
   // инициализация стэйта
@@ -85,6 +74,7 @@ class ChatApp {
     State.store(ADMIN, null);
     State.store(TOKEN, null);
     State.store(NEW_MESSAGE, null);
+    State.store(LAST_MESSAGE_TIME, null);
     State.store(STATES.CHATS_LIST, null); // Список чатов (IChat[])
     State.store(STATES.CURRENT_CHAT, null); // текущий чат (IChat)
     State.store(STATES.CURRENT_USER, null); // текущий пользователь чата (IUser)
@@ -397,10 +387,11 @@ class ChatApp {
 
   // получено новое сообщение
   newMessage(message) {
-    console.log(message);
+    const user = State.extract(STATES.CHAT_USERS)[message.user_id];
     const mess = {
       ...message,
       avatar: State.extract(STATES.CHAT_USERS)[message.user_id].avatar,
+      display_name: user.display_name,
     };
     State.dispatch(NEW_MESSAGE, mess);
   }
@@ -422,7 +413,13 @@ class ChatApp {
 
   _prepareUsersList = (users: Awaited<IUser[]>): object => {
     const res = {};
-    users.forEach((user) => (res[user["id"]] = user));
+    users.forEach(
+      (user) =>
+        (res[user["id"]] = {
+          ...user,
+          display_name: user.display_name ? user.display_name : user.first_name,
+        })
+    );
     return res;
   };
 

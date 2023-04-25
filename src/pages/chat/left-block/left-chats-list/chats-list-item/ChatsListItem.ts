@@ -17,7 +17,11 @@ export class ChatsListItem extends Component {
       if (this.props.chat.last_message) {
         this.props.chat.last_message = {
           ...this.props.chat.last_message,
-          time: dateConvert(this.props.chat.last_message.time),
+          time:
+            new Date(Date.now()).getDay() !==
+            new Date(this.props.chat.last_message.time).getDay()
+              ? dateConvert(this.props.chat.last_message.time, "D-M-Y h:i")
+              : dateConvert(this.props.chat.last_message.time, "h:i"),
         };
       }
       this.render(<IChat>this.props.chat);

@@ -8,8 +8,8 @@ export class AudioAttachment extends Component {
   playing = false;
   timer: number;
   duration: number;
-  currentTime: number = 0;
-  slider: number = 0;
+  currentTime = 0;
+  slider = 0;
 
   constructor() {
     super(view);
