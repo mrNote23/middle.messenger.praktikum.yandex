@@ -1,7 +1,7 @@
 import view from "./AudioAttachment.hbs";
-import { Component } from "../../core/Component";
+import { Component } from "../../../core/Component";
 import "./AudioAttachment.scss";
-import { mediaTimeConvert } from "../../utils/media-time-convert";
+import { mediaTimeConvert } from "../../../utils/media-time-convert";
 
 export class AudioAttachment extends Component {
   audio: HTMLAudioElement;

@@ -1,40 +1,91 @@
 import view from "./AddUser.hbs";
 import { ModalWindow } from "../../../../../shared/modal-window/ModalWindow";
-import { TFormValidatorConfig } from "../../../../../shared/form-validator/FormValidator";
-import "./AddUser.scss";
 import ChatApp from "../../../../../core/ChatApp";
+import { Component } from "../../../../../core/Component";
+import "./AddUser.scss";
+import { IUser } from "../../../../../core/config/interfaces";
+import { RES_URL } from "../../../../../core/config/endpoints";
+
+class AddUserComponent extends Component {
+  timeout: number;
+  users: IUser[];
+  user: IUser;
+  inputValue = "";
+  userNode: HTMLElement;
+
+  constructor() {
+    super(view);
+  }
+
+  connected() {
+    this.render();
+  }
+
+  onInput = (e) => {
+    this.inputValue = e.target.value;
+    clearTimeout(this.timeout);
+    if (this.inputValue === "") {
+      this.render({ users: [], inputValue: this.inputValue, empty: false });
+      this.querySelector(".form-control").focus();
+      return;
+    }
+    this.timeout = setTimeout(() => {
+      ChatApp.searchUser(e.target.value).then((res: IUser[]) => {
+        this.users = res.map((elm) => {
+          return {
+            ...elm,
+            avatar: elm.avatar
+              ? `${RES_URL}${elm.avatar}`
+              : `/images/no-avatar.jpg`,
+          };
+        });
+        let empty = false;
+        if (this.inputValue !== "" && !this.users.length) {
+          empty = true;
+        }
+        this.render({ users: this.users, inputValue: this.inputValue, empty });
+        this.querySelector(".form-control").focus();
+        this.querySelector(".form-control").setSelectionRange(
+          this.inputValue.length,
+          this.inputValue.length
+        );
+      });
+    }, 500);
+  };
+
+  selectUser = (e) => {
+    if (this.userNode) {
+      this.userNode.classList.remove("active");
+    }
+    this.userNode = e.target.closest("li");
+    this.userNode.classList.add("active");
+    this.user = this.users.find(
+      (user) => user.id === parseInt(this.userNode.dataset.id)
+    );
+    console.log(this.user);
+  };
+
+  addUser = () => {
+    ChatApp.addUser(this.user);
+    this.createEvent("finish", null);
+  };
+
+  notNow = () => {
+    this.createEvent("finish", null);
+  };
+}
 
 export const AddUser = (): void => {
-  const formFields: TFormValidatorConfig = {
-    login: {
-      required: true,
-      maxLength: 50,
-      message: "up to 50 characters",
-    },
-  };
-  const modalWindow = new ModalWindow("Add user", view(), {
-    formFields,
-    formValidated,
-  });
+  !window.customElements.get("add-user-component") &&
+    window.customElements.define("add-user-component", AddUserComponent);
 
-  modalWindow.node["error"] = function (error: string) {
-    const tmp = this.querySelector(".modal-error");
-    tmp.textContent = error;
-    tmp.style.display = "block";
-    setTimeout(() => {
-      tmp.style.display = "none";
-    }, 3000);
-  };
+  const modalWindow = new ModalWindow(
+    "Add user",
+    `<add-user-component event-finish="[[closeWindow]]"></add-user-component>`,
+    { closeWindow }
+  );
 
-  function formValidated(e: CustomEvent): void {
-    ChatApp.searchUser(e.detail.login).then((res) => {
-      const user = res.find((elm) => elm.login === e.detail.login);
-      if (user) {
-        ChatApp.addUser(user);
-        modalWindow.remove();
-      } else {
-        modalWindow.node["error"]("User not found");
-      }
-    });
+  function closeWindow() {
+    modalWindow.remove();
   }
 };

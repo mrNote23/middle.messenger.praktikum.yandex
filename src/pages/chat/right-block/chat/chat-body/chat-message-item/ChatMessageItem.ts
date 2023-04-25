@@ -4,7 +4,7 @@ import { IChatMessageItem } from "../../../../../../core/config/interfaces";
 import { dateConvert } from "../../../../../../utils/date-convert";
 import { RES_URL } from "../../../../../../core/config/endpoints";
 import { mediaContainer } from "../../../../../../utils/media-container";
-import { ADMIN, LAST_MESSAGE_TIME } from "../../../../../../core/ChatApp";
+import { ADMIN } from "../../../../../../core/ChatApp";
 import State from "../../../../../../core/State";
 
 export class ChatMessageItem extends Component {

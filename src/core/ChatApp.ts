@@ -1,5 +1,5 @@
 import State from "./State";
-import { IChat, IChatMessage, IUser } from "./config/interfaces";
+import { IChat, IUser } from "./config/interfaces";
 import { OnMobile } from "../utils/on-mobile";
 import { ModalWindowComponent } from "../shared/modal-window/ModalWindow";
 import { FormValidator } from "../shared/form-validator/FormValidator";
@@ -223,7 +223,13 @@ class ChatApp {
   ) {
     UserApi.profile(data)
       .then((res) => {
-        State.dispatch(ADMIN, { ...res, role: "admin" });
+        State.dispatch(ADMIN, {
+          ...res,
+          role: "admin",
+          avatar: res.avatar
+            ? `${RES_URL}${res.avatar}`
+            : `/images/no-avatar.jpg`,
+        });
         cbOk();
       })
       .catch((e) => {
@@ -268,9 +274,6 @@ class ChatApp {
           JSON.stringify(State.extract(STATES.CHAT_USERS))
         );
 
-        user.avatar = user.avatar
-          ? `${RES_URL}${user.avatar}`
-          : `/images/no-avatar.jpg`;
         tmp[user.id] = user;
         State.dispatch(STATES.CHAT_USERS, tmp);
       }

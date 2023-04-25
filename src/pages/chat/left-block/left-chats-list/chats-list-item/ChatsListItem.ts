@@ -41,7 +41,8 @@ export class ChatsListItem extends Component {
   onChangeChat = (chat: IChat) => {
     if (chat instanceof Object && this.chat) {
       if (this.chat.id === chat.id) {
-        this.chat = { ...this.chat, unread_count: 0 };
+        this.chat = chat;
+        // this.chat = { ...this.chat, unread_count: 0 };
         this.render(<IChat>this.chat);
         this.classList.add("active");
       } else {

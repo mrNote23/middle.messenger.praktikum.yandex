@@ -4,15 +4,12 @@ export const dateConvert = (param, mask = "D-M-Y h:i") => {
     elm = new Date(param);
   }
 
-  const nowSec = Date.now() / 1000;
-  const targetSec = Date.parse(elm) / 1000;
-
-  let year = elm.getFullYear().toString().substring(2);
-  let month = (elm.getMonth() + 1).toString();
-  let date = elm.getDate().toString();
-  let hour = elm.getHours().toString();
-  let minute = elm.getMinutes().toString();
-  let seconds = elm.getSeconds().toString();
+  const year = elm.getFullYear().toString().substring(2);
+  const month = (elm.getMonth() + 1).toString();
+  const date = elm.getDate().toString();
+  const hour = elm.getHours().toString();
+  const minute = elm.getMinutes().toString();
+  const seconds = elm.getSeconds().toString();
 
   const par = {
     Y: (year.length > 1 ? "" : "0") + year,

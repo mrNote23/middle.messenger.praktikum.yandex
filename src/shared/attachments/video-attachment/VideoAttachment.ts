@@ -1,5 +1,5 @@
 import view from "./VideoAttachment.hbs";
-import { Component } from "../../core/Component";
+import { Component } from "../../../core/Component";
 import "./VideoAttachment.scss";
 
 export class VideoAttachment extends Component {

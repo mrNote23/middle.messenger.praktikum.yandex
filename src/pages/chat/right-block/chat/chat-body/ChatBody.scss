@@ -19,7 +19,7 @@
       text-align: left;
       background-color: white;
       border-radius: 10px;
-      padding: 10px 10px;
+      padding: 10px;
       box-shadow: 0 8px 24px rgb(0 0 0 / 10%);
 
       .message-header {
@@ -32,15 +32,8 @@
           margin-bottom: 5px;
           margin-right: 10px;
         }
-
-        .time {
-        }
-
       }
-
-
     }
-
   }
 
   &.message-right {
@@ -52,6 +45,12 @@
         background-color: var(--accent-color);
         color: white;
 
+        .time {
+          font-size: 10px;
+          text-align: right;
+          color: white;
+        }
+
         &.file {
           background-color: inherit;
           color: inherit;
@@ -60,12 +59,6 @@
             color: var(--dark-gray-color)
           }
         }
-      }
-
-      .time {
-        font-size: 10px;
-        text-align: right;
-        color: white;
       }
     }
   }
