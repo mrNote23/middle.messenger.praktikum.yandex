@@ -2,7 +2,11 @@ import view from "./ChatHeader.hbs";
 import State from "../../../../../core/State";
 import { OnMobile } from "../../../../../utils/on-mobile";
 import { Component } from "../../../../../core/Component";
-import { IChat, IUser } from "../../../../../core/config/interfaces";
+import {
+  IChat,
+  IChatUsers,
+  IUser,
+} from "../../../../../core/config/interfaces";
 import "./ChatHeader.scss";
 import { RIGHTMODE, STATES } from "../../../../../core/ChatApp";
 
@@ -31,14 +35,14 @@ export class ChatHeader extends Component {
     } else {
       this.chat = chat;
       this.usersAvatars = [];
-      this.chatUsers = State.extract(STATES.CHAT_USERS);
+      this.chatUsers = <IUser[]>State.extract(STATES.CHAT_USERS);
       Object.values(this.chatUsers)
         .slice(0, 3)
         .forEach((u) => this.usersAvatars.push(u.avatar));
       this.usersCountAvatar =
         Object.keys(this.chatUsers).length < 10
           ? Object.keys(this.chatUsers).length
-          : "99+";
+          : "10+";
       this.render({
         ...this.chat,
         usersAvatars: this.usersAvatars,

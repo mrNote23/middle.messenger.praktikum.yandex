@@ -26,11 +26,13 @@ class WS {
     });
   }
 
-  private _connect() {
+  private _connect(first = true) {
     this._connection = new WebSocket(
       `${API_WS_URL}chats/${this._userId}/${this._chatId}/${this._token}`
     );
-    this._connection.onopen = this._open.bind(this);
+    if (first) {
+      this._connection.onopen = this._open.bind(this);
+    }
     this._connection.onclose = this._close.bind(this);
     this._connection.onmessage = this._message.bind(this);
     this._connection.onerror = this._error.bind(this);
@@ -70,7 +72,9 @@ class WS {
 
   private _close(e: ErrorEvent) {
     if (e.code === 1006) {
-      this._connect();
+      setTimeout(() => {
+        this._connect(false);
+      }, 5000);
     }
   }
 
