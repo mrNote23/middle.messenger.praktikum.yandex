@@ -4,8 +4,9 @@ import { Confirm } from "../../../../../shared/confirm/confirm";
 import { Component } from "../../../../../core/Component";
 import "./ChatProfile.scss";
 import { IChat } from "../../../../../core/config/interfaces";
-import ChatApp, { RIGHTMODE, STATES } from "../../../../../core/ChatApp";
 import { RenameChat } from "./rename-chat/RenameChat";
+import { ChatController } from "../../../../../core/controllers/ChatController";
+import { RIGHTMODE, STATES } from "../../../../../core/config/types";
 
 export class ChatProfile extends Component {
   chat: IChat;
@@ -23,7 +24,7 @@ export class ChatProfile extends Component {
 
   changeAvatar = (e) => {
     if (e.target.files) {
-      ChatApp.changeChatAvatar(this.chat.id, e.target.files[0]);
+      ChatController.changeChatAvatar(this.chat.id, e.target.files[0]);
     }
   };
 
@@ -48,7 +49,7 @@ export class ChatProfile extends Component {
     Confirm(
       { title: "Are you sure?", text: "Do you want to delete a chat?" },
       () => {
-        ChatApp.deleteChat(this.chat.id);
+        ChatController.deleteChat(this.chat.id);
       }
     );
   };

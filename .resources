@@ -1,3 +1,5 @@
+https://app.netlify.com/sites/andreys/overview
+https://imgbb.com/
 https://github.com/Yandex-Practicum/tests-second-floor
 https://ya-praktikum.tech/api/v2/swagger/#/
 new WebSocket(`wss://ya-praktikum.tech/ws/chats/${userId}/${chatId}/${token}`);

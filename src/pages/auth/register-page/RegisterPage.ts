@@ -1,9 +1,9 @@
 import view from "./RegisterPage.hbs";
 import { Component } from "../../../core/Component";
-import ChatApp from "../../../core/ChatApp";
 import { TFormValidatorConfig } from "../../../shared/form-validator/FormValidator";
 import { formFields } from "./formFields";
 import "../auth.scss";
+import { AuthController } from "../../../core/controllers/AuthController";
 
 export class RegisterPage extends Component {
   formFields: TFormValidatorConfig;
@@ -21,7 +21,7 @@ export class RegisterPage extends Component {
 
   formValidated = (e: CustomEvent): void => {
     this.error.style.display = "none";
-    ChatApp.register(e.detail, this.registerError);
+    AuthController.register(e.detail, this.registerError);
   };
 
   connected(): void {

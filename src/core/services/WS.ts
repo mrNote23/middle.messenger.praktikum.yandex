@@ -1,6 +1,7 @@
-import ChatApp, { ADMIN, STATES, TOKEN } from "./ChatApp";
-import State from "./State";
-import { API_WS_URL } from "./config/endpoints";
+import State from "../State";
+import { API_WS_URL } from "../API/endpoints";
+import { MessagesController } from "../controllers/MessagesController";
+import { ADMIN, STATES, TOKEN } from "../config/types";
 
 class WS {
   _connection: WebSocket;
@@ -8,8 +9,6 @@ class WS {
   _pingPong: number;
   _userId: number;
   _chatId: number;
-
-  // constructor() {}
 
   public init() {
     State.subscribe(TOKEN, (token: string | null) => {
@@ -28,7 +27,7 @@ class WS {
 
   private _connect(first = true) {
     this._connection = new WebSocket(
-      `${API_WS_URL}chats/${this._userId}/${this._chatId}/${this._token}`
+      `${API_WS_URL}/${this._userId}/${this._chatId}/${this._token}`
     );
     if (first) {
       this._connection.onopen = this._open.bind(this);
@@ -50,14 +49,14 @@ class WS {
   private _message(response: MessageEvent) {
     const income = JSON.parse(response.data);
     if (Array.isArray(income)) {
-      ChatApp.loadOldMessages(income);
+      MessagesController.loadOldMessages(income);
     } else {
       switch (income.type) {
         case "pong":
           break;
         case "file":
         case "message":
-          ChatApp.newMessage(income);
+          MessagesController.newMessage(income);
           break;
         default:
           console.log(income);

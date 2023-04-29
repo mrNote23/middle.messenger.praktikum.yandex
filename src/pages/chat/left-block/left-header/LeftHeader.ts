@@ -1,11 +1,11 @@
 import view from "./LeftHeader.hbs";
 import { Component } from "../../../../core/Component";
-import { LEFTMODE, RIGHTMODE, STATES } from "../../../../core/ChatApp";
 import State from "../../../../core/State";
 import { OnMobile } from "../../../../utils/on-mobile";
 import { AddChat } from "../left-modals/add-chat/AddChat";
 import { AddUser } from "../left-modals/add-user/AddUser";
 import "./LeftHeader.scss";
+import { LEFTMODE, RIGHTMODE, STATES } from "../../../../core/config/types";
 
 export class LeftHeader extends Component {
   leftMode: string | null = null;
@@ -13,6 +13,19 @@ export class LeftHeader extends Component {
 
   constructor() {
     super(view);
+  }
+
+  connected() {
+    this.render();
+    this.addSubscriber(STATES.LEFT_MODE, (val) => (this.leftMode = val));
+    this.addSubscriber(STATES.RIGHT_MODE, (val) => (this.rightMode = val));
+    this.addSubscriber(STATES.CURRENT_CHAT, (val) => {
+      if (val) {
+        document.getElementById("mode-users").classList.remove("d-none");
+      } else {
+        document.getElementById("mode-users").classList.add("d-none");
+      }
+    });
   }
 
   addUserChat = (): void => {
@@ -46,13 +59,4 @@ export class LeftHeader extends Component {
       document.getElementById("mode-chats").className = "";
     }
   };
-
-  connected() {
-    this.render();
-    this.addSubscriber(STATES.LEFT_MODE, (val) => (this.leftMode = val));
-    this.addSubscriber(STATES.RIGHT_MODE, (val) => (this.rightMode = val));
-    this.addSubscriber(STATES.CURRENT_CHAT, (val) => {
-      val && document.getElementById("mode-users").classList.remove("d-none");
-    });
-  }
 }

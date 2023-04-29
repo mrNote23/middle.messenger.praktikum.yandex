@@ -3,8 +3,8 @@ import State from "../../../../../core/State";
 import { Component } from "../../../../../core/Component";
 import "./ChatBody.scss";
 import { IChatMessageItem } from "../../../../../core/config/interfaces";
-import { ADMIN, NEW_MESSAGE, STATES } from "../../../../../core/ChatApp";
 import { ChatMessageItem } from "./chat-message-item/ChatMessageItem";
+import { ADMIN, NEW_MESSAGE, STATES } from "../../../../../core/config/types";
 
 customElements.define("chat-message-item", ChatMessageItem);
 
@@ -45,9 +45,11 @@ export class ChatBody extends Component {
   newMessage = (message) => {
     if (message) {
       const tmp = document.createElement("chat-message-item");
-      this.container.appendChild(tmp);
-      tmp.props["message"] = message;
-      this.scrollTop = Math.round(Number.MAX_SAFE_INTEGER / 10);
+      if (this.container) {
+        this.container.appendChild(tmp);
+        tmp.props["message"] = message;
+        this.scrollTop = Math.round(Number.MAX_SAFE_INTEGER / 10);
+      }
     }
   };
 }

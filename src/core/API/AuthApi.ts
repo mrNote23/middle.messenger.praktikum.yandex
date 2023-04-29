@@ -1,6 +1,6 @@
-import { HTTPTransport } from "./HTTPTransport";
-import { AUTH_ENDPOINTS } from "./config/endpoints";
-import { IUser } from "./config/interfaces";
+import { HTTPTransport } from "../services/HTTPTransport";
+import { AUTH_ENDPOINTS } from "./endpoints";
+import { IUser } from "../config/interfaces";
 
 type TLoginData = {
   login: string;

@@ -1,5 +1,5 @@
-import { HTTPTransport } from "./HTTPTransport";
-import { RESOURCE_ENDPOINTS } from "./config/endpoints";
+import { HTTPTransport } from "../services/HTTPTransport";
+import { RESOURCE_ENDPOINTS } from "./endpoints";
 
 class ResourceApi {
   http: HTTPTransport;

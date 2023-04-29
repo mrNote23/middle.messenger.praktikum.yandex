@@ -1,9 +1,10 @@
 import view from "./LeftChatsList.hbs";
 import { Component } from "../../../../core/Component";
 import { IChat } from "../../../../core/config/interfaces";
-import ChatApp, { STATES } from "../../../../core/ChatApp";
 import { ChatsListItem } from "./chats-list-item/ChatsListItem";
 import "./LeftChatsList.scss";
+import { ChatController } from "../../../../core/controllers/ChatController";
+import { STATES } from "../../../../core/config/types";
 
 customElements.define("chats-list-item", ChatsListItem);
 
@@ -18,10 +19,9 @@ export class LeftChatsList extends Component {
 
   connected(): void {
     // подписка на изменение текущего чата
-    this.addSubscriber(
-      STATES.CURRENT_CHAT,
-      (val: IChat) => (this.currentChat = val)
-    );
+    this.addSubscriber(STATES.CURRENT_CHAT, (val: IChat) => {
+      this.currentChat = val;
+    });
 
     // подписка на изменения списка чатов
     this.addSubscriber(STATES.CHATS_LIST, (val: IChat[]) => {
@@ -41,13 +41,13 @@ export class LeftChatsList extends Component {
 
     if (this.chatsList === null) {
       this.loading();
-      ChatApp.loadChatsList();
+      ChatController.loadChatsList();
     }
   }
 
   // выбор чата
   selectChat = (id) => {
-    ChatApp.setCurrentChat(
+    ChatController.setCurrentChat(
       this.chatsList.filter((elm) => elm.id === id.detail)[0]
     );
   };

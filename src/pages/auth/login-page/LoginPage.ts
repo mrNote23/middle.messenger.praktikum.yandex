@@ -1,8 +1,8 @@
 import view from "./LoginPage.hbs";
 import { Component } from "../../../core/Component";
-import ChatApp from "../../../core/ChatApp";
 import { TFormValidatorConfig } from "../../../shared/form-validator/FormValidator";
 import { formFields } from "./formFields";
+import { AuthController } from "../../../core/controllers/AuthController";
 import "../auth.scss";
 
 export class LoginPage extends Component {
@@ -21,7 +21,7 @@ export class LoginPage extends Component {
 
   formValidated = (e: CustomEvent): void => {
     this.error.style.display = "none";
-    ChatApp.login(e.detail, this.loginError);
+    AuthController.login(e.detail, this.loginError);
   };
 
   connected(): void {

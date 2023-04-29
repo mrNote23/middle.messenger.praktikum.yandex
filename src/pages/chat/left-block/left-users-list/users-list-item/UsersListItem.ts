@@ -1,8 +1,8 @@
 import { Component } from "../../../../../core/Component";
 import view from "./UsersListItem.hbs";
 import { IUser } from "../../../../../core/config/interfaces";
-import { STATES } from "../../../../../core/ChatApp";
 import State from "../../../../../core/State";
+import { STATES } from "../../../../../core/config/types";
 
 export class UsersListItem extends Component {
   user: IUser;

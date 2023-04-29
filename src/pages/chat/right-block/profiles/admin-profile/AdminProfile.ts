@@ -3,16 +3,18 @@ import State from "../../../../../core/State";
 import { OnMobile } from "../../../../../utils/on-mobile";
 import { Confirm } from "../../../../../shared/confirm/confirm";
 import { Component } from "../../../../../core/Component";
-import ChatApp, {
-  ADMIN,
-  LEFTMODE,
-  RIGHTMODE,
-  STATES,
-} from "../../../../../core/ChatApp";
 import { TFormValidatorConfig } from "../../../../../shared/form-validator/FormValidator";
 import { formFields } from "./formFields";
 import { IUser } from "../../../../../core/config/interfaces";
 import "./AdminProfile.scss";
+import { AuthController } from "../../../../../core/controllers/AuthController";
+import { AdminController } from "../../../../../core/controllers/AdminController";
+import {
+  ADMIN,
+  LEFTMODE,
+  RIGHTMODE,
+  STATES,
+} from "../../../../../core/config/types";
 
 export class AdminProfile extends Component {
   admin: IUser | null;
@@ -34,7 +36,7 @@ export class AdminProfile extends Component {
 
   changeAvatar = (e: unknown) => {
     if (e.target.files) {
-      ChatApp.changeAdminAvatar(e.target.files[0]);
+      AdminController.changeAdminAvatar(e.target.files[0]);
     }
   };
 
@@ -61,12 +63,16 @@ export class AdminProfile extends Component {
           e.detail
         )
       ) {
-        ChatApp.changeAdminProfile(e.detail, this.errorProfile, this.btnBack);
+        AdminController.changeAdminProfile(
+          e.detail,
+          this.errorProfile,
+          this.btnBack
+        );
       }
 
       // при необходимости обновим пароль
       if (e.detail.newPassword !== "") {
-        ChatApp.changeAdminPassword(
+        AdminController.changeAdminPassword(
           e.detail.oldPassword,
           e.detail.newPassword,
           this.errorProfile,
@@ -92,7 +98,7 @@ export class AdminProfile extends Component {
 
   btnLogout = (): void => {
     Confirm({ title: "Are you sure?", text: "Exit from chat?" }, () => {
-      ChatApp.logout();
+      AuthController.logout();
     });
   };
 
