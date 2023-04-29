@@ -22,7 +22,8 @@ class AddUserComponent extends Component {
   }
 
   onInput = (e) => {
-    this.inputValue = e.target.value;
+    this.inputValue = e.target.value.replace(/[^а-яa-z0-9-]+/gi, "");
+    e.target.value = this.inputValue;
     clearTimeout(this.timeout);
     if (this.inputValue === "") {
       this.render({ users: [], inputValue: this.inputValue, empty: false });
