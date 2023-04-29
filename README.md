@@ -28,6 +28,30 @@
 - Добавлены ESLint, StyleLint
 - Добавлен класс для работы с HTTP запросами
 
+### Спринт 3 / 4 [(PR)](https://github.com/mrNote23/middle.messenger.praktikum.yandex/pull/4)
+
+- Добавлен прелоадер
+- Сделан роутинг приложения (Class Router)
+- Реализованы методы взаимодействия с API
+- Реализован обмен сообщениями с помощью WebSocket
+- Реализован полный функционал чата, а именно:
+  - регистрация пользователя;
+  - авторизация пользователя;
+  - деавторизация пользователя;
+  - редактирование профиля пользователя;
+  - изменение пароля пользователя;
+  - изменение аватара пользователя;
+  - создание чата;
+  - удаление чата;
+  - изменение аватара чата;
+  - добавление собеседника в чат;
+  - удаление собеседника из чата;
+  - просмотр профиля собеседника;
+  - отправка текстовых сообщений в чат;
+  - отправка файлов в чат;
+  - просмотр/прослушивание для аудио/видео/фото сообщений;
+  - возможность скачивания файловых вложений;
+
 ## СТЭК
 
 - HTML
@@ -44,7 +68,6 @@
 
 ```mermaid
 flowchart TD
-    main-app --> app-router
     app-router --> login-page
     app-router --> register-page
     app-router --> chat-page
@@ -177,7 +200,7 @@ export class MainComponent extends Component {
 
 ## RouterComponent
 
-**Динамическое изменение контента в зависимости от атрибута `path`**
+**Динамическое изменение контента в зависимости от пропса `path`**
 
 ```typescript
 // App.ts
@@ -233,7 +256,11 @@ export class App extends Component {
 
 ```HTML
 <!-- App.hbs-->
-<main-router path="{{path}}" props-routes="[[rootRoutes]]"></main-router>
+<main-router props-path="{{path}}" props-routes="[[rootRoutes]]">
+  ...
+  content
+  ...
+</main-router>
 ```
 
 ## FormValidator
