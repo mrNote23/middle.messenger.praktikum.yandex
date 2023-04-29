@@ -1,5 +1,5 @@
 import { TRoute } from "../../../shared/router-component/RouterComponent";
-import { RIGHTMODE } from "../../../core/ChatApp";
+import { RIGHTMODE } from "../../../core/config/types";
 
 export const rightRoutes: TRoute[] = [
   {

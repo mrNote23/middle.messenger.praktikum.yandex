@@ -12,8 +12,10 @@ export class RouterComponent extends Component {
     super();
   }
 
-  propsChanged() {
-    this._fill(this.getAttribute("path"));
+  propsChanged(prop, oldValue, newValue) {
+    if (prop === "path" && oldValue !== newValue) {
+      this._fill(this.props.path);
+    }
   }
 
   private _fill(path: string): void {
@@ -23,17 +25,13 @@ export class RouterComponent extends Component {
     if (this.props.routes) {
       let res = this._findRoute(path);
       if (res) {
-        // если роут найден
         if (res.redirect) {
-          // если есть редирект, то обработаем его в первую очередь
           this._fill(res.redirect);
           return;
         } else if (res.content) {
-          // если есть контент то выведем его
           this.innerHTML = res.content;
         }
       } else {
-        // заданный роут не найден, значит ищем роут "*", если есть то используем его, иначе ничего не делаем
         res = this._findRoute("*");
         if (res) {
           this._fill("*");
@@ -53,18 +51,4 @@ export class RouterComponent extends Component {
       return null;
     }
   };
-
-  static get observedAttributes(): Array<string> {
-    return ["path"];
-  }
-
-  attributeChangedCallback(
-    name: string,
-    oldValue: string,
-    newValue: string
-  ): void {
-    if (name === "path" && newValue !== oldValue) {
-      this._fill(newValue);
-    }
-  }
 }

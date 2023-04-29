@@ -1,10 +1,10 @@
 import view from "./AddUser.hbs";
 import { ModalWindow } from "../../../../../shared/modal-window/ModalWindow";
-import ChatApp from "../../../../../core/ChatApp";
 import { Component } from "../../../../../core/Component";
 import "./AddUser.scss";
 import { IUser } from "../../../../../core/config/interfaces";
-import { RES_URL } from "../../../../../core/config/endpoints";
+import { RES_URL } from "../../../../../core/API/endpoints";
+import { UserController } from "../../../../../core/controllers/UserController";
 
 class AddUserComponent extends Component {
   timeout: number;
@@ -30,7 +30,7 @@ class AddUserComponent extends Component {
       return;
     }
     this.timeout = setTimeout(() => {
-      ChatApp.searchUser(e.target.value).then((res: IUser[]) => {
+      UserController.searchUser(e.target.value).then((res: IUser[]) => {
         this.users = res.map((elm) => {
           return {
             ...elm,
@@ -62,11 +62,10 @@ class AddUserComponent extends Component {
     this.user = this.users.find(
       (user) => user.id === parseInt(this.userNode.dataset.id)
     );
-    console.log(this.user);
   };
 
   addUser = () => {
-    ChatApp.addUser(this.user);
+    UserController.addUser(this.user);
     this.createEvent("finish", null);
   };
 

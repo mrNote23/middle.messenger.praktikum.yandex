@@ -1,9 +1,10 @@
 import view from "./ChatFooter.hbs";
 import { Component } from "../../../../../core/Component";
-import ChatApp, { STATES } from "../../../../../core/ChatApp";
 import { mediaContainer } from "../../../../../utils/media-container";
+import { MAX_UFS, MAX_UFSS } from "../../../../../core/API/endpoints";
+import { MessagesController } from "../../../../../core/controllers/MessagesController";
+import { STATES } from "../../../../../core/config/types";
 import "./ChatFooter.scss";
-import { MAX_UFS, MAX_UFSS } from "../../../../../core/config/endpoints";
 
 export class ChatFooter extends Component {
   message = "";
@@ -35,7 +36,7 @@ export class ChatFooter extends Component {
 
   sendMessage = (): void => {
     if (this.message.length || this.attach) {
-      ChatApp.sendMessage(this.message, this.attach);
+      MessagesController.sendMessage(this.message, this.attach);
       this.message = "";
       this.attach = null;
       this.render();

@@ -1,9 +1,9 @@
 import view from "./RenameChat.hbs";
 import { ModalWindow } from "../../../../../../shared/modal-window/ModalWindow";
 import State from "../../../../../../core/State";
-import { STATES } from "../../../../../../core/ChatApp";
 import { TFormValidatorConfig } from "../../../../../../shared/form-validator/FormValidator";
 import "./RenameChat.scss";
+import { STATES } from "../../../../../../core/config/types";
 
 export const RenameChat = (): void => {
   const formFields: TFormValidatorConfig = {

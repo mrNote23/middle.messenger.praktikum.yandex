@@ -1,6 +1,5 @@
 import view from "./LeftBlock.hbs";
 import { Component } from "../../../core/Component";
-import { STATES } from "../../../core/ChatApp";
 import { LeftSearch } from "./left-search/LeftSearch";
 import { LeftChatsList } from "./left-chats-list/LeftChatsList";
 import { LeftUsersList } from "./left-users-list/LeftUsersList";
@@ -8,6 +7,7 @@ import { TRoute } from "../../../shared/router-component/RouterComponent";
 import { leftRoutes } from "./leftRoutes";
 import { LeftHeader } from "./left-header/LeftHeader";
 import "./LeftBlock.scss";
+import { STATES } from "../../../core/config/types";
 
 customElements.define("left-header", LeftHeader);
 customElements.define("left-search", LeftSearch);
@@ -28,6 +28,7 @@ export class LeftBlock extends Component {
     this.router = document.getElementById("left-router");
 
     this.addSubscriber(STATES.LEFT_MODE, (val) => {
+      this.router.props.path = val;
       this.router.setAttribute("path", val);
     });
   }

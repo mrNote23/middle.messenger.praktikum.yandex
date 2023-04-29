@@ -2,7 +2,7 @@ import view from "./AddChat.hbs";
 import "./AddChat.scss";
 import { ModalWindow } from "../../../../../shared/modal-window/ModalWindow";
 import { TFormValidatorConfig } from "../../../../../shared/form-validator/FormValidator";
-import ChatApp from "../../../../../core/ChatApp";
+import { ChatController } from "../../../../../core/controllers/ChatController";
 
 export const AddChat = (): void => {
   const formFields: TFormValidatorConfig = {
@@ -20,7 +20,7 @@ export const AddChat = (): void => {
   });
 
   function formValidated(e: CustomEvent): void {
-    ChatApp.addChat(e.detail.chat_name);
+    ChatController.addChat(e.detail.chat_name);
     modalWindow.remove();
   }
 };

@@ -1,4 +1,4 @@
-import { API_URL } from "./config/endpoints";
+import { API_URL } from "../API/endpoints";
 
 export enum METHODS {
   GET = "GET",

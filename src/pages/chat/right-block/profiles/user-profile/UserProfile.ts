@@ -4,7 +4,8 @@ import { Confirm } from "../../../../../shared/confirm/confirm";
 import "./UserProfile.scss";
 import { Component } from "../../../../../core/Component";
 import { IChat, IUser } from "../../../../../core/config/interfaces";
-import ChatApp, { ADMIN, RIGHTMODE, STATES } from "../../../../../core/ChatApp";
+import { UserController } from "../../../../../core/controllers/UserController";
+import { ADMIN, RIGHTMODE, STATES } from "../../../../../core/config/types";
 
 export class UserProfile extends Component {
   user: IUser;
@@ -35,7 +36,7 @@ export class UserProfile extends Component {
     Confirm(
       { title: "Are you sure?", text: "Do you want to delete a user?" },
       () => {
-        ChatApp.deleteUser(this.user.id);
+        UserController.deleteUser(this.user.id);
         this.backBtn();
       }
     );

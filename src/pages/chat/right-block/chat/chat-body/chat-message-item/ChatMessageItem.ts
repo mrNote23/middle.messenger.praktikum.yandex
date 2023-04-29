@@ -2,10 +2,10 @@ import view from "./ChatMessageItem.hbs";
 import { Component } from "../../../../../../core/Component";
 import { IChatMessageItem } from "../../../../../../core/config/interfaces";
 import { dateConvert } from "../../../../../../utils/date-convert";
-import { RES_URL } from "../../../../../../core/config/endpoints";
+import { RES_URL } from "../../../../../../core/API/endpoints";
 import { mediaContainer } from "../../../../../../utils/media-container";
-import { ADMIN } from "../../../../../../core/ChatApp";
 import State from "../../../../../../core/State";
+import { ADMIN } from "../../../../../../core/config/types";
 
 export class ChatMessageItem extends Component {
   message: IChatMessageItem | object;

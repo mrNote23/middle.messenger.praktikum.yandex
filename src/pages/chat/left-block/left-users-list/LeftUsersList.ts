@@ -1,9 +1,10 @@
 import view from "./LeftUsersList.hbs";
 import { Component } from "../../../../core/Component";
 import { IChatUsers } from "../../../../core/config/interfaces";
-import ChatApp, { STATES } from "../../../../core/ChatApp";
 import "./LeftUsersList.scss";
 import { UsersListItem } from "./users-list-item/UsersListItem";
+import { UserController } from "../../../../core/controllers/UserController";
+import { STATES } from "../../../../core/config/types";
 
 customElements.define("users-list-item", UsersListItem);
 
@@ -23,6 +24,6 @@ export class LeftUsersList extends Component {
   }
 
   selectUser = (id) => {
-    ChatApp.setCurrentUser(this.usersList[id.detail]);
+    UserController.setCurrentUser(this.usersList[id.detail]);
   };
 }

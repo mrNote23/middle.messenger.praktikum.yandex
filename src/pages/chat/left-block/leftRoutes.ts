@@ -1,5 +1,5 @@
 import { TRoute } from "../../../shared/router-component/RouterComponent";
-import { LEFTMODE } from "../../../core/ChatApp";
+import { LEFTMODE } from "../../../core/config/types";
 
 export const leftRoutes: TRoute[] = [
   {

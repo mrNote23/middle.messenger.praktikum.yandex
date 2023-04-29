@@ -1,6 +1,6 @@
-import { HTTPTransport } from "./HTTPTransport";
-import { CHAT_ENDPOINTS } from "./config/endpoints";
-import { IChat, IUser } from "./config/interfaces";
+import { HTTPTransport } from "../services/HTTPTransport";
+import { CHAT_ENDPOINTS } from "./endpoints";
+import { IChat, IUser } from "../config/interfaces";
 
 class ChatApi {
   http: HTTPTransport;

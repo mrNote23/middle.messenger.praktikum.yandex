@@ -2,7 +2,6 @@ import view from "./ChatPage.hbs";
 import { TRoute } from "../../shared/router-component/RouterComponent";
 import { Component } from "../../core/Component";
 import { LeftBlock } from "./left-block/LeftBlock";
-import { STATES } from "../../core/ChatApp";
 import { ChatHeader } from "./right-block/chat/chat-header/ChatHeader";
 import { ChatBody } from "./right-block/chat/chat-body/ChatBody";
 import { ChatFooter } from "./right-block/chat/chat-footer/ChatFooter";
@@ -16,6 +15,7 @@ import { ImageAttachment } from "../../shared/attachments/image-attachment/Image
 import { MessagesDivider } from "../../shared/messages-divider/MessagesDivider";
 import { rightRoutes } from "./right-block/rightRoutes";
 import "./ChatPage.scss";
+import { STATES } from "../../core/config/types";
 
 customElements.define("left-block", LeftBlock);
 
@@ -47,6 +47,7 @@ export class ChatPage extends Component {
     this.router = document.getElementById("right-router");
 
     this.addSubscriber(STATES.RIGHT_MODE, (val: string) => {
+      this.router.props.path = val;
       this.router.setAttribute("path", val);
     });
   }

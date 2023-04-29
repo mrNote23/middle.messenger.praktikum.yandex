@@ -1,6 +1,6 @@
-import { HTTPTransport } from "./HTTPTransport";
-import { USER_ENDPOINTS } from "./config/endpoints";
-import { IUser } from "./config/interfaces";
+import { HTTPTransport } from "../services/HTTPTransport";
+import { USER_ENDPOINTS } from "./endpoints";
+import { IUser } from "../config/interfaces";
 
 class UserApi {
   http: HTTPTransport;
