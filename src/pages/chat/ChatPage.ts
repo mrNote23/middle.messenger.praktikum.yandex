@@ -13,9 +13,10 @@ import { VideoAttachment } from "../../shared/attachments/video-attachment/Video
 import { FileAttachment } from "../../shared/attachments/file-attachment/FileAttachment";
 import { ImageAttachment } from "../../shared/attachments/image-attachment/ImageAttachment";
 import { MessagesDivider } from "../../shared/messages-divider/MessagesDivider";
+import { STATES } from "../../core/config/types";
+import { AuthController } from "../../core/controllers/AuthController";
 import { rightRoutes } from "./right-block/rightRoutes";
 import "./ChatPage.scss";
-import { STATES } from "../../core/config/types";
 
 customElements.define("left-block", LeftBlock);
 
@@ -42,13 +43,17 @@ export class ChatPage extends Component {
   }
 
   connected(): void {
-    this.render();
+    AuthController.auth().then((res) => {
+      if (res) {
+        this.render();
 
-    this.router = document.getElementById("right-router");
+        this.router = document.getElementById("right-router");
 
-    this.addSubscriber(STATES.RIGHT_MODE, (val: string) => {
-      this.router.props.path = val;
-      this.router.setAttribute("path", val);
+        this.addSubscriber(STATES.RIGHT_MODE, (val: string) => {
+          this.router.props.path = val;
+          this.router.setAttribute("path", val);
+        });
+      }
     });
   }
 }

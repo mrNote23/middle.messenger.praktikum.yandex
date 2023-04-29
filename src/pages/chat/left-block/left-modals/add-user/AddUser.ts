@@ -1,10 +1,10 @@
 import view from "./AddUser.hbs";
 import { ModalWindow } from "../../../../../shared/modal-window/ModalWindow";
 import { Component } from "../../../../../core/Component";
-import "./AddUser.scss";
 import { IUser } from "../../../../../core/config/interfaces";
 import { RES_URL } from "../../../../../core/API/endpoints";
 import { UserController } from "../../../../../core/controllers/UserController";
+import "./AddUser.scss";
 
 class AddUserComponent extends Component {
   timeout: number;

@@ -1,5 +1,5 @@
 import { Component } from "../../core/Component";
-import ChatApp from "../../core/ChatApp";
+import Router from "../../core/Router";
 
 export class RouterLink extends Component {
   constructor() {
@@ -13,7 +13,7 @@ export class RouterLink extends Component {
 
   onClick = (e) => {
     e.stopPropagation();
-    ChatApp.navigate(this.getAttribute("href"));
+    Router.go(this.getAttribute("href"));
   };
 
   disconnected() {

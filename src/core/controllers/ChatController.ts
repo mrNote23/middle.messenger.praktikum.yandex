@@ -6,7 +6,7 @@ import { OnMobile } from "../../utils/on-mobile";
 import { ADMIN, RIGHTMODE, STATES, TOKEN } from "../config/types";
 
 export class ChatController {
-  static addChat(title: string) {
+  static addChat(title: string): void {
     ChatApi.add(title)
       .then((res) => {
         const tmp = {
@@ -26,7 +26,7 @@ export class ChatController {
       .catch(() => false);
   }
 
-  static deleteChat(chatId: number) {
+  static deleteChat(chatId: number): void {
     ChatApi.delete(chatId)
       .then(() => {
         const tmp = State.extract(STATES.CHATS_LIST).filter(
@@ -35,9 +35,7 @@ export class ChatController {
         State.dispatch(STATES.CHATS_LIST, tmp);
         if (tmp.length) {
           this.setCurrentChat(tmp[0]);
-          // State.dispatch(STATES.CURRENT_CHAT, tmp[0]);
         } else {
-          // this.setCurrentChat(null);
           State.dispatch(STATES.CURRENT_CHAT, null);
           State.dispatch(STATES.CHAT_MESSAGES, []);
           State.dispatch(STATES.CHAT_USERS, []);
@@ -47,7 +45,7 @@ export class ChatController {
       .catch(() => false);
   }
 
-  static changeChatAvatar(chatId: number, avatar: File) {
+  static changeChatAvatar(chatId: number, avatar: File): void {
     ChatApi.avatar(chatId, avatar)
       .then((res) => {
         let tmp = {
@@ -112,8 +110,6 @@ export class ChatController {
             State.dispatch(TOKEN, res.token);
           })
           .catch(() => false);
-
-        // this._getToken(chat.id);
       });
     }
     OnMobile.showRightPanel();

@@ -4,10 +4,10 @@ import { LeftSearch } from "./left-search/LeftSearch";
 import { LeftChatsList } from "./left-chats-list/LeftChatsList";
 import { LeftUsersList } from "./left-users-list/LeftUsersList";
 import { TRoute } from "../../../shared/router-component/RouterComponent";
-import { leftRoutes } from "./leftRoutes";
 import { LeftHeader } from "./left-header/LeftHeader";
-import "./LeftBlock.scss";
 import { STATES } from "../../../core/config/types";
+import { leftRoutes } from "./leftRoutes";
+import "./LeftBlock.scss";
 
 customElements.define("left-header", LeftHeader);
 customElements.define("left-search", LeftSearch);
