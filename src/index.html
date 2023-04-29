@@ -6,9 +6,70 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="./assets/images/favicon-16x16.png">
+  <link rel="preload" href="./assets/fonts/Roboto-Regular.ttf" as="font" type="font/ttf">
+  <link rel="preload" href="./assets/fonts/Roboto-Bold.ttf" as="font" type="font/ttf">
+  <link rel="preload" href="./assets/images/header-bg.png" as="image" type="image/png">
+  <link rel="preload" href="./assets/images/logo.png" as="image" type="image/png">
+  <link rel="preload" href="./assets/images/no-avatar.jpg" as="image" type="image/jpeg">
+
   <title>CHAT - life in communication</title>
+  <style>
+    .pre-loader {
+      width: 250px;
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: helvetica, arial, sans-serif;
+      text-transform: uppercase;
+      font-weight: 900;
+      color: #680a83;
+      letter-spacing: 0.2em;
+    }
+
+    .pre-loader::before, .pre-loader::after {
+      content: "";
+      display: block;
+      width: 15px;
+      height: 15px;
+      background: #680a83;
+      position: absolute;
+      animation: load .7s infinite alternate ease-in-out;
+    }
+
+    .pre-loader::before {
+      top: 0;
+    }
+
+    .pre-loader::after {
+      bottom: 0;
+    }
+
+    @keyframes load {
+      0% {
+        left: 0;
+        height: 30px;
+        width: 15px;
+      }
+
+      50% {
+        height: 8px;
+        width: 40px;
+      }
+
+      100% {
+        left: 235px;
+        height: 30px;
+        width: 15px;
+      }
+    }
+  </style>
 </head>
 <body>
+<div class="pre-loader">Loading...</div>
 <script src="index.ts" type="module"></script>
 </body>
 </html>

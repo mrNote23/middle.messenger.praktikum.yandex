@@ -20,32 +20,35 @@ customElements.define("chat-page", ChatPage);
 customElements.define("form-validator", FormValidator);
 customElements.define("modal-window", ModalWindowComponent);
 
-const main = document.createElement("main");
-document.body.appendChild(main);
+window.onload = () => {
+  document.querySelector(".pre-loader")?.remove();
+  const main = document.createElement("main");
+  document.body.appendChild(main);
 
-appInit();
-Router.use({
-  path: "/",
-  content: `<chat-page class="wrapper"></chat-page>`,
-})
-  .use({
-    path: "/login",
-    content: `<login-page class="wrapper"></login-page>`,
+  appInit();
+  Router.use({
+    path: "/",
+    content: `<chat-page class="wrapper"></chat-page>`,
   })
-  .use({
-    path: "/register",
-    content: `<register-page class="wrapper"></register-page>`,
-  })
-  .use({
-    path: "/404",
-    content: `<error-page class="wrapper">404</error-page>`,
-  })
-  .use({
-    path: "/500",
-    content: `<error-page class="wrapper">500</error-page>`,
-  })
-  .use({
-    path: "*",
-    redirect: `/404`,
-  })
-  .start(main);
+    .use({
+      path: "/login",
+      content: `<login-page class="wrapper"></login-page>`,
+    })
+    .use({
+      path: "/register",
+      content: `<register-page class="wrapper"></register-page>`,
+    })
+    .use({
+      path: "/404",
+      content: `<error-page class="wrapper">404</error-page>`,
+    })
+    .use({
+      path: "/500",
+      content: `<error-page class="wrapper">500</error-page>`,
+    })
+    .use({
+      path: "*",
+      redirect: `/404`,
+    })
+    .start(main);
+};
