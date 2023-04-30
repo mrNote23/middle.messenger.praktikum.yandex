@@ -4,8 +4,9 @@ import State from "../../../../core/State";
 import { OnMobile } from "../../../../utils/on-mobile";
 import { AddChat } from "../left-modals/add-chat/AddChat";
 import { AddUser } from "../left-modals/add-user/AddUser";
-import "./LeftHeader.scss";
 import { LEFTMODE, RIGHTMODE, STATES } from "../../../../core/config/types";
+import { IChat } from "../../../../core/config/interfaces";
+import "./LeftHeader.scss";
 
 export class LeftHeader extends Component {
   leftMode: string | null = null;
@@ -17,9 +18,15 @@ export class LeftHeader extends Component {
 
   connected() {
     this.render();
-    this.addSubscriber(STATES.LEFT_MODE, (val) => (this.leftMode = val));
-    this.addSubscriber(STATES.RIGHT_MODE, (val) => (this.rightMode = val));
-    this.addSubscriber(STATES.CURRENT_CHAT, (val) => {
+    this.addSubscriber(
+      STATES.LEFT_MODE,
+      (val: string) => (this.leftMode = val)
+    );
+    this.addSubscriber(
+      STATES.RIGHT_MODE,
+      (val: string) => (this.rightMode = val)
+    );
+    this.addSubscriber(STATES.CURRENT_CHAT, (val: IChat) => {
       if (val) {
         document.getElementById("mode-users").classList.remove("d-none");
       } else {

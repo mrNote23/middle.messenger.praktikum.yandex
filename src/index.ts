@@ -10,6 +10,7 @@ import { ErrorPage } from "./pages/misc/error-page/ErrorPage";
 import { ChatPage } from "./pages/chat/ChatPage";
 import { FormValidator } from "./shared/form-validator/FormValidator";
 import { ModalWindowComponent } from "./shared/modal-window/ModalWindow";
+import { RIGHTMODE } from "./core/config/types";
 
 customElements.define("app-router", RouterComponent);
 customElements.define("router-link", RouterLink);
