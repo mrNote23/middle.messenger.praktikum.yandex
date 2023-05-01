@@ -4,17 +4,17 @@ export type TRoute = {
   path: string;
   content?: string;
   redirect?: string;
-  auth?: boolean;
+  cb?: () => void;
 };
 
-export class RouterComponent extends Component {
+export class ContentSwitch extends Component {
   constructor() {
     super();
   }
 
   propsChanged(prop, oldValue, newValue) {
     if (prop === "path" && oldValue !== newValue) {
-      this._fill(this.props.path);
+      this._fill(newValue);
     }
   }
 

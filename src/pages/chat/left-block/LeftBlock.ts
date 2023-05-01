@@ -3,7 +3,7 @@ import { Component } from "../../../core/Component";
 import { LeftSearch } from "./left-search/LeftSearch";
 import { LeftChatsList } from "./left-chats-list/LeftChatsList";
 import { LeftUsersList } from "./left-users-list/LeftUsersList";
-import { TRoute } from "../../../shared/router-component/RouterComponent";
+import { TRoute } from "../../../shared/content-switch/ContentSwitch";
 import { LeftHeader } from "./left-header/LeftHeader";
 import { STATES } from "../../../core/config/types";
 import { leftRoutes } from "./leftRoutes";
@@ -27,9 +27,8 @@ export class LeftBlock extends Component {
     this.render();
     this.router = document.getElementById("left-router");
 
-    this.addSubscriber(STATES.LEFT_MODE, (val) => {
-      this.router.props.path = val;
-      this.router.setAttribute("path", val);
-    });
+    this.addSubscriber(STATES.LEFT_MODE, this.changedMode);
   }
+
+  changedMode = (val: string) => (this.router.props.path = val);
 }

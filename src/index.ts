@@ -2,7 +2,7 @@ import "./assets/scss";
 import { appInit } from "./core/appInit";
 import Router from "./core/Router";
 
-import { RouterComponent } from "./shared/router-component/RouterComponent";
+import { ContentSwitch } from "./shared/content-switch/ContentSwitch";
 import { RouterLink } from "./shared/router-link/RouterLink";
 import { LoginPage } from "./pages/auth/login-page/LoginPage";
 import { RegisterPage } from "./pages/auth/register-page/RegisterPage";
@@ -10,9 +10,9 @@ import { ErrorPage } from "./pages/misc/error-page/ErrorPage";
 import { ChatPage } from "./pages/chat/ChatPage";
 import { FormValidator } from "./shared/form-validator/FormValidator";
 import { ModalWindowComponent } from "./shared/modal-window/ModalWindow";
-import { RIGHTMODE } from "./core/config/types";
+import { routes } from "./core/config/routes";
 
-customElements.define("app-router", RouterComponent);
+customElements.define("content-switch", ContentSwitch);
 customElements.define("router-link", RouterLink);
 customElements.define("login-page", LoginPage);
 customElements.define("register-page", RegisterPage);
@@ -27,29 +27,17 @@ window.onload = () => {
   document.body.appendChild(main);
 
   appInit();
-  Router.use({
-    path: "/",
-    content: `<chat-page class="wrapper"></chat-page>`,
-  })
-    .use({
-      path: "/login",
-      content: `<login-page class="wrapper"></login-page>`,
-    })
-    .use({
-      path: "/register",
-      content: `<register-page class="wrapper"></register-page>`,
-    })
-    .use({
-      path: "/404",
-      content: `<error-page class="wrapper">404</error-page>`,
-    })
-    .use({
-      path: "/500",
-      content: `<error-page class="wrapper">500</error-page>`,
-    })
-    .use({
-      path: "*",
-      redirect: `/404`,
-    })
+  Router.use(routes.root)
+    .use(routes.chatsList)
+    .use(routes.chat)
+    .use(routes.chatProfile)
+    .use(routes.usersList)
+    .use(routes.userProfile)
+    .use(routes.profile)
+    .use(routes.login)
+    .use(routes.register)
+    .use(routes.route404)
+    .use(routes.route500)
+    .use(routes.undefined)
     .start(main);
 };

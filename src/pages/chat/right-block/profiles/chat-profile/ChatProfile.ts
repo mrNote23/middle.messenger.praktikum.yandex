@@ -1,12 +1,12 @@
 import view from "./ChatProfile.hbs";
-import State from "../../../../../core/State";
 import { Confirm } from "../../../../../shared/confirm/confirm";
 import { Component } from "../../../../../core/Component";
 import "./ChatProfile.scss";
 import { IChat } from "../../../../../core/config/interfaces";
 import { RenameChat } from "./rename-chat/RenameChat";
 import { ChatController } from "../../../../../core/controllers/ChatController";
-import { RIGHTMODE, STATES } from "../../../../../core/config/types";
+import { STATES } from "../../../../../core/config/types";
+import Router from "../../../../../core/Router";
 
 export class ChatProfile extends Component {
   chat: IChat;
@@ -16,11 +16,13 @@ export class ChatProfile extends Component {
   }
 
   connected(): void {
-    this.addSubscriber(STATES.CURRENT_CHAT, (val: IChat) => {
-      this.chat = val;
-      this.render({ ...this.chat });
-    });
+    this.addSubscriber(STATES.CURRENT_CHAT, this.changedChat);
   }
+
+  changedChat = (val: IChat) => {
+    this.chat = val;
+    this.render({ ...this.chat });
+  };
 
   changeAvatar = (e) => {
     if (e.target.files) {
@@ -29,7 +31,7 @@ export class ChatProfile extends Component {
   };
 
   backBtn = () => {
-    State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
+    Router.go(`/chat/${this.chat.id}`);
   };
 
   renameChat = (): void => {

@@ -24,7 +24,6 @@ export class UsersListItem extends Component {
       this.createEvent("select", this.props.user.id);
     };
     this.addSubscriber(STATES.CURRENT_USER, this.onChangeUser);
-    // });
   }
 
   onChangeUser = (user: IUser) => {
@@ -34,6 +33,8 @@ export class UsersListItem extends Component {
       } else {
         this.classList.remove("active");
       }
+    } else {
+      this.classList.remove("active");
     }
   };
 

@@ -12,6 +12,7 @@ export class RegisterPage extends Component {
   constructor() {
     super(view);
     this.formFields = formFields;
+    this.className = "wrapper";
   }
 
   registerError = (e) => {

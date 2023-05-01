@@ -85,6 +85,8 @@ export const AddUser = (): void => {
     { closeWindow }
   );
 
+  modalWindow.node.querySelector(".form-control").focus();
+
   function closeWindow() {
     modalWindow.remove();
   }

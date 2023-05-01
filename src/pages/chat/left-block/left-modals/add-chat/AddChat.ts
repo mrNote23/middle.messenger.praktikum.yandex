@@ -19,6 +19,8 @@ export const AddChat = (): void => {
     formValidated,
   });
 
+  modalWindow.node.querySelector(".form-control").focus();
+
   function formValidated(e: CustomEvent): void {
     ChatController.addChat(e.detail.chat_name);
     modalWindow.remove();

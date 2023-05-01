@@ -6,6 +6,7 @@ import "../misc.scss";
 export class ErrorPage extends Component {
   constructor() {
     super(view404);
+    this.className = "wrapper";
   }
 
   connected(): void {

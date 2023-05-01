@@ -18,7 +18,7 @@ export const appInit = (): void => {
   State.store(STATES.CHATS_LIST, null); // Список чатов (IChat[])
   State.store(STATES.CURRENT_CHAT, null); // текущий чат (IChat)
   State.store(STATES.CURRENT_USER, null); // текущий пользователь чата (IUser)
-  State.store(STATES.CHAT_USERS, []); // пользователи текущего чата (IUser[])
+  State.store(STATES.CHAT_USERS, null); // пользователи текущего чата (IUser[])
   State.store(STATES.CHAT_MESSAGES, []); // сообщения текущего чата
 
   State.store(STATES.LEFT_MODE, LEFTMODE.CHATS); // режим левой панели ( chats/users )

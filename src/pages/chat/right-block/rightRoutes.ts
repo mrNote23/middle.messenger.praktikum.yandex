@@ -1,4 +1,4 @@
-import { TRoute } from "../../../shared/router-component/RouterComponent";
+import { TRoute } from "../../../shared/content-switch/ContentSwitch";
 import { RIGHTMODE } from "../../../core/config/types";
 
 export const rightRoutes: TRoute[] = [

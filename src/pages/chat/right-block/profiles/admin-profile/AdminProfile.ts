@@ -1,6 +1,4 @@
 import view from "./AdminProfile.hbs";
-import State from "../../../../../core/State";
-import { OnMobile } from "../../../../../utils/on-mobile";
 import { Confirm } from "../../../../../shared/confirm/confirm";
 import { Component } from "../../../../../core/Component";
 import { TFormValidatorConfig } from "../../../../../shared/form-validator/FormValidator";
@@ -9,12 +7,8 @@ import { IUser } from "../../../../../core/config/interfaces";
 import "./AdminProfile.scss";
 import { AuthController } from "../../../../../core/controllers/AuthController";
 import { AdminController } from "../../../../../core/controllers/AdminController";
-import {
-  ADMIN,
-  LEFTMODE,
-  RIGHTMODE,
-  STATES,
-} from "../../../../../core/config/types";
+import { ADMIN } from "../../../../../core/config/types";
+import Router from "../../../../../core/Router";
 
 export class AdminProfile extends Component {
   admin: IUser | null;
@@ -27,12 +21,14 @@ export class AdminProfile extends Component {
   }
 
   connected(): void {
-    this.addSubscriber(ADMIN, (val) => {
-      this.admin = <IUser>val;
-      this.render({ ...this.admin });
-      this.error = this.querySelector(".profile-error");
-    });
+    this.addSubscriber(ADMIN, this.changedAdminProfile);
   }
+
+  changedAdminProfile = (val: IUser) => {
+    this.admin = <IUser>val;
+    this.render({ ...this.admin });
+    this.error = this.querySelector(".profile-error");
+  };
 
   changeAvatar = (e: unknown) => {
     if (e.target.files) {
@@ -103,19 +99,6 @@ export class AdminProfile extends Component {
   };
 
   btnBack = (): void => {
-    OnMobile.showLeftPanel();
-    if (window["prevLeftMode"]) {
-      State.dispatch(STATES.LEFT_MODE, window["prevLeftMode"]);
-      window["prevLeftMode"] = null;
-    } else {
-      State.dispatch(STATES.LEFT_MODE, LEFTMODE.CHATS);
-    }
-
-    if (window["prevRightMode"]) {
-      State.dispatch(STATES.RIGHT_MODE, window["prevRightMode"]);
-      window["prevRightMode"] = null;
-    } else {
-      State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
-    }
+    Router.history.back();
   };
 }

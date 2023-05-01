@@ -4,6 +4,7 @@ import ChatApi from "../API/ChatApi";
 import { RES_URL } from "../API/endpoints";
 import { OnMobile } from "../../utils/on-mobile";
 import { ADMIN, RIGHTMODE, STATES, TOKEN } from "../config/types";
+import Router from "../Router";
 
 export class ChatController {
   static addChat(title: string): void {
@@ -21,7 +22,7 @@ export class ChatController {
           ...State.extract(STATES.CHATS_LIST),
           tmp,
         ]);
-        this.setCurrentChat(<IChat>tmp);
+        Router.go(`/chat/${tmp.id}`);
       })
       .catch(() => false);
   }
@@ -34,11 +35,13 @@ export class ChatController {
         );
         State.dispatch(STATES.CHATS_LIST, tmp);
         if (tmp.length) {
-          this.setCurrentChat(tmp[0]);
+          Router.go(`/chat/${tmp[0].id}`);
         } else {
           State.dispatch(STATES.CURRENT_CHAT, null);
           State.dispatch(STATES.CHAT_MESSAGES, []);
           State.dispatch(STATES.CHAT_USERS, []);
+          State.dispatch(STATES.CHATS_LIST, []);
+          Router.go("/chats");
         }
         State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
       })
@@ -83,11 +86,21 @@ export class ChatController {
       .catch(() => false);
   };
 
-  static setCurrentChat = (chat: IChat): void => {
+  static setCurrentChat = (
+    chatId: number,
+    rightMode: string = RIGHTMODE.CHAT,
+    userNull = true
+  ): void => {
     if (
       !State.extract(STATES.CURRENT_CHAT) ||
-      chat.id !== State.extract(STATES.CURRENT_CHAT).id
+      +chatId !== State.extract(STATES.CURRENT_CHAT).id
     ) {
+      const chat = State.extract(STATES.CHATS_LIST).filter(
+        (elm) => elm.id === +chatId
+      )[0];
+      if (!chat) {
+        Router.go("/404");
+      }
       State.dispatch(STATES.CHAT_MESSAGES, "loading");
       ChatApi.users(chat.id).then((res: IUser[]) => {
         State.dispatch(
@@ -104,7 +117,9 @@ export class ChatController {
           )
         );
         State.dispatch(STATES.CURRENT_CHAT, { ...chat, unread_count: 0 });
-        State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
+        State.dispatch(STATES.RIGHT_MODE, rightMode);
+        userNull && State.dispatch(STATES.CURRENT_USER, null);
+
         ChatApi.token(chat.id)
           .then((res) => {
             State.dispatch(TOKEN, res.token);

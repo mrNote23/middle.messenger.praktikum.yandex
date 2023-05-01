@@ -1,5 +1,5 @@
 import view from "./ChatPage.hbs";
-import { TRoute } from "../../shared/router-component/RouterComponent";
+import { TRoute } from "../../shared/content-switch/ContentSwitch";
 import { Component } from "../../core/Component";
 import { LeftBlock } from "./left-block/LeftBlock";
 import { ChatHeader } from "./right-block/chat/chat-header/ChatHeader";
@@ -17,6 +17,7 @@ import { STATES } from "../../core/config/types";
 import { AuthController } from "../../core/controllers/AuthController";
 import { rightRoutes } from "./right-block/rightRoutes";
 import "./ChatPage.scss";
+import Router from "../../core/Router";
 
 customElements.define("left-block", LeftBlock);
 
@@ -40,20 +41,24 @@ export class ChatPage extends Component {
   constructor() {
     super(view);
     this.rightRoutes = rightRoutes;
+    this.className = "wrapper";
   }
 
   connected(): void {
     AuthController.auth().then((res) => {
       if (res) {
         this.render();
+        Router.currentRoute.cb && Router.currentRoute.cb();
 
         this.router = document.getElementById("right-router");
 
-        this.addSubscriber(STATES.RIGHT_MODE, (val: string) => {
-          this.router.props.path = val;
-          this.router.setAttribute("path", val);
-        });
+        this.addSubscriber(STATES.RIGHT_MODE, this.changedMode);
       }
     });
   }
+
+  changedMode = (val: string) => {
+    this.router.props.path = val;
+    this.router.setAttribute("path", val);
+  };
 }

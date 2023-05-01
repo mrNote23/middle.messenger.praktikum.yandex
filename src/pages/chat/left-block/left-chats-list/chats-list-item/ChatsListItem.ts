@@ -42,12 +42,13 @@ export class ChatsListItem extends Component {
     if (chat instanceof Object && this.chat) {
       if (this.chat.id === chat.id) {
         this.chat = chat;
-        // this.chat = { ...this.chat, unread_count: 0 };
         this.render(<IChat>this.chat);
         this.classList.add("active");
       } else {
         this.classList.remove("active");
       }
+    } else {
+      this.classList.remove("active");
     }
   };
 

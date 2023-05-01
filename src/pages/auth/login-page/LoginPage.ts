@@ -12,6 +12,7 @@ export class LoginPage extends Component {
   constructor() {
     super(view);
     this.formFields = formFields;
+    this.className = "wrapper";
   }
 
   loginError = (e) => {

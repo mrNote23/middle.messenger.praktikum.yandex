@@ -50,7 +50,6 @@
   - отправка текстовых сообщений в чат;
   - отправка файлов в чат;
   - просмотр/прослушивание для аудио/видео/фото сообщений;
-  - возможность скачивания файловых вложений;
 
 ## СТЭК
 
@@ -68,21 +67,21 @@
 
 ```mermaid
 flowchart TD
-    app-router --> login-page
-    app-router --> register-page
-    app-router --> chat-page
-    app-router --> error-404
-    app-router --> error-500
+    router --> login-page
+    router --> register-page
+    router --> chat-page
+    router --> error-404
+    router --> error-500
     chat-page --> left-block
     chat-page --> right-block
-    left-block --> left-router
-    right-block --> right-router
-    left-router --> chats-list
-    left-router --> users-list
-    right-router --> chat-messages
-    right-router --> chat-profile
-    right-router --> user-profile
-    right-router --> admin-profile
+    left-block --> content-switch
+    content-switch --> chats-list
+    content-switch --> users-list
+    right-block --> content-switch
+    content-switch --> chat-messages
+    content-switch --> chat-profile
+    content-switch --> user-profile
+    content-switch --> admin-profile
 
 ```
 
@@ -93,6 +92,7 @@ flowchart TD
 - `store()` - сохранение объекта (переменной) без оповещения подписчиков
 - `extract()` - извлечение объекта
 - `subscribe()` - подписка на изменение объекта
+- `onceSubscribe()` - как subscribe, только выполняется один раз
 - `unsubscribe()` - отписка
 - `dispatch()` - изменение объекта с оповещением подписчиков
 - `clear()` - удаление всех объектов и подписчиков
@@ -198,7 +198,7 @@ export class MainComponent extends Component {
 
 # Примеры использования некоторых компонент
 
-## RouterComponent
+## ContentSwitch
 
 **Динамическое изменение контента в зависимости от пропса `path`**
 
@@ -206,9 +206,9 @@ export class MainComponent extends Component {
 // App.ts
 import view from "./App.hbs";
 import {Component} from "./Component";
-import {RouterComponent} from "./RouterComponent";
+import {ContentSwitch} from "./ContentSwitch";
 
-customElements.define("main-router", RouterComponent);
+customElements.define("content-switch", ContentSwitch);
 
 type TRoute = {
   path: string;
@@ -256,11 +256,11 @@ export class App extends Component {
 
 ```HTML
 <!-- App.hbs-->
-<main-router props-path="{{path}}" props-routes="[[rootRoutes]]">
+<content-switch props-path="{{path}}" props-routes="[[rootRoutes]]">
   ...
   content
   ...
-</main-router>
+</content-switch>
 ```
 
 ## FormValidator

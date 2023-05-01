@@ -41,6 +41,7 @@ export interface IChatMessageItem {
   avatar?: string;
   chat_id: number;
   time: string;
+  timeDisplay?: string;
   type: string;
   content: string;
   file?: {
