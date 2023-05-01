@@ -2,30 +2,31 @@ import view from "./RegisterPage.hbs";
 import { Component } from "../../../core/Component";
 import { TFormValidatorConfig } from "../../../shared/form-validator/FormValidator";
 import { formFields } from "./formFields";
-import "../auth.scss";
 import { AuthController } from "../../../core/controllers/AuthController";
+import "../auth.scss";
 
 export class RegisterPage extends Component {
   formFields: TFormValidatorConfig;
-  error: HTMLElement;
+  private _error: HTMLElement;
 
   constructor() {
     super(view);
     this.formFields = formFields;
+    this.className = "wrapper";
   }
 
-  registerError = (e) => {
-    this.error.textContent = e.reason;
-    this.error.style.display = "block";
+  registerError = <T>(e: T) => {
+    this._error.textContent = e.reason;
+    this._error.style.display = "block";
   };
 
-  formValidated = (e: CustomEvent): void => {
-    this.error.style.display = "none";
-    AuthController.register(e.detail, this.registerError);
+  formValidated = async (e: CustomEvent) => {
+    this._error.style.display = "none";
+    await AuthController.register(e.detail, this.registerError);
   };
 
-  connected(): void {
+  connected() {
     this.render();
-    this.error = this.querySelector(".auth-error");
+    this._error = this.querySelector(".auth-error");
   }
 }

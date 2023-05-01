@@ -9,44 +9,46 @@ import { ADMIN, NEW_MESSAGE, STATES } from "../../../../../core/config/types";
 customElements.define("chat-message-item", ChatMessageItem);
 
 export class ChatBody extends Component {
-  messages: IChatMessageItem[] | "loading";
-  adminId: number;
-  notSelected = true;
-  container: HTMLElement;
+  messages: IChatMessageItem[] | string;
+  private _adminId: number;
+  private _notSelected = true;
+  private _container: Component;
 
   constructor() {
     super(view);
   }
 
-  connected(): void {
-    this.addSubscriber(STATES.CHAT_MESSAGES, this.loadMessages);
-    this.addSubscriber(NEW_MESSAGE, this.newMessage);
+  connected() {
+    this.addSubscriber(STATES.CHAT_MESSAGES, this._loadMessages);
+    this.addSubscriber(NEW_MESSAGE, this._newMessage);
   }
 
-  loadMessages = (messages) => {
+  private _loadMessages = (messages: IChatMessageItem[] | string): void => {
     if (messages === "loading") {
       this.loading();
-      this.notSelected = false;
+      this._notSelected = false;
     } else {
       if (State.extract(STATES.CURRENT_CHAT)) {
-        this.notSelected = false;
+        this._notSelected = false;
       }
       this.messages = messages;
-      this.adminId = State.extract(ADMIN).id | null;
+      this._adminId = State.extract(ADMIN).id | null;
       this.render({
         messages: this.messages,
-        notSelected: this.notSelected,
+        notSelected: this._notSelected,
       });
       this.scrollTop = Math.round(Number.MAX_SAFE_INTEGER / 10);
-      this.container = this.querySelector("#messages_container");
+      this._container = <Component>this.querySelector("#messages_container");
     }
   };
 
-  newMessage = (message) => {
+  private _newMessage = (message: IChatMessageItem): void => {
     if (message) {
-      const tmp = document.createElement("chat-message-item");
-      if (this.container) {
-        this.container.appendChild(tmp);
+      const tmp: Component = <Component>(
+        document.createElement("chat-message-item")
+      );
+      if (this._container) {
+        this._container.appendChild(tmp);
         tmp.props["message"] = message;
         this.scrollTop = Math.round(Number.MAX_SAFE_INTEGER / 10);
       }

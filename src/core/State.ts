@@ -11,10 +11,12 @@ export type TSubscriberItem = {
 class StoreNode {
   value: unknown = null;
   subscribers: { [key: string]: (val: unknown) => void };
+  onceSubscribers: { [key: string]: (val: unknown) => void };
 
   constructor(val = null) {
     this.value = val;
     this.subscribers = {};
+    this.onceSubscribers = {};
   }
 
   set setter(val: unknown) {
@@ -25,10 +27,11 @@ class StoreNode {
       a = JSON.stringify(a);
       b = JSON.stringify(b);
     }
+    this.value = val;
     if (a !== b) {
       this.processSubscribers(val);
+      this.processOnceSubscribers(val);
     }
-    this.value = val;
   }
 
   get getter(): unknown {
@@ -51,6 +54,25 @@ class StoreNode {
     cb(this.value);
     return uuid;
   }
+
+  onceSubscribe(cb: (value: unknown) => void): string {
+    let uuid = "";
+    while (this.onceSubscribers[uuid] || uuid === "") {
+      uuid = `${(~~(Math.random() * 1e8)).toString(16)}-${(~~(
+        Math.random() * 1e8
+      )).toString(16)}-${(~~(Math.random() * 1e8)).toString(16)}`;
+    }
+
+    this.onceSubscribers[uuid] = cb;
+    return uuid;
+  }
+
+  processOnceSubscribers = (val: unknown): void => {
+    for (const uuid in this.onceSubscribers) {
+      this.onceSubscribers[uuid](val);
+      delete this.onceSubscribers[uuid];
+    }
+  };
 
   processSubscribers = (val: unknown): void => {
     for (const uuid in this.subscribers) {
@@ -99,6 +121,21 @@ class State {
       };
     } else {
       throw new Error(`State.Subscribe: wrong variable '${varName}'`);
+    }
+  };
+
+  // одноразовая подписка на изменение параметра
+  onceSubscribe = (
+    varName: string,
+    cb: (val: unknown) => void
+  ): TSubscriberItem => {
+    if (varName && this.storeHolder.store[varName]) {
+      return {
+        varName: varName,
+        uuid: this.storeHolder.store[varName].onceSubscribe(cb),
+      };
+    } else {
+      throw new Error(`State.OnceSubscribe: wrong variable '${varName}'`);
     }
   };
 

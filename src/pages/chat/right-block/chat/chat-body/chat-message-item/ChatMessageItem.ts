@@ -8,53 +8,55 @@ import State from "../../../../../../core/State";
 import { ADMIN } from "../../../../../../core/config/types";
 
 export class ChatMessageItem extends Component {
-  message: IChatMessageItem | object;
-  adminId: number;
-  dividerDate = "";
+  private _message: IChatMessageItem;
+  private _adminId: number;
+  private _dividerDate = "";
 
   constructor() {
     super(view);
-    this.adminId = State.extract(ADMIN).id;
+    this._adminId = State.extract(ADMIN).id;
   }
 
   propsChanged() {
     if (this.props) {
-      this.dividerDate = "";
+      this._dividerDate = "";
       if (this.previousElementSibling) {
         if (
           new Date(this.props.message.time).getDay() !==
-          new Date(this.previousElementSibling.props.message.time).getDay()
+          new Date(
+            (this.previousElementSibling as Component).props.message.time
+          ).getDay()
         ) {
-          this.dividerDate = dateConvert(this.props.message.time, "D-M-Y");
+          this._dividerDate = dateConvert(this.props.message.time, "D-M-Y");
         }
       } else {
-        this.dividerDate = dateConvert(this.props.message.time, "D-M-Y");
+        this._dividerDate = dateConvert(this.props.message.time, "D-M-Y");
       }
 
-      this.message = {
-        ...this.props.message,
+      this._message = {
+        ...(<IChatMessageItem>this.props.message),
         time: dateConvert(this.props.message.time, "h:i"),
       };
 
-      if (this.message.type === "message") {
+      if (this._message.type === "message") {
         this.render({
-          ...this.message,
-          isAdmin: this.adminId === this.props.message.user_id,
-          dividerDate: this.dividerDate,
+          ...this._message,
+          isAdmin: this._adminId === this.props.message.user_id,
+          dividerDate: this._dividerDate,
         });
-      } else if (this.message.type === "file" && this.message.file) {
-        const media: HTMLElement = mediaContainer(
-          this.message.file.content_type.split("/")[0]
+      } else if (this._message.type === "file" && this._message.file) {
+        const media: Component = mediaContainer(
+          this._message.file.content_type.split("/")[0]
         );
-        media.props.src = `${RES_URL}${this.message.file.path}`;
-        media.props.fileName = this.message.file.filename;
+        media.props.src = `${RES_URL}${this._message.file.path}`;
+        media.props.fileName = this._message.file.filename;
         media.props.inChat = true;
 
         this.render({
-          ...this.message,
+          ...this._message,
           content: "",
-          isAdmin: this.adminId === this.props.message.user_id,
-          dividerDate: this.dividerDate,
+          isAdmin: this._adminId === this.props.message.user_id,
+          dividerDate: this._dividerDate,
         });
 
         this.querySelector(".message").classList.add("file");

@@ -1,7 +1,12 @@
-export const dateConvert = (param, mask = "D-M-Y h:i") => {
-  let elm = param;
+export const dateConvert = (
+  param: Date | string,
+  mask = "D-M-Y h:i"
+): string => {
+  let elm: Date;
   if (typeof param === "string") {
     elm = new Date(param);
+  } else {
+    elm = param;
   }
 
   const year = elm.getFullYear().toString().substring(2);

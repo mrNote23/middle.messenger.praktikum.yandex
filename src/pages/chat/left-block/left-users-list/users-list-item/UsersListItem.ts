@@ -5,8 +5,6 @@ import State from "../../../../../core/State";
 import { STATES } from "../../../../../core/config/types";
 
 export class UsersListItem extends Component {
-  user: IUser;
-
   constructor() {
     super(view);
   }
@@ -14,26 +12,27 @@ export class UsersListItem extends Component {
   propsChanged() {
     if (this.props) {
       this.render(<IUser>this.props.user);
-      this.onChangeUser(<IUser>State.extract(STATES.CURRENT_USER));
+      this._onChangeUser(<IUser>State.extract(STATES.CURRENT_USER));
     }
   }
 
   connected() {
-    this.onclick = (e: MouseEvent) => {
+    this.onclick = (e: MouseEvent): void => {
       e.preventDefault();
       this.createEvent("select", this.props.user.id);
     };
-    this.addSubscriber(STATES.CURRENT_USER, this.onChangeUser);
-    // });
+    this.addSubscriber(STATES.CURRENT_USER, this._onChangeUser);
   }
 
-  onChangeUser = (user: IUser) => {
+  private _onChangeUser = (user: IUser): void => {
     if (user instanceof Object && this.props.user) {
       if (this.props.user.id === user.id) {
         this.classList.add("active");
       } else {
         this.classList.remove("active");
       }
+    } else {
+      this.classList.remove("active");
     }
   };
 

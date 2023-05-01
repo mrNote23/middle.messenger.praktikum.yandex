@@ -9,11 +9,11 @@ class UserApi {
     this.http = new HTTPTransport("/user");
   }
 
-  search(login: string) {
+  search(login: string): Promise<HTTPTransport> {
     return this.http.post(USER_ENDPOINTS.SEARCH, { login });
   }
 
-  avatar(avatar: File) {
+  avatar(avatar: File): Promise<IUser> {
     const tmp = new FormData();
     tmp.append("avatar", avatar);
     return this.http.put(USER_ENDPOINTS.AVATAR, tmp);
@@ -23,7 +23,7 @@ class UserApi {
     return this.http.put(USER_ENDPOINTS.PROFILE, data);
   }
 
-  password(oldPassword: string, newPassword: string) {
+  password(oldPassword: string, newPassword: string): Promise<HTTPTransport> {
     return this.http.put(USER_ENDPOINTS.PASSWORD, { oldPassword, newPassword });
   }
 }

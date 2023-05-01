@@ -17,7 +17,7 @@ export class ModalWindow {
     document.body.appendChild(this.node);
   }
 
-  remove() {
+  remove(): void {
     this.node.remove();
   }
 }
@@ -32,7 +32,7 @@ export class ModalWindowComponent extends Component {
       title: this.getAttribute("title"),
       content: this.innerHTML,
     });
-    this.addListener(document, "keyup", this.pressEscape);
+    this.addListener(document, "keyup", this._pressEscape);
   }
 
   clickAway = (e: MouseEvent): void => {
@@ -41,14 +41,14 @@ export class ModalWindowComponent extends Component {
     }
   };
 
-  pressEscape = (e: KeyboardEvent): void => {
-    if (e?.key === "Escape") {
+  closeModal = (e: MouseEvent): void => {
+    if (e?.target["closest"](".close-modal")) {
       this.remove();
     }
   };
 
-  closeModal = (e: MouseEvent): void => {
-    if (e?.target["closest"](".close-modal")) {
+  private _pressEscape = (e: KeyboardEvent): void => {
+    if (e?.key === "Escape") {
       this.remove();
     }
   };

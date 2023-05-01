@@ -23,22 +23,18 @@ class AuthApi {
     this.http = new HTTPTransport("/auth");
   }
 
-  // user login
-  login(data: TLoginData): Promise<unknown> {
+  login(data: TLoginData): Promise<HTTPTransport> {
     return this.http.post(AUTH_ENDPOINTS.LOGIN, data);
   }
 
-  // user register
-  register(data: TRegisterData): Promise<unknown> {
+  register(data: TRegisterData): Promise<HTTPTransport> {
     return this.http.post(AUTH_ENDPOINTS.REGISTER, data);
   }
 
-  // user logout
-  logout(): Promise<void> {
+  logout(): Promise<HTTPTransport> {
     return this.http.post(AUTH_ENDPOINTS.LOGOUT);
   }
 
-  // get user's profile
   profile(): Promise<IUser> {
     return this.http.get(AUTH_ENDPOINTS.PROFILE);
   }

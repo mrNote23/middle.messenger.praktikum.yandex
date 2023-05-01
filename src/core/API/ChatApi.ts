@@ -9,11 +9,11 @@ class ChatApi {
     this.http = new HTTPTransport("/chats");
   }
 
-  add(title: string) {
+  add(title: string): Promise<IChat> {
     return this.http.post(CHAT_ENDPOINTS.CHAT, { title });
   }
 
-  delete(chatId: number) {
+  delete(chatId: number): Promise<HTTPTransport> {
     return this.http.delete(CHAT_ENDPOINTS.CHAT, { chatId });
   }
 
@@ -25,11 +25,11 @@ class ChatApi {
     return this.http.get(`${CHAT_ENDPOINTS.CHAT}/${chatId}/users`);
   }
 
-  addUsers(chatId: number, users: number[]) {
+  addUsers(chatId: number, users: number[]): Promise<HTTPTransport> {
     return this.http.put(CHAT_ENDPOINTS.USERS, { users, chatId });
   }
 
-  deleteUsers(chatId: number, users: number[]) {
+  deleteUsers(chatId: number, users: number[]): Promise<HTTPTransport> {
     return this.http.delete(CHAT_ENDPOINTS.USERS, { users, chatId });
   }
 
@@ -40,7 +40,7 @@ class ChatApi {
     return this.http.put(CHAT_ENDPOINTS.AVATAR, tmp);
   }
 
-  token(chatId: number): Promise<string> {
+  token(chatId: number): Promise<object> {
     return this.http.post(`${CHAT_ENDPOINTS.TOKEN}/${chatId}`);
   }
 }

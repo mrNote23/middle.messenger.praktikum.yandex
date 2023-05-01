@@ -20,8 +20,8 @@ export type TFormValidatorConfig = {
 };
 
 export class FormValidator extends Component {
-  config: unknown;
-  form: unknown;
+  private _config: TFormValidatorConfig;
+  private _form: HTMLFormElement;
 
   constructor() {
     super();
@@ -30,83 +30,80 @@ export class FormValidator extends Component {
   propsChanged() {
     if (this.props) {
       const form = this.getElementsByTagName("form")[0];
-      // если форма есть, то начинаем работать
       if (form && !!this.props.fields) {
-        this.validateForm(form, this.props.fields);
+        this._validateForm(form, <TFormValidatorConfig>this.props.fields);
       }
     }
   }
 
-  private validateForm = (_form, _config): void => {
-    this.config = _config;
-    this.form = _form;
-    // проверка, что все поля описанные в конфиге, есть в форме
-    for (const field in this.config) {
-      if (!this.form[field]) {
+  private _validateForm = (
+    form: HTMLFormElement,
+    config: TFormValidatorConfig
+  ): void => {
+    this._config = config;
+    this._form = form;
+
+    for (const field in this._config) {
+      if (!this._form[field]) {
         throw new Error(
           `FormValidator: the form does not contain a field - ${field}`
         );
       } else {
-        // создадим span для вывода сообщений об ошибках ввода
         const spanError = document.createElement("div");
-        spanError.textContent = this.config[field].message;
+        spanError.textContent = this._config[field].message;
         spanError.className = "error-message";
-        // прикрепим его перед каждым элементом формы
-        this.form[field].parentNode.insertBefore(spanError, this.form[field]);
-        // создадим для элементов формы методы включения и выключения спана
-        this.form[field].showError = function () {
+
+        this._form[field].parentNode.insertBefore(spanError, this._form[field]);
+
+        this._form[field]["showError"] = function () {
           this.previousSibling.style.display = "block";
         };
-        this.form[field].hideError = function () {
+
+        this._form[field]["hideError"] = function () {
           this.previousSibling.style.display = "none";
         };
 
-        this.form[field]["onblur"] = this.hideError;
-        this.form[field]["onfocus"] = this.showError;
+        this._form[field]["onblur"] = this._hideError;
+        this._form[field]["onfocus"] = this._showError;
 
-        // обработчик события input
-        this.form[field]["oninput"] = this.onChange;
+        this._form[field]["oninput"] = this._onChange;
 
-        if (this.config[field].required) {
-          this.form[field].valid = !!this.form[field].value.length;
+        if (this._config[field].required) {
+          this._form[field]["valid"] = !!this._form[field]["value"].length;
         } else {
-          this.form[field].valid = true;
+          this._form[field]["valid"] = true;
         }
       }
     }
-    this.form["onsubmit"] = this.formSubmit;
-    this.form["onreset"] = this.formReset;
+    this._form["onsubmit"] = this._formSubmit;
+    this._form["onreset"] = this._formReset;
   };
 
-  // скрыть ошибку ввода
-  private hideError<T>(e: T): void {
+  private _hideError<T>(e: T): void {
     e.target.hideError();
   }
 
-  // показать ошибку ввода
-  private showError<T>(e: T): void {
+  private _showError<T>(e: T): void {
     e.target.showError();
   }
 
-  // форма сброшена, отказ от воода
-  private formReset = <T>(e: T): void => {
+  private _formReset = <T>(e: T): void => {
     e.preventDefault();
     this.createEvent("validated", false);
   };
 
-  // сабмит формы
-  private formSubmit = <T>(e: T): void => {
+  private _formSubmit = <T>(e: T): void => {
     e.preventDefault();
     let valid = true;
     const result: object = {};
-    for (const field in this.config) {
-      result[field] = this.form[field].value;
-      if (!this.form[field].valid) {
-        this.form[field].classList.add("error");
+    for (const field in this._config) {
+      result[field] = this._form[field]["value"];
+      if (!this._form[field]["valid"]) {
+        this._form[field].classList.add("error");
         valid = false;
       } else {
-        this.form[field].classList.remove("error");
-        this.form[field].classList.add("success");
+        this._form[field].classList.remove("error");
+        this._form[field].classList.add("success");
       }
     }
     if (valid) {
@@ -114,52 +111,55 @@ export class FormValidator extends Component {
     }
   };
 
-  private onChange = <T>(e: T): void => {
+  private _onChange = <T>(e: T): void => {
     const field = e.target;
     let error = false;
 
     // Первая буква должна быть заглавной
-    if (this.config[field.name].firstUC) {
+    if (this._config[field.name].firstUC) {
       field.value = field.value.replace(/(^|\s)\S$/g, (u) => u.toUpperCase());
     }
 
     // очистка фильтром
-    if (this.config[field.name].filter) {
-      field.value = field.value.replace(this.config[field.name].filter, "");
+    if (this._config[field.name].filter) {
+      field.value = field.value.replace(this._config[field.name].filter, "");
     }
 
     // минимальная длина
     if (
-      this.config[field.name].minLength &&
-      field.value.length < this.config[field.name].minLength
+      this._config[field.name].minLength &&
+      field.value.length < this._config[field.name].minLength
     ) {
       error = true;
     }
 
     // максимальная длина
     if (
-      this.config[field.name].maxLength &&
-      field.value.length > this.config[field.name].maxLength
+      this._config[field.name].maxLength &&
+      field.value.length > this._config[field.name].maxLength
     ) {
-      field.value = field.value.substring(0, this.config[field.name].maxLength);
+      field.value = field.value.substring(
+        0,
+        this._config[field.name].maxLength
+      );
     }
 
     // required
-    if (this.config[field.name].required && !field.value.length) {
+    if (this._config[field.name].required && !field.value.length) {
       error = true;
     }
 
     // compare
     if (
-      this.config[field.name].compare &&
-      field.value !== this.form[this.config[field.name].compare].value
+      this._config[field.name].compare &&
+      field.value !== this._form[this._config[field.name].compare].value
     ) {
       error = true;
     }
 
     // match проверка стандартных типов
-    if (this.config[field.name].match) {
-      const match = this.config[field.name].match;
+    if (this._config[field.name].match) {
+      const match = this._config[field.name].match;
       switch (true) {
         case match === MATCH.EMAIL:
           if (

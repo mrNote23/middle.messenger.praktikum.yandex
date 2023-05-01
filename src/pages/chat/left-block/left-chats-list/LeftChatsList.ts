@@ -2,42 +2,25 @@ import view from "./LeftChatsList.hbs";
 import { Component } from "../../../../core/Component";
 import { IChat } from "../../../../core/config/interfaces";
 import { ChatsListItem } from "./chats-list-item/ChatsListItem";
-import "./LeftChatsList.scss";
 import { ChatController } from "../../../../core/controllers/ChatController";
 import { STATES } from "../../../../core/config/types";
+import Router from "../../../../core/Router";
+import "./LeftChatsList.scss";
 
 customElements.define("chats-list-item", ChatsListItem);
 
 export class LeftChatsList extends Component {
   chatsList: IChat[] | null = null;
-  currentChat: IChat | null = null;
-  listEmpty = true;
+  private _currentChat: IChat | null = null;
+  private _listEmpty = true;
 
   constructor() {
     super(view);
   }
 
-  connected(): void {
-    // подписка на изменение текущего чата
-    this.addSubscriber(STATES.CURRENT_CHAT, (val: IChat) => {
-      this.currentChat = val;
-    });
-
-    // подписка на изменения списка чатов
-    this.addSubscriber(STATES.CHATS_LIST, (val: IChat[]) => {
-      this.listEmpty = true;
-      this.chatsList = val;
-      if (this.chatsList !== null) {
-        this.listEmpty = !(this.chatsList.length > 0);
-        this.render({
-          chatsList: this.chatsList.map((elm, index: number) => {
-            return { ...elm, index };
-          }),
-          currentChatId: this.currentChat ? this.currentChat.id : null,
-          listEmpty: this.listEmpty,
-        });
-      }
-    });
+  connected() {
+    this.addSubscriber(STATES.CURRENT_CHAT, this._changedChat);
+    this.addSubscriber(STATES.CHATS_LIST, this._changedChatsList);
 
     if (this.chatsList === null) {
       this.loading();
@@ -45,10 +28,25 @@ export class LeftChatsList extends Component {
     }
   }
 
-  // выбор чата
-  selectChat = (id) => {
-    ChatController.setCurrentChat(
-      this.chatsList.filter((elm) => elm.id === id.detail)[0]
-    );
+  selectChat = (id: CustomEvent): void => {
+    ChatController.setCurrentChat(id.detail);
+    Router.history.pushState({}, "", `/chat/${id.detail}`);
+  };
+
+  private _changedChat = (val: IChat): IChat => (this._currentChat = val);
+
+  private _changedChatsList = (val: IChat[]): void => {
+    this._listEmpty = true;
+    this.chatsList = val;
+    if (this.chatsList !== null) {
+      this._listEmpty = !(this.chatsList.length > 0);
+      this.render({
+        chatsList: this.chatsList.map((elm, index: number) => {
+          return { ...elm, index };
+        }),
+        currentChatId: this._currentChat ? this._currentChat.id : null,
+        listEmpty: this._listEmpty,
+      });
+    }
   };
 }

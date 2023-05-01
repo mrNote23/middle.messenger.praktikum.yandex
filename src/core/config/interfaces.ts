@@ -30,6 +30,7 @@ export interface IChat {
       phone: string;
     };
     time: string;
+    timeDisplay?: string;
     content: string;
   };
 }
@@ -41,6 +42,7 @@ export interface IChatMessageItem {
   avatar?: string;
   chat_id: number;
   time: string;
+  timeDisplay?: string;
   type: string;
   content: string;
   file?: {

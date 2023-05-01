@@ -6,9 +6,10 @@ import "../misc.scss";
 export class ErrorPage extends Component {
   constructor() {
     super(view404);
+    this.className = "wrapper";
   }
 
-  connected(): void {
+  connected() {
     switch (this.textContent) {
       case "404":
         this.view = view404;

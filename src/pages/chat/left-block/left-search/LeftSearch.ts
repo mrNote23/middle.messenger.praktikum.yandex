@@ -11,7 +11,7 @@ export class LeftSearch extends Component {
     console.log(`Search: ${e.target.value}`);
   };
 
-  connected(): void {
+  connected() {
     this.render();
   }
 }

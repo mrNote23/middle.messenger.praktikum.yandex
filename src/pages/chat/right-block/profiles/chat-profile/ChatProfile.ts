@@ -1,35 +1,37 @@
 import view from "./ChatProfile.hbs";
-import State from "../../../../../core/State";
 import { Confirm } from "../../../../../shared/confirm/confirm";
 import { Component } from "../../../../../core/Component";
-import "./ChatProfile.scss";
 import { IChat } from "../../../../../core/config/interfaces";
 import { RenameChat } from "./rename-chat/RenameChat";
 import { ChatController } from "../../../../../core/controllers/ChatController";
-import { RIGHTMODE, STATES } from "../../../../../core/config/types";
+import { STATES } from "../../../../../core/config/types";
+import Router from "../../../../../core/Router";
+import "./ChatProfile.scss";
 
 export class ChatProfile extends Component {
-  chat: IChat;
+  private _chat: IChat;
 
   constructor() {
     super(view);
   }
 
-  connected(): void {
-    this.addSubscriber(STATES.CURRENT_CHAT, (val: IChat) => {
-      this.chat = val;
-      this.render({ ...this.chat });
-    });
+  connected() {
+    this.addSubscriber(STATES.CURRENT_CHAT, this._changedChat);
   }
 
-  changeAvatar = (e) => {
+  private _changedChat = (val: IChat): void => {
+    this._chat = val;
+    this.render({ ...this._chat });
+  };
+
+  changeAvatar = <T>(e: T): void => {
     if (e.target.files) {
-      ChatController.changeChatAvatar(this.chat.id, e.target.files[0]);
+      ChatController.changeChatAvatar(this._chat.id, e.target.files[0]);
     }
   };
 
-  backBtn = () => {
-    State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
+  backBtn = (): void => {
+    Router.go(`/chat/${this._chat.id}`);
   };
 
   renameChat = (): void => {
@@ -49,7 +51,7 @@ export class ChatProfile extends Component {
     Confirm(
       { title: "Are you sure?", text: "Do you want to delete a chat?" },
       () => {
-        ChatController.deleteChat(this.chat.id);
+        ChatController.deleteChat(this._chat.id);
       }
     );
   };

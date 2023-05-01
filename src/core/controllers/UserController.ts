@@ -4,13 +4,14 @@ import ChatApi from "../API/ChatApi";
 import State from "../State";
 import { OnMobile } from "../../utils/on-mobile";
 import { RIGHTMODE, STATES } from "../config/types";
+import Router from "../Router";
 
 export class UserController {
   static searchUser(login: string) {
     return UserApi.search(login);
   }
 
-  static addUser(user: IUser) {
+  static addUser(user: IUser): void {
     ChatApi.addUsers(State.extract(STATES.CURRENT_CHAT).id, [user.id]).then(
       () => {
         const tmp = JSON.parse(
@@ -22,7 +23,7 @@ export class UserController {
     );
   }
 
-  static deleteUser(userId: number) {
+  static deleteUser(userId: number): void {
     ChatApi.deleteUsers(State.extract(STATES.CURRENT_CHAT).id, [userId])
       .then(() => {
         const tmp = JSON.parse(
@@ -34,8 +35,15 @@ export class UserController {
       .catch(() => false);
   }
 
-  static setCurrentUser = (user: IUser): void => {
-    State.dispatch(STATES.CURRENT_USER, user);
+  static setCurrentUser = (userId: number): void => {
+    if (!State.extract(STATES.CHAT_USERS)[+userId]) {
+      Router.go("/404");
+      return;
+    }
+    State.dispatch(
+      STATES.CURRENT_USER,
+      State.extract(STATES.CHAT_USERS)[+userId]
+    );
     State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.USER_PROFILE);
     OnMobile.showRightPanel();
   };

@@ -28,6 +28,40 @@
 - Добавлены ESLint, StyleLint
 - Добавлен класс для работы с HTTP запросами
 
+### Спринт 3 / 4 [(PR)](https://github.com/mrNote23/middle.messenger.praktikum.yandex/pull/4)
+
+- Добавлен прелоадер
+- Сделан роутинг приложения (Class Router)
+  - все страницы приложения имеют свои url
+    - /chats
+    - /chat/:chatId
+    - /chat-profile/:chatId
+    - /users/:chatId
+    - /user/:chatId/:userId
+    - /login
+    - /register
+    - /profile
+    - /404
+    - /500
+- Реализованы методы взаимодействия с API
+- Реализован обмен сообщениями с помощью WebSocket
+- Реализован полный функционал чата, а именно:
+  - регистрация пользователя;
+  - авторизация пользователя;
+  - деавторизация пользователя;
+  - редактирование профиля пользователя;
+  - изменение пароля пользователя;
+  - изменение аватара пользователя;
+  - создание чата;
+  - удаление чата;
+  - изменение аватара чата;
+  - добавление собеседника в чат;
+  - удаление собеседника из чата;
+  - просмотр профиля собеседника;
+  - отправка текстовых сообщений в чат;
+  - отправка файлов в чат;
+  - просмотр/прослушивание для аудио/видео/фото сообщений;
+
 ## СТЭК
 
 - HTML
@@ -44,22 +78,21 @@
 
 ```mermaid
 flowchart TD
-    main-app --> app-router
-    app-router --> login-page
-    app-router --> register-page
-    app-router --> chat-page
-    app-router --> error-404
-    app-router --> error-500
+    router --> login-page
+    router --> register-page
+    router --> chat-page
+    router --> error-404
+    router --> error-500
     chat-page --> left-block
     chat-page --> right-block
-    left-block --> left-router
-    right-block --> right-router
-    left-router --> chats-list
-    left-router --> users-list
-    right-router --> chat-messages
-    right-router --> chat-profile
-    right-router --> user-profile
-    right-router --> admin-profile
+    left-block --> left-content-switch
+    left-content-switch --> chats-list
+    left-content-switch --> users-list
+    right-block --> right-content-switch
+    right-content-switch --> chat-messages
+    right-content-switch --> chat-profile
+    right-content-switch --> user-profile
+    right-content-switch --> admin-profile
 
 ```
 
@@ -70,6 +103,7 @@ flowchart TD
 - `store()` - сохранение объекта (переменной) без оповещения подписчиков
 - `extract()` - извлечение объекта
 - `subscribe()` - подписка на изменение объекта
+- `onceSubscribe()` - как subscribe, только выполняется один раз
 - `unsubscribe()` - отписка
 - `dispatch()` - изменение объекта с оповещением подписчиков
 - `clear()` - удаление всех объектов и подписчиков
@@ -175,17 +209,17 @@ export class MainComponent extends Component {
 
 # Примеры использования некоторых компонент
 
-## RouterComponent
+## ContentSwitch
 
-**Динамическое изменение контента в зависимости от атрибута `path`**
+**Динамическое изменение контента в зависимости от пропса `path`**
 
 ```typescript
 // App.ts
 import view from "./App.hbs";
 import {Component} from "./Component";
-import {RouterComponent} from "./RouterComponent";
+import {ContentSwitch} from "./ContentSwitch";
 
-customElements.define("main-router", RouterComponent);
+customElements.define("content-switch", ContentSwitch);
 
 type TRoute = {
   path: string;
@@ -233,7 +267,11 @@ export class App extends Component {
 
 ```HTML
 <!-- App.hbs-->
-<main-router path="{{path}}" props-routes="[[rootRoutes]]"></main-router>
+<content-switch props-path="{{path}}" props-routes="[[rootRoutes]]">
+  ...
+  content
+  ...
+</content-switch>
 ```
 
 ## FormValidator

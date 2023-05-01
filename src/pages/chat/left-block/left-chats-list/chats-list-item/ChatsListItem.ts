@@ -6,7 +6,7 @@ import State from "../../../../../core/State";
 import { STATES } from "../../../../../core/config/types";
 
 export class ChatsListItem extends Component {
-  chat: IChat;
+  private _chat: IChat;
 
   constructor() {
     super(view);
@@ -14,40 +14,41 @@ export class ChatsListItem extends Component {
 
   propsChanged() {
     if (this.props) {
-      this.chat = <IChat>this.props.chat;
-      if (this.chat.last_message) {
-        this.chat.last_message = <any>{
-          ...this.chat.last_message,
+      this._chat = <IChat>this.props.chat;
+      if (this._chat.last_message) {
+        this._chat.last_message = {
+          ...this._chat.last_message,
           timeDisplay:
             new Date(Date.now()).getDay() !==
-            new Date(this.chat.last_message.time).getDay()
-              ? dateConvert(this.chat.last_message.time, "D-M-Y h:i")
-              : dateConvert(this.chat.last_message.time, "h:i"),
+            new Date(this._chat.last_message.time).getDay()
+              ? dateConvert(this._chat.last_message.time, "D-M-Y h:i")
+              : dateConvert(this._chat.last_message.time, "h:i"),
         };
       }
-      this.render(<IChat>this.chat);
-      this.onChangeChat(<IChat>State.extract(STATES.CURRENT_CHAT));
+      this.render(<IChat>this._chat);
+      this._onChangeChat(<IChat>State.extract(STATES.CURRENT_CHAT));
     }
   }
 
   connected() {
     this.onclick = (e: MouseEvent) => {
       e.preventDefault();
-      this.createEvent("select", this.chat.id);
+      this.createEvent("select", this._chat.id);
     };
-    this.addSubscriber(STATES.CURRENT_CHAT, this.onChangeChat);
+    this.addSubscriber(STATES.CURRENT_CHAT, this._onChangeChat);
   }
 
-  onChangeChat = (chat: IChat) => {
-    if (chat instanceof Object && this.chat) {
-      if (this.chat.id === chat.id) {
-        this.chat = chat;
-        // this.chat = { ...this.chat, unread_count: 0 };
-        this.render(<IChat>this.chat);
+  private _onChangeChat = (chat: IChat): void => {
+    if (chat instanceof Object && this._chat) {
+      if (this._chat.id === chat.id) {
+        this._chat = chat;
+        this.render(<IChat>this._chat);
         this.classList.add("active");
       } else {
         this.classList.remove("active");
       }
+    } else {
+      this.classList.remove("active");
     }
   };
 
