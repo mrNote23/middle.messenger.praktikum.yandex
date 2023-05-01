@@ -7,11 +7,11 @@ import { UserController } from "../../../../../core/controllers/UserController";
 import "./AddUser.scss";
 
 class AddUserComponent extends Component {
-  timeout: number;
-  users: IUser[];
-  user: IUser;
-  inputValue = "";
-  userNode: HTMLElement;
+  private _timeout: number;
+  private _users: IUser[];
+  private _user: IUser;
+  private _inputValue = "";
+  private _userNode: HTMLElement;
 
   constructor() {
     super(view);
@@ -21,18 +21,18 @@ class AddUserComponent extends Component {
     this.render();
   }
 
-  onInput = (e) => {
-    this.inputValue = e.target.value.replace(/[^а-яa-z0-9-]+/gi, "");
-    e.target.value = this.inputValue;
-    clearTimeout(this.timeout);
-    if (this.inputValue === "") {
-      this.render({ users: [], inputValue: this.inputValue, empty: false });
-      this.querySelector(".form-control").focus();
+  onInput = <T>(e: T): void => {
+    this._inputValue = e.target.value.replace(/[^а-яa-z0-9-]+/gi, "");
+    e.target.value = this._inputValue;
+    clearTimeout(this._timeout);
+    if (this._inputValue === "") {
+      this.render({ users: [], inputValue: this._inputValue, empty: false });
+      this.querySelector<HTMLInputElement>(".form-control").focus();
       return;
     }
-    this.timeout = setTimeout(() => {
+    this._timeout = setTimeout(() => {
       UserController.searchUser(e.target.value).then((res: IUser[]) => {
-        this.users = res.map((elm) => {
+        this._users = res.map((elm) => {
           return {
             ...elm,
             avatar: elm.avatar
@@ -41,36 +41,40 @@ class AddUserComponent extends Component {
           };
         });
         let empty = false;
-        if (this.inputValue !== "" && !this.users.length) {
+        if (this._inputValue !== "" && !this._users.length) {
           empty = true;
         }
-        this.render({ users: this.users, inputValue: this.inputValue, empty });
-        this.querySelector(".form-control").focus();
-        this.querySelector(".form-control").setSelectionRange(
-          this.inputValue.length,
-          this.inputValue.length
+        this.render({
+          users: this._users,
+          inputValue: this._inputValue,
+          empty,
+        });
+        this.querySelector<HTMLInputElement>(".form-control").focus();
+        this.querySelector<HTMLInputElement>(".form-control").setSelectionRange(
+          this._inputValue.length,
+          this._inputValue.length
         );
       });
     }, 500);
   };
 
-  selectUser = (e) => {
-    if (this.userNode) {
-      this.userNode.classList.remove("active");
+  selectUser = <T>(e: T): void => {
+    if (this._userNode) {
+      this._userNode.classList.remove("active");
     }
-    this.userNode = e.target.closest("li");
-    this.userNode.classList.add("active");
-    this.user = this.users.find(
-      (user) => user.id === parseInt(this.userNode.dataset.id)
+    this._userNode = e.target.closest("li");
+    this._userNode.classList.add("active");
+    this._user = this._users.find(
+      (user) => user.id === parseInt(this._userNode.dataset.id)
     );
   };
 
-  addUser = () => {
-    UserController.addUser(this.user);
+  addUser = (): void => {
+    UserController.addUser(this._user);
     this.createEvent("finish", null);
   };
 
-  notNow = () => {
+  notNow = (): void => {
     this.createEvent("finish", null);
   };
 }
@@ -85,7 +89,7 @@ export const AddUser = (): void => {
     { closeWindow }
   );
 
-  modalWindow.node.querySelector(".form-control").focus();
+  modalWindow.node.querySelector<HTMLInputElement>(".form-control").focus();
 
   function closeWindow() {
     modalWindow.remove();

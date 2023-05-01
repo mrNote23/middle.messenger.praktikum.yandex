@@ -8,8 +8,7 @@ import { IChat } from "../../../../core/config/interfaces";
 import "./LeftHeader.scss";
 
 export class LeftHeader extends Component {
-  leftMode: string | null = null;
-  rightMode: string | null = null;
+  private _leftMode: string | null = null;
 
   constructor() {
     super(view);
@@ -17,12 +16,16 @@ export class LeftHeader extends Component {
 
   connected() {
     this.render();
-    this.addSubscriber(STATES.LEFT_MODE, this.changedMode);
-    this.addSubscriber(STATES.CURRENT_CHAT, this.changedChat);
+    this.addSubscriber(STATES.LEFT_MODE, this._changedMode);
+    this.addSubscriber(STATES.CURRENT_CHAT, this._changedChat);
   }
 
-  changedMode = (val: string) => {
-    this.leftMode = val;
+  addUserChat = (): void => {
+    this._leftMode === LEFTMODE.CHATS ? AddChat() : AddUser();
+  };
+
+  private _changedMode = (val: string): void => {
+    this._leftMode = val;
     if (val === LEFTMODE.CHATS) {
       document.getElementById("mode-users").classList.remove("active");
       document.getElementById("mode-chats").classList.add("active");
@@ -35,7 +38,7 @@ export class LeftHeader extends Component {
     }
   };
 
-  changedChat = (val: IChat) => {
+  private _changedChat = (val: IChat): void => {
     if (val) {
       document
         .getElementById("mode-users")
@@ -44,9 +47,5 @@ export class LeftHeader extends Component {
     } else {
       document.getElementById("mode-users").classList.add("d-none");
     }
-  };
-
-  addUserChat = (): void => {
-    this.leftMode === LEFTMODE.CHATS ? AddChat() : AddUser();
   };
 }

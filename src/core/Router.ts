@@ -1,27 +1,29 @@
-import { TRoute } from "../shared/content-switch/ContentSwitch";
+export type TRoute = {
+  path: string;
+  content?: string;
+  redirect?: string;
+  cb?: () => void;
+};
+export type TRoutes = { [key: string]: TRoute };
 
 class Router {
-  routes: TRoute[] = [];
-  currentRoute: TRoute;
-  target: HTMLElement;
+  private _routes: TRoute[] = [];
+  private _target: HTMLElement;
+  private _lastContent = "";
   history: History;
-  lastContent = "";
+  currentRoute: TRoute;
 
   constructor() {
     this.history = window.history;
   }
 
-  use(route: TRoute) {
-    this.routes.push(route);
+  use(route: TRoute): Router {
+    this._routes.push(route);
     return this;
   }
 
-  start(target: HTMLElement) {
-    this.target = target;
-    // new MutationObserver(this._mutationObserver).observe(this.target, {
-    //   subtree: true,
-    //   childList: true,
-    // });
+  start(target: HTMLElement): void {
+    this._target = target;
     window.addEventListener("popstate", <T>(e: T) => {
       e.preventDefault();
       this.go(e.currentTarget.location.pathname, false);
@@ -41,9 +43,9 @@ class Router {
         return;
       } else if (res.content) {
         this.currentRoute = res;
-        if (this.lastContent !== res.content) {
-          this.target.innerHTML = res.content;
-          this.lastContent = res.content;
+        if (this._lastContent !== res.content) {
+          this._target.innerHTML = res.content;
+          this._lastContent = res.content;
         } else {
           res.cb && res.cb();
         }
@@ -60,8 +62,8 @@ class Router {
   }
 
   _findRoute = (path: Array<string>): TRoute | null => {
-    if (this.routes.length) {
-      const route = this.routes.find(
+    if (this._routes.length) {
+      const route = this._routes.find(
         (route) => route.path.split("/")[1] === path[1]
       );
       if (!route) {
@@ -90,10 +92,6 @@ class Router {
       return null;
     }
   };
-
-  // _mutationObserver = (mutationList, observer) => {
-  //   console.log(mutationList);
-  // };
 }
 
 export default new Router();

@@ -11,12 +11,12 @@ export class RouterLink extends Component {
     this.addEventListener("click", this.onClick);
   }
 
-  onClick = (e) => {
+  onClick = (e: MouseEvent): void => {
     e.stopPropagation();
     Router.go(this.getAttribute("href"));
   };
 
-  disconnected() {
+  disconnected(): void {
     this.removeEventListener("click", this.onClick);
   }
 }

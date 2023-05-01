@@ -4,28 +4,29 @@ import { MessagesController } from "../controllers/MessagesController";
 import { ADMIN, STATES, TOKEN } from "../config/types";
 
 class WS {
-  _connection: WebSocket;
-  _token: string;
-  _pingPong: number;
-  _userId: number;
-  _chatId: number;
+  private _connection: WebSocket;
+  private _token: string;
+  private _pingPong: number;
+  private _userId: number;
+  private _chatId: number;
 
   public init() {
-    State.subscribe(TOKEN, (token: string | null) => {
-      if (token !== null) {
-        /* eslint-disable */
-        this._userId = State.extract(ADMIN)!.id;
-        this._chatId = State.extract(STATES.CURRENT_CHAT)!.id;
-        this._token = token;
-        if (this._connection) {
-          this._disconnect();
-        }
-        this._connect();
-      }
-    });
+    State.subscribe(TOKEN, this._changedToken);
   }
 
-  private _connect(first = true) {
+  private _changedToken = (token: string | null): void => {
+    if (token !== null) {
+      this._userId = <number>State.extract(ADMIN).id;
+      this._chatId = <number>State.extract(STATES.CURRENT_CHAT).id;
+      this._token = token;
+      if (this._connection) {
+        this._disconnect();
+      }
+      this._connect();
+    }
+  };
+
+  private _connect(first = true): void {
     this._connection = new WebSocket(
       `${API_WS_URL}/${this._userId}/${this._chatId}/${this._token}`
     );
@@ -37,7 +38,7 @@ class WS {
     this._connection.onerror = this._error.bind(this);
   }
 
-  private _open() {
+  private _open(): void {
     this.send({ content: "0", type: "get old" });
     if (!this._pingPong) {
       this._pingPong = setInterval(() => {
@@ -46,7 +47,7 @@ class WS {
     }
   }
 
-  private _message(response: MessageEvent) {
+  private _message(response: MessageEvent): void {
     const income = JSON.parse(response.data);
     if (Array.isArray(income)) {
       MessagesController.loadOldMessages(income);
@@ -65,11 +66,11 @@ class WS {
     }
   }
 
-  private _error(e: ErrorEvent) {
+  private _error(e: ErrorEvent): void {
     console.log(e);
   }
 
-  private _close(e: ErrorEvent) {
+  private _close<T>(e: T): void {
     if (e.code === 1006) {
       setTimeout(() => {
         this._connect(false);
@@ -77,15 +78,15 @@ class WS {
     }
   }
 
-  public send(content) {
+  public send(content: object): void {
     this._connection.send(JSON.stringify(content));
   }
 
-  private _disconnect() {
+  private _disconnect(): void {
     try {
       clearInterval(this._pingPong);
       this._connection.close(1000);
-    } catch (e) {
+    } catch (e: ErrorEvent) {
       console.log(e);
     }
   }

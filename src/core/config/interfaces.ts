@@ -30,6 +30,7 @@ export interface IChat {
       phone: string;
     };
     time: string;
+    timeDisplay?: string;
     content: string;
   };
 }

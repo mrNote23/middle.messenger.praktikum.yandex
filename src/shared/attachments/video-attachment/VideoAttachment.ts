@@ -3,7 +3,7 @@ import { Component } from "../../../core/Component";
 import "./VideoAttachment.scss";
 
 export class VideoAttachment extends Component {
-  video: HTMLVideoElement;
+  private _video: HTMLVideoElement;
 
   constructor() {
     super(view);
@@ -13,15 +13,15 @@ export class VideoAttachment extends Component {
     if (this.props.src) {
       this.style.width = "100%";
       this.render({ fileName: this.props.fileName });
-      this.video = this.querySelector(".video-container video");
-      this.video.src = <string>this.props.src;
+      this._video = this.querySelector(".video-container video");
+      this._video.src = <string>this.props.src;
     }
   }
 
   disconnected = () => {
-    if (this.video) {
-      this.video.pause();
-      this.video.remove();
+    if (this._video) {
+      this._video.pause();
+      this._video.remove();
     }
   };
 }

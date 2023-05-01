@@ -32,6 +32,17 @@
 
 - Добавлен прелоадер
 - Сделан роутинг приложения (Class Router)
+  - все страницы приложения имеют свои url
+    - /chats
+    - /chat/:chatId
+    - /chat-profile/:chatId
+    - /users/:chatId
+    - /user/:chatId/:userId
+    - /login
+    - /register
+    - /profile
+    - /404
+    - /500
 - Реализованы методы взаимодействия с API
 - Реализован обмен сообщениями с помощью WebSocket
 - Реализован полный функционал чата, а именно:
@@ -74,14 +85,14 @@ flowchart TD
     router --> error-500
     chat-page --> left-block
     chat-page --> right-block
-    left-block --> content-switch
-    content-switch --> chats-list
-    content-switch --> users-list
-    right-block --> content-switch
-    content-switch --> chat-messages
-    content-switch --> chat-profile
-    content-switch --> user-profile
-    content-switch --> admin-profile
+    left-block --> left-content-switch
+    left-content-switch --> chats-list
+    left-content-switch --> users-list
+    right-block --> right-content-switch
+    right-content-switch --> chat-messages
+    right-content-switch --> chat-profile
+    right-content-switch --> user-profile
+    right-content-switch --> admin-profile
 
 ```
 

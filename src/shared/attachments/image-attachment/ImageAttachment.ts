@@ -9,6 +9,8 @@ export class ImageAttachment extends Component {
 
   connected() {
     this.render({ fileName: this.props.fileName });
-    this.querySelector(".image-container img").src = <string>this.props.src;
+    this.querySelector<HTMLImageElement>(".image-container img").src = <string>(
+      this.props.src
+    );
   }
 }

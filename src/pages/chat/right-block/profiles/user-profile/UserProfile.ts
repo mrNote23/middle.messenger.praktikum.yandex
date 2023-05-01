@@ -10,42 +10,42 @@ import { OnMobile } from "../../../../../utils/on-mobile";
 import "./UserProfile.scss";
 
 export class UserProfile extends Component {
-  user: IUser;
-  currentChat: IChat;
+  private _user: IUser;
+  private _currentChat: IChat;
 
   constructor() {
     super(view);
   }
 
   connected(): void {
-    this.addSubscriber(STATES.CURRENT_CHAT, this.changedChat);
-    this.addSubscriber(STATES.CURRENT_USER, this.changedUser);
+    this.addSubscriber(STATES.CURRENT_CHAT, this._changedChat);
+    this.addSubscriber(STATES.CURRENT_USER, this._changedUser);
   }
 
-  changedChat = (val: IChat) => (this.currentChat = val);
+  private _changedChat = (val: IChat) => (this._currentChat = val);
 
-  changedUser = (val: IUser) => {
-    this.user = val;
-    if (this.user) {
+  private _changedUser = (val: IUser): void => {
+    this._user = val;
+    if (this._user) {
       this.render({
-        ...this.user,
-        canDelete: this.user.id !== State.extract(ADMIN).id,
-        chatTitle: this.currentChat.title,
-        chatAvatar: this.currentChat.avatar,
+        ...this._user,
+        canDelete: this._user.id !== State.extract(ADMIN).id,
+        chatTitle: this._currentChat.title,
+        chatAvatar: this._currentChat.avatar,
       });
     }
   };
 
-  backBtn = () => {
+  backBtn = (): void => {
     OnMobile.showLeftPanel();
-    Router.go(`/users/${this.currentChat.id}`);
+    Router.go(`/users/${this._currentChat.id}`);
   };
 
   deleteUser = (): void => {
     Confirm(
       { title: "Are you sure?", text: "Do you want to delete a user?" },
       () => {
-        UserController.deleteUser(this.user.id);
+        UserController.deleteUser(this._user.id);
         this.backBtn();
       }
     );

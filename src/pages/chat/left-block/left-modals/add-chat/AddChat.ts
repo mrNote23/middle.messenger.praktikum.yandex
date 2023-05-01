@@ -1,8 +1,8 @@
 import view from "./AddChat.hbs";
-import "./AddChat.scss";
 import { ModalWindow } from "../../../../../shared/modal-window/ModalWindow";
 import { TFormValidatorConfig } from "../../../../../shared/form-validator/FormValidator";
 import { ChatController } from "../../../../../core/controllers/ChatController";
+import "./AddChat.scss";
 
 export const AddChat = (): void => {
   const formFields: TFormValidatorConfig = {
@@ -19,7 +19,7 @@ export const AddChat = (): void => {
     formValidated,
   });
 
-  modalWindow.node.querySelector(".form-control").focus();
+  modalWindow.node.querySelector<HTMLInputElement>(".form-control").focus();
 
   function formValidated(e: CustomEvent): void {
     ChatController.addChat(e.detail.chat_name);

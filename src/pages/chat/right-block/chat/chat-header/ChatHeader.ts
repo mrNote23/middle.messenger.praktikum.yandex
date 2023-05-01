@@ -3,55 +3,55 @@ import State from "../../../../../core/State";
 import { OnMobile } from "../../../../../utils/on-mobile";
 import { Component } from "../../../../../core/Component";
 import { IChat, IUser } from "../../../../../core/config/interfaces";
-import "./ChatHeader.scss";
 import { STATES } from "../../../../../core/config/types";
 import Router from "../../../../../core/Router";
+import "./ChatHeader.scss";
 
 export class ChatHeader extends Component {
-  chat: IChat | null = null;
-  usersAvatars: Array<string>;
-  usersCountAvatar: number | string = 0;
-  chatUsers: IUser[] | null = null;
+  private _chat: IChat | null = null;
+  private _usersAvatars: Array<string>;
+  private _usersCountAvatar: number | string = 0;
+  private _chatUsers: IUser[] | null = null;
 
   constructor() {
     super(view);
   }
 
-  connected(): void {
-    this.chat = null;
-    this.usersAvatars = [];
-    this.usersCountAvatar = 0;
-    this.chatUsers = [];
+  connected() {
+    this._chat = null;
+    this._usersAvatars = [];
+    this._usersCountAvatar = 0;
+    this._chatUsers = [];
 
-    this.addSubscriber(STATES.CURRENT_CHAT, this.chatChanged);
-    this.addSubscriber(STATES.CHAT_USERS, this.usersChanged);
+    this.addSubscriber(STATES.CURRENT_CHAT, this._chatChanged);
+    this.addSubscriber(STATES.CHAT_USERS, this._usersChanged);
   }
 
-  usersChanged = (users: IUser[]) => {
-    this.chatUsers = users;
-    this.chatChanged(<IChat>this.chat);
+  private _usersChanged = (users: IUser[]): void => {
+    this._chatUsers = users;
+    this._chatChanged(<IChat>this._chat);
   };
 
-  chatChanged = (chat: IChat | "loading"): void => {
+  private _chatChanged = (chat: IChat | string): void => {
     if (chat === "loading") {
       this.loading();
     } else {
-      this.chat = chat;
-      if (this.chat) {
-        this.usersAvatars = [];
-        this.chatUsers = <IUser[]>State.extract(STATES.CHAT_USERS);
-        Object.values(this.chatUsers)
+      this._chat = <IChat>chat;
+      if (this._chat) {
+        this._usersAvatars = [];
+        this._chatUsers = <IUser[]>State.extract(STATES.CHAT_USERS);
+        Object.values(this._chatUsers)
           .slice(0, 3)
-          .forEach((u) => this.usersAvatars.push(u.avatar));
-        this.usersCountAvatar =
-          Object.keys(this.chatUsers).length < 10
-            ? Object.keys(this.chatUsers).length
+          .forEach((u) => this._usersAvatars.push(u.avatar));
+        this._usersCountAvatar =
+          Object.keys(this._chatUsers).length < 10
+            ? Object.keys(this._chatUsers).length
             : "10+";
         this.render({
-          ...this.chat,
-          usersAvatars: this.usersAvatars,
-          usersCountAvatar: this.usersCountAvatar,
-          showAvatars: this.usersAvatars.length > 0,
+          ...this._chat,
+          usersAvatars: this._usersAvatars,
+          usersCountAvatar: this._usersCountAvatar,
+          showAvatars: this._usersAvatars.length > 0,
         });
       } else {
         this.render();
@@ -59,7 +59,7 @@ export class ChatHeader extends Component {
     }
   };
 
-  showLeftPanel = () => {
+  showLeftPanel = (): void => {
     OnMobile.showLeftPanel();
   };
 

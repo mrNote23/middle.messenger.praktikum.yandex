@@ -5,9 +5,9 @@ import { ChatController } from "../controllers/ChatController";
 import { UserController } from "../controllers/UserController";
 import { chatExists } from "../../utils/chat-exists";
 import { userExists } from "../../utils/user-exists";
-import Router from "../Router";
+import Router, { TRoutes } from "../Router";
 
-export const routes = {
+export const routes: TRoutes = {
   root: {
     path: "/",
     redirect: "/chats",

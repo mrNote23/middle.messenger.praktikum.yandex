@@ -1,16 +1,18 @@
-export const mediaContainer = (fileType: string): HTMLElement => {
+import { Component } from "../core/Component";
+
+export const mediaContainer = (fileType: string): Component => {
   switch (fileType) {
     case "image":
-      return document.createElement("image-attachment");
+      return <Component>document.createElement("image-attachment");
       break;
     case "audio":
-      return document.createElement("audio-attachment");
+      return <Component>document.createElement("audio-attachment");
       break;
     case "video":
-      return document.createElement("video-attachment");
+      return <Component>document.createElement("video-attachment");
       break;
     default:
-      return document.createElement("file-attachment");
+      return <Component>document.createElement("file-attachment");
       break;
   }
 };

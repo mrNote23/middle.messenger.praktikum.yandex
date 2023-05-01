@@ -89,7 +89,6 @@ class State {
       store: {},
       storeNode: StoreNode,
     };
-    window.store = this.storeHolder;
   }
 
   // получение значения параметра

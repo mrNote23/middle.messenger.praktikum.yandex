@@ -1,5 +1,5 @@
 import view from "./ChatPage.hbs";
-import { TRoute } from "../../shared/content-switch/ContentSwitch";
+import { TSwitchRoute } from "../../shared/content-switch/ContentSwitch";
 import { Component } from "../../core/Component";
 import { LeftBlock } from "./left-block/LeftBlock";
 import { ChatHeader } from "./right-block/chat/chat-header/ChatHeader";
@@ -16,8 +16,8 @@ import { MessagesDivider } from "../../shared/messages-divider/MessagesDivider";
 import { STATES } from "../../core/config/types";
 import { AuthController } from "../../core/controllers/AuthController";
 import { rightRoutes } from "./right-block/rightRoutes";
-import "./ChatPage.scss";
 import Router from "../../core/Router";
+import "./ChatPage.scss";
 
 customElements.define("left-block", LeftBlock);
 
@@ -35,8 +35,8 @@ customElements.define("file-attachment", FileAttachment);
 customElements.define("messages-divider", MessagesDivider);
 
 export class ChatPage extends Component {
-  router: HTMLElement;
-  rightRoutes: TRoute[];
+  private _router: Component;
+  rightRoutes: TSwitchRoute[];
 
   constructor() {
     super(view);
@@ -44,21 +44,21 @@ export class ChatPage extends Component {
     this.className = "wrapper";
   }
 
-  connected(): void {
+  connected() {
     AuthController.auth().then((res) => {
       if (res) {
         this.render();
         Router.currentRoute.cb && Router.currentRoute.cb();
 
-        this.router = document.getElementById("right-router");
+        this._router = <Component>document.getElementById("right-router");
 
-        this.addSubscriber(STATES.RIGHT_MODE, this.changedMode);
+        this.addSubscriber(STATES.RIGHT_MODE, this._changedMode);
       }
     });
   }
 
-  changedMode = (val: string) => {
-    this.router.props.path = val;
-    this.router.setAttribute("path", val);
+  private _changedMode = (val: string): void => {
+    this._router.props.path = val;
+    this._router.setAttribute("path", val);
   };
 }

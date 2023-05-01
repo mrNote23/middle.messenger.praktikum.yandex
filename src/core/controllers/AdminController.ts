@@ -5,7 +5,7 @@ import { IUser } from "../config/interfaces";
 import { ADMIN } from "../config/types";
 
 export class AdminController {
-  static changeAdminAvatar(avatar: File) {
+  static changeAdminAvatar(avatar: File): void {
     UserApi.avatar(avatar)
       .then((res) => {
         const tmp = {
@@ -21,7 +21,7 @@ export class AdminController {
     data: IUser,
     cbError: (e: unknown) => void,
     cbOk: () => void
-  ) {
+  ): void {
     UserApi.profile(data)
       .then((res) => {
         State.dispatch(ADMIN, {
@@ -47,7 +47,7 @@ export class AdminController {
     newPassword: string,
     cbError: (e: unknown) => void,
     cbOk: () => void
-  ) {
+  ): void {
     UserApi.password(oldPassword, newPassword)
       .then(() => {
         cbOk();

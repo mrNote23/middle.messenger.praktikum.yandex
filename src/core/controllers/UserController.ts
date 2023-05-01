@@ -11,7 +11,7 @@ export class UserController {
     return UserApi.search(login);
   }
 
-  static addUser(user: IUser) {
+  static addUser(user: IUser): void {
     ChatApi.addUsers(State.extract(STATES.CURRENT_CHAT).id, [user.id]).then(
       () => {
         const tmp = JSON.parse(
@@ -23,7 +23,7 @@ export class UserController {
     );
   }
 
-  static deleteUser(userId: number) {
+  static deleteUser(userId: number): void {
     ChatApi.deleteUsers(State.extract(STATES.CURRENT_CHAT).id, [userId])
       .then(() => {
         const tmp = JSON.parse(

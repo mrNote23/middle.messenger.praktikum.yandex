@@ -9,7 +9,7 @@ import Router from "../Router";
 export class ChatController {
   static addChat(title: string): void {
     ChatApi.add(title)
-      .then((res) => {
+      .then((res: IChat) => {
         const tmp = {
           id: res.id,
           title,
@@ -50,7 +50,7 @@ export class ChatController {
 
   static changeChatAvatar(chatId: number, avatar: File): void {
     ChatApi.avatar(chatId, avatar)
-      .then((res) => {
+      .then((res: IChat) => {
         let tmp = {
           ...State.extract(STATES.CURRENT_CHAT),
           avatar: `${RES_URL}/${res.avatar}`,
