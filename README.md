@@ -62,6 +62,14 @@
   - отправка файлов в чат;
   - просмотр/прослушивание для аудио/видео/фото сообщений;
 
+### Спринт 4 / 4 [(PR)](https://github.com/mrNote23/middle.messenger.praktikum.yandex/pull/5)
+
+- Изменены эндпоинты в соответствии с заданием
+  - /chats -> /messenger
+  - /login -> /sign-in
+  - /register -> /sign-up
+  - /profile -> /settings
+
 ## СТЭК
 
 - HTML
