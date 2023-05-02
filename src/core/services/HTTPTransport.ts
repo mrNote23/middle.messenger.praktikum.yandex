@@ -15,6 +15,12 @@ type TOptions = {
   data?: object;
 };
 
+type HTTPMethod<Response> = (
+  path: string,
+  data?: unknown,
+  headers?: Array<object>
+) => Promise<Response>;
+
 export class HTTPTransport {
   protected endpoint: string;
 
@@ -22,65 +28,53 @@ export class HTTPTransport {
     this.endpoint = `${API_URL}${endpoint}`;
   }
 
-  public get<Response>(
-    path = "/",
-    data?: unknown,
-    headers?: Array<object>
-  ): Promise<Response> {
-    return this.request<Response>(this.endpoint + path, {
+  public get: HTTPMethod<Response> = (path = "/", data = {}, headers = []) => {
+    return this.request(this.endpoint + path, {
       method: METHODS.GET,
       data,
       headers,
     });
-  }
+  };
 
-  public put<Response>(
-    path = "/",
-    data?: unknown,
-    headers?: Array<object>
-  ): Promise<Response> {
+  public put: HTTPMethod<Response> = (path = "/", data = {}, headers = []) => {
     return this.request<Response>(this.endpoint + path, {
       method: METHODS.PUT,
       data,
       headers,
     });
-  }
+  };
 
-  public post<Response>(
-    path = "/",
-    data?: unknown,
-    headers?: Array<object>
-  ): Promise<Response> {
+  public post: HTTPMethod<Response> = (path = "/", data = {}, headers = []) => {
     return this.request<Response>(this.endpoint + path, {
       method: METHODS.POST,
       data,
       headers,
     });
-  }
+  };
 
-  public patch<Response>(
+  public patch: HTTPMethod<Response> = (
     path = "/",
-    data?: unknown,
-    headers?: Array<object>
-  ): Promise<Response> {
+    data = {},
+    headers = []
+  ) => {
     return this.request<Response>(this.endpoint + path, {
       method: METHODS.PATCH,
       data,
       headers,
     });
-  }
+  };
 
-  public delete<Response>(
+  public delete: HTTPMethod<Response> = (
     path = "/",
-    data?: unknown,
-    headers?: Array<object>
-  ): Promise<Response> {
+    data = {},
+    headers = []
+  ) => {
     return this.request<Response>(this.endpoint + path, {
       method: METHODS.DELETE,
       data,
       headers,
     });
-  }
+  };
 
   private request = <TResponse>(
     url: string,
