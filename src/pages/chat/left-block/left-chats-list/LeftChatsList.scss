@@ -1,0 +1,99 @@
+.chats-list {
+  border-radius: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 5px;
+
+  .chats-item {
+    display: flex;
+    padding: 15px;
+    cursor: pointer;
+    border-radius: 6px;
+    background-color: white;
+    margin-bottom: 10px;
+    position: relative;
+    box-shadow: 0 .5em 1em -.125em rgb(10 10 10 / 10%), 0 0 0 1px rgb(10 10 10 / 2%);
+
+    .chats-item-body {
+      flex: 1;
+      position: relative;
+      display: flex;
+      min-width: 0;
+
+      .chats-item-info {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        width: 0;
+        flex: 1;
+        text-align: left;
+
+        .chats-title {
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          font-weight: bold;
+          padding-bottom: 5px;
+        }
+
+        .chats-last-message {
+          color: var(--dark-gray-color);
+          padding: 0;
+          margin: 0;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+      .chats-last-message-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+
+        :first-child {
+          font-size: 10px;
+          white-space: nowrap;
+          color: var(--dark-gray-color)
+        }
+
+        .chats-unread-messages {
+          text-align: center;
+          color: white;
+          padding: 5px;
+          width: 30px;
+          height: 30px;
+          font-size: 17px;
+          font-weight: bold;
+          vertical-align: middle;
+          background-color: var(--primary-color);
+          border-radius: 50%;
+        }
+      }
+    }
+
+    &.active {
+      background-color: var(--primary-color);
+      color: white;
+      border-left: 5px solid var(--accent-color);
+
+      .chats-item-info {
+        .chats-last-message {
+          color: white;
+        }
+      }
+
+      .chats-last-message-info {
+        :first-child {
+          color: white;
+        }
+
+        .chats-unread-messages {
+          color: var(--primary-color);
+          background-color: white;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+.video-container {
+  width: 100%;
+
+  .title {
+    width: 99%;
+    text-align: left;
+    color: var(--primary-color);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}

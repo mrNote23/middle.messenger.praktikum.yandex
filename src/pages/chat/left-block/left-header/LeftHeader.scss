@@ -1,0 +1,60 @@
+.sidebar-header-top {
+  margin-bottom: 30px;
+  font-weight: 600;
+  background-color: var(--primary-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .admin-profile-btn {
+    color: white;
+    cursor: pointer;
+
+    @media screen and (max-width: 992px) {
+      padding-right: 15px;
+    }
+  }
+}
+
+.btn-header {
+  position: absolute;
+  right: 12px;
+  bottom: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  color: white;
+  text-align: center;
+  background: var(--accent-color);
+  padding-top: 6px;
+  padding-left: 6px;
+  margin: 0;
+}
+
+nav {
+  position: relative;
+  top: -20px;
+
+  @media screen and (max-width: 992px) {
+    top: -22px;
+  }
+
+  .nav-tabs {
+    top: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+
+    a, router-link {
+      font-size: 16px;
+      color: white;
+      font-weight: 700;
+      padding: 10px;
+
+      &.active {
+        color: var(--accent-color);
+      }
+    }
+  }
+}

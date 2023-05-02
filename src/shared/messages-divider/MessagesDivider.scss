@@ -1,0 +1,14 @@
+.messages-divider {
+  border-bottom: 1px dotted var(--primary-color);
+  margin: 10px 0;
+
+  span {
+    position: relative;
+    top: 7px;
+    background-color: var(--accent-color);
+    border-radius: 6px;
+    padding: 0 10px;
+    color: white;
+    font-size: 10px;
+  }
+}

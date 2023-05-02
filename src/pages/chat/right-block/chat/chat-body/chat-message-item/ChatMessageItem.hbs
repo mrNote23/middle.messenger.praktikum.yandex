@@ -1,0 +1,29 @@
+{{#if dividerDate}}
+  <messages-divider date="{{dividerDate}}"></messages-divider>
+{{/if}}
+{{#if isAdmin}}
+  <div class="message-body message-right">
+    <div class="message-content">
+      <div class="message">
+        <span>{{content}}</span>
+        <div class="time">{{time}}
+        </div>
+      </div>
+    </div>
+  </div>
+{{else}}
+  <div class="message-body">
+    <div class="message-avatar">
+      <img class="rounded-circle" src="{{avatar}}" alt="">
+    </div>
+    <div class="message-content">
+      <div class="message">
+        <div class="message-header">
+          <div class="message-author">{{display_name}}</div>
+          <div class="time">{{time}}</div>
+        </div>
+        <span>{{content}}</span>
+      </div>
+    </div>
+  </div>
+{{/if}}

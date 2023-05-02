@@ -1,0 +1,9 @@
+{{#if notSelected}}
+  <div class="empty">Please select another chat or create new</div>
+{{else}}
+  <div id="messages_container">
+    {{#each messages}}
+      <chat-message-item props-message="[[messages[{{@index}}]]]"></chat-message-item>
+    {{/each}}
+  </div>
+{{/if}}
