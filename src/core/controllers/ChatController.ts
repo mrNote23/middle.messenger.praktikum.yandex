@@ -41,7 +41,7 @@ export class ChatController {
           State.dispatch(STATES.CHAT_MESSAGES, []);
           State.dispatch(STATES.CHAT_USERS, []);
           State.dispatch(STATES.CHATS_LIST, []);
-          Router.go("/chats");
+          Router.go("/messenger");
         }
         State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
       })

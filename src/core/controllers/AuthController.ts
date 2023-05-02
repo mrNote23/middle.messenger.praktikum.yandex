@@ -14,7 +14,7 @@ export class AuthController {
         return true;
       })
       .catch(() => {
-        Router.go("/login");
+        Router.go("/sign-in");
         return false;
       });
   }
@@ -61,7 +61,7 @@ export class AuthController {
 
   static async logout() {
     await AuthApi.logout().catch(() => false);
-    Router.go("/login");
+    Router.go("/sign-in");
     State.clear();
   }
 }
