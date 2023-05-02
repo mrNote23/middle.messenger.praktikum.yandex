@@ -29,8 +29,7 @@ export class LeftChatsList extends Component {
   }
 
   selectChat = (id: CustomEvent): void => {
-    ChatController.setCurrentChat(id.detail);
-    Router.history.pushState({}, "", `/chat/${id.detail}`);
+    Router.go(`/chat/${id.detail}`);
   };
 
   private _changedChat = (val: IChat): IChat => (this._currentChat = val);
