@@ -1,6 +1,5 @@
 import { HTTPTransport } from "../services/HTTPTransport";
 import { CHAT_ENDPOINTS } from "./endpoints";
-import { IChat, IUser } from "../config/interfaces";
 
 class ChatApi {
   http: HTTPTransport;
@@ -9,31 +8,31 @@ class ChatApi {
     this.http = new HTTPTransport("/chats");
   }
 
-  add(title: string): Promise<IChat> {
+  add(title: string): Promise<Response> {
     return this.http.post(CHAT_ENDPOINTS.CHAT, { title });
   }
 
-  delete(chatId: number): Promise<HTTPTransport> {
+  delete(chatId: number): Promise<Response> {
     return this.http.delete(CHAT_ENDPOINTS.CHAT, { chatId });
   }
 
-  list(): Promise<IChat[]> {
+  list(): Promise<Response> {
     return this.http.get(CHAT_ENDPOINTS.CHAT);
   }
 
-  users(chatId: number): Promise<IUser[]> {
+  users(chatId: number): Promise<Response> {
     return this.http.get(`${CHAT_ENDPOINTS.CHAT}/${chatId}/users`);
   }
 
-  addUsers(chatId: number, users: number[]): Promise<HTTPTransport> {
+  addUsers(chatId: number, users: number[]): Promise<Response> {
     return this.http.put(CHAT_ENDPOINTS.USERS, { users, chatId });
   }
 
-  deleteUsers(chatId: number, users: number[]): Promise<HTTPTransport> {
+  deleteUsers(chatId: number, users: number[]): Promise<Response> {
     return this.http.delete(CHAT_ENDPOINTS.USERS, { users, chatId });
   }
 
-  avatar(chatId: number, avatar: File): Promise<IChat> {
+  avatar(chatId: number, avatar: File): Promise<Response> {
     const tmp = new FormData();
     tmp.append("chatId", chatId.toString());
     tmp.append("avatar", avatar);

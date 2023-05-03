@@ -1,4 +1,5 @@
 import { Component } from "../../core/Component";
+import { TRoute } from "../../core/Router";
 
 export type TSwitchRoute = {
   path: string;
@@ -42,7 +43,7 @@ export class ContentSwitch extends Component {
 
   private _findRoute = (path: string): TSwitchRoute | null => {
     if (this.props.routes) {
-      return this.props.routes.find((elm) => {
+      return this.props.routes.find((elm: TRoute) => {
         if (elm.path === path) {
           return elm;
         }

@@ -36,7 +36,7 @@ export class AdminProfile extends Component {
     }
   };
 
-  errorProfile = (e: unknown) => {
+  errorProfile = (e) => {
     this.error.textContent = e.reason;
     this.error.style.display = "block";
   };

@@ -13,8 +13,6 @@ class Router {
   history: History;
   currentRoute: TRoute;
 
-  constructor() {}
-
   use(route: TRoute): Router {
     this._routes.push(route);
     return this;

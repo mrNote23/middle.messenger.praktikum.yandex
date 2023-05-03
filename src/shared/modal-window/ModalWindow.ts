@@ -32,23 +32,23 @@ export class ModalWindowComponent extends Component {
       title: this.getAttribute("title"),
       content: this.innerHTML,
     });
-    this.addListener(document, "keyup", this._pressEscape);
+    this.addListener(<HTMLElement>document, "keyup", this._pressEscape);
   }
 
-  clickAway = (e: MouseEvent): void => {
-    if (e?.target["className"] === "modal-content") {
+  clickAway = (e: MouseEvent) => {
+    if (e.target["className"] === "modal-content") {
       this.remove();
     }
   };
 
-  closeModal = (e: MouseEvent): void => {
-    if (e?.target["closest"](".close-modal")) {
+  closeModal = (e: MouseEvent) => {
+    if (e.target["closest"](".close-modal")) {
       this.remove();
     }
   };
 
-  private _pressEscape = (e: KeyboardEvent): void => {
-    if (e?.key === "Escape") {
+  private _pressEscape = (e: KeyboardEvent) => {
+    if (e.key === "Escape") {
       this.remove();
     }
   };

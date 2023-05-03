@@ -117,7 +117,9 @@ export class FormValidator extends Component {
 
     // Первая буква должна быть заглавной
     if (this._config[field.name].firstUC) {
-      field.value = field.value.replace(/(^|\s)\S$/g, (u) => u.toUpperCase());
+      field.value = field.value.replace(/(^|\s)\S$/g, (u: string) =>
+        u.toUpperCase()
+      );
     }
 
     // очистка фильтром

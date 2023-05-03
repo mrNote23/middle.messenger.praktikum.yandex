@@ -17,8 +17,12 @@ export type TProps = {
   [key: string]: unknown;
 };
 
+export type TEventResult = {
+  detail: unknown;
+};
 export type TEvent = {
-  [key: string]: () => void;
+  eventName: string;
+  eventHandler: (e: TEventResult) => void;
 };
 
 type TComponentParams = {
@@ -55,7 +59,7 @@ export class Component extends HTMLElement {
   ): void => {
     // ивенты установленные через атрибуты
     this._events.forEach((event: TEvent) => {
-      if (<string>event.eventName === eventName) {
+      if (event.eventName === eventName) {
         event.eventHandler({ detail: eventProps });
       }
     });
@@ -67,11 +71,11 @@ export class Component extends HTMLElement {
   protected render = (params: TComponentParams | null = null): void => {
     this.params = params;
     if (this.view !== null) {
-      const html = this.view(params);
+      const html = <string>this.view(params);
       this.innerHTML = html;
       const attrs = this._parseAttributes(html);
       if (attrs) {
-        this.querySelectorAll(attrs.join(",")).forEach((node) => {
+        this.querySelectorAll(attrs.join(",")).forEach((node: Component) => {
           this._addPropsAndEvents(node);
         });
       }
@@ -90,7 +94,7 @@ export class Component extends HTMLElement {
   }
 
   // добавление Event.listener
-  protected addListener<TListener>(
+  protected addListener(
     node: HTMLElement,
     event: string,
     callBack: (e: unknown) => void

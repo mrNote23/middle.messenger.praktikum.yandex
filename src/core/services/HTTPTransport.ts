@@ -17,7 +17,7 @@ type TOptions = {
 
 type HTTPMethod<Response> = (
   path: string,
-  data?: unknown,
+  data?: any,
   headers?: Array<object>
 ) => Promise<Response>;
 
