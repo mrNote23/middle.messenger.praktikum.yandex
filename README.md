@@ -81,6 +81,8 @@
 - PostCSS
 - ESLint
 - StyleLint
+- Mocha
+- Chai
 
 # Структура приложения (DOM)
 
@@ -395,4 +397,10 @@ npm start
 ```text
 npm run lint:eslint
 npm run lint:stylelint
+```
+
+### Запуск тестов Mocha
+
+```text
+npm run test
 ```
