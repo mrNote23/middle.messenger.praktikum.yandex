@@ -11,7 +11,7 @@
     "lint": "eslint . && stylelint **/*.scss",
     "lint:eslint": "eslint . --ext .ts",
     "lint:stylelint": "stylelint **/*.scss",
-    "test": "mocha"
+    "test": "ts-mocha"
   },
   "alias": {
     "@hbs-helpers": "./src/utils/hbs-helpers.js"
@@ -37,7 +37,6 @@
   },
   "homepage": "https://github.com/mrNote23/middle.messenger.praktikum.yandex#readme",
   "devDependencies": {
-    "@babel/register": "^7.21.0",
     "@parcel/transformer-sass": "^2.8.3",
     "@types/chai": "^4.3.5",
     "@types/mocha": "^10.0.1",
@@ -54,6 +53,7 @@
     "parcel-transformer-hbs": "^1.0.4",
     "stylelint": "^15.4.0",
     "stylelint-config-standard-scss": "^7.0.1",
+    "ts-mocha": "^10.0.0",
     "typescript": "^5.0.4"
   },
   "dependencies": {

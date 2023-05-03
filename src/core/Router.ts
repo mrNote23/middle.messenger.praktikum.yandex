@@ -13,9 +13,7 @@ class Router {
   history: History;
   currentRoute: TRoute;
 
-  constructor() {
-    this.history = window.history;
-  }
+  constructor() {}
 
   use(route: TRoute): Router {
     this._routes.push(route);
@@ -23,6 +21,7 @@ class Router {
   }
 
   start(target: HTMLElement): void {
+    this.history = window.history;
     this._target = target;
     window.addEventListener("popstate", <T>(e: T) => {
       e.preventDefault();
