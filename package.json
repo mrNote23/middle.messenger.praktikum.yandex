@@ -38,22 +38,17 @@
   "homepage": "https://github.com/mrNote23/middle.messenger.praktikum.yandex#readme",
   "devDependencies": {
     "@parcel/transformer-sass": "^2.8.3",
-    "@types/chai": "^4.3.5",
-    "@types/mocha": "^10.0.1",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
     "@typescript-eslint/parser": "^5.58.0",
-    "chai": "^4.3.7",
     "eslint": "^8.38.0",
     "eslint-config-airbnb": "^19.0.4",
     "handlebars": "^4.7.7",
-    "mocha": "^10.2.0",
     "parcel": "^2.8.3",
     "parcel-reporter-clean-dist": "^1.0.4",
     "parcel-reporter-static-files-copy": "^1.5.0",
     "parcel-transformer-hbs": "^1.0.4",
     "stylelint": "^15.4.0",
     "stylelint-config-standard-scss": "^7.0.1",
-    "ts-mocha": "^10.0.0",
     "typescript": "^5.0.4"
   },
   "dependencies": {
