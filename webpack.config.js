@@ -11,13 +11,13 @@ module.exports = {
   mode: "development",
   devServer: {
     port: 4200,
-    static: path.resolve(__dirname, "dist"),
+    static: path.resolve(__dirname, "build"),
   },
   entry: {
     index: "./index.ts",
   },
   output: {
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, "build"),
     filename: "index.[contenthash].js",
   },
   resolve: {
