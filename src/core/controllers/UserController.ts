@@ -7,7 +7,7 @@ import { RIGHTMODE, STATES } from "../config/types";
 import Router from "../Router";
 
 export class UserController {
-  static searchUser(login: string) {
+  static searchUser(login: string): Promise<IUser[]> {
     return UserApi.search(login);
   }
 

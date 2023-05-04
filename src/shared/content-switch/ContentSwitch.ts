@@ -43,7 +43,7 @@ export class ContentSwitch extends Component {
 
   private _findRoute = (path: string): TSwitchRoute | null => {
     if (this.props.routes) {
-      return this.props.routes.find((elm: TRoute) => {
+      return (this.props.routes as TSwitchRoute[]).find((elm: TRoute) => {
         if (elm.path === path) {
           return elm;
         }

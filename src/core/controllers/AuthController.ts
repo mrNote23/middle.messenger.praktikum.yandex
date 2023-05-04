@@ -1,7 +1,7 @@
 import AuthApi from "../API/AuthApi";
 import State from "../State";
 import { pathToAvatar } from "../../utils/path-to-avatar";
-import { ADMIN } from "../config/types";
+import { ADMIN, TLoginData, TRegisterData } from "../config/types";
 import { IUser } from "../config/interfaces";
 import Router from "../Router";
 import { appInit } from "../appInit";
@@ -19,7 +19,7 @@ export class AuthController {
       });
   }
 
-  static async login<T>(props: T, cbError: (e: object) => void) {
+  static async login(props: TLoginData, cbError: (e: object) => void) {
     try {
       await AuthApi.login(props);
       appInit();
@@ -39,7 +39,7 @@ export class AuthController {
     }
   }
 
-  static async register<T>(props: T, cbError: (e: object) => void) {
+  static async register(props: TRegisterData, cbError: (e: object) => void) {
     try {
       await AuthApi.register(props);
       appInit();

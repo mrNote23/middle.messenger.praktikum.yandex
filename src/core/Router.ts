@@ -1,9 +1,11 @@
+import { TRecord } from "./config/types";
+
 export type TRoute = {
   path: string;
   content?: string;
   redirect?: string;
   cb?: () => void;
-};
+} & TRecord;
 export type TRoutes = { [key: string]: TRoute };
 
 class Router {
@@ -21,9 +23,8 @@ class Router {
   start(target: HTMLElement): void {
     this.history = window.history;
     this._target = target;
-    window.addEventListener("popstate", <T>(e: T) => {
-      e.preventDefault();
-      this.go(e.currentTarget.location.pathname, false);
+    window.addEventListener("popstate", () => {
+      this.go(window.location.pathname, false);
     });
     this.go(window.location.pathname);
   }
@@ -60,7 +61,7 @@ class Router {
 
   _findRoute = (path: Array<string>): TRoute | null => {
     if (this._routes.length) {
-      const route = this._routes.find(
+      const route: TRoute = this._routes.find(
         (route) => route.path.split("/")[1] === path[1]
       );
       if (!route) {

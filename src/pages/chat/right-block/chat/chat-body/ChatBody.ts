@@ -4,7 +4,7 @@ import { Component } from "../../../../../core/Component";
 import "./ChatBody.scss";
 import { IChatMessageItem } from "../../../../../core/config/interfaces";
 import { ChatMessageItem } from "./chat-message-item/ChatMessageItem";
-import { ADMIN, NEW_MESSAGE, STATES } from "../../../../../core/config/types";
+import { NEW_MESSAGE, STATES } from "../../../../../core/config/types";
 
 customElements.define("chat-message-item", ChatMessageItem);
 

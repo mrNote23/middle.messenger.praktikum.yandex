@@ -3,8 +3,9 @@ import { Component } from "../../../../../core/Component";
 import { mediaContainer } from "../../../../../utils/media-container";
 import { MAX_UFS, MAX_UFSS } from "../../../../../core/API/endpoints";
 import { MessagesController } from "../../../../../core/controllers/MessagesController";
-import { STATES } from "../../../../../core/config/types";
+import { STATES, TEventTarget, TNode } from "../../../../../core/config/types";
 import "./ChatFooter.scss";
+import { IChat } from "../../../../../core/config/interfaces";
 
 export class ChatFooter extends Component {
   private _message = "";
@@ -19,7 +20,7 @@ export class ChatFooter extends Component {
     this.addSubscriber(STATES.CURRENT_CHAT, this._chatChanged);
   }
 
-  private _chatChanged = (val): void => {
+  private _chatChanged = (val: IChat | "loading"): void => {
     if (val && val !== "loading") {
       this.style.display = "flex";
       this.render({ message: this._message });
@@ -29,7 +30,7 @@ export class ChatFooter extends Component {
     }
   };
 
-  onChange = <T>(e: T): void => {
+  onChange = (e: TEventTarget): void => {
     this._message = e.target.value;
     e.key === "Enter" && this.sendMessage();
   };
@@ -52,15 +53,15 @@ export class ChatFooter extends Component {
   };
 
   addAttachment = (): void => {
-    this.querySelector<unknown>("#attachment")["click"]();
+    this.querySelector<TNode>("#attachment")["click"]();
   };
 
-  onAttachment = <T>(e: T): void => {
+  onAttachment = (e: TEventTarget): void => {
     if (!e.target.files.length) {
       return;
     }
     this.querySelector(".attach-container").innerHTML = "";
-    this._attach = <File>e.target.files[0];
+    this._attach = e.target.files[0];
 
     if (this._attach.size > MAX_UFS) {
       this.querySelector(

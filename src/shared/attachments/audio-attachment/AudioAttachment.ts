@@ -2,6 +2,7 @@ import view from "./AudioAttachment.hbs";
 import { Component } from "../../../core/Component";
 import { mediaTimeConvert } from "../../../utils/media-time-convert";
 import "./AudioAttachment.scss";
+import { TEventTarget } from "../../../core/config/types";
 
 export class AudioAttachment extends Component {
   private _audio: HTMLAudioElement;
@@ -45,7 +46,7 @@ export class AudioAttachment extends Component {
     this._render();
   };
 
-  seekTo = (e) => {
+  seekTo = (e: TEventTarget) => {
     this._audio.currentTime = this._audio.duration * (e.target.value / 100);
     this._seekUpdate();
   };

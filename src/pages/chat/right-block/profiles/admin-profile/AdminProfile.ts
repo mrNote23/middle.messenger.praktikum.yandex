@@ -7,9 +7,8 @@ import { IUser } from "../../../../../core/config/interfaces";
 import "./AdminProfile.scss";
 import { AuthController } from "../../../../../core/controllers/AuthController";
 import { AdminController } from "../../../../../core/controllers/AdminController";
-import { ADMIN } from "../../../../../core/config/types";
+import { ADMIN, TEventTarget, TRecord } from "../../../../../core/config/types";
 import Router from "../../../../../core/Router";
-import { InputFileSystem } from "copy-webpack-plugin/types/utils";
 
 export class AdminProfile extends Component {
   admin: IUser | null;
@@ -31,7 +30,7 @@ export class AdminProfile extends Component {
     this.error = this.querySelector(".profile-error");
   };
 
-  changeAvatar = (e: InputFileSystem) => {
+  changeAvatar = (e: TEventTarget) => {
     if (e.target.files) {
       AdminController.changeAdminAvatar(e.target.files[0]);
     }
@@ -81,8 +80,8 @@ export class AdminProfile extends Component {
 
   _compareFields = (
     fields: string[],
-    oldObj: object,
-    newObj: object
+    oldObj: TRecord,
+    newObj: TRecord
   ): boolean => {
     let res = true;
     fields.forEach((field: string) => {
@@ -94,8 +93,8 @@ export class AdminProfile extends Component {
   };
 
   btnLogout = (): void => {
-    Confirm({ title: "Are you sure?", text: "Exit from chat?" }, () => {
-      AuthController.logout();
+    Confirm({ title: "Are you sure?", text: "Exit from chat?" }, async () => {
+      await AuthController.logout();
     });
   };
 

@@ -12,10 +12,9 @@
 */
 
 import State, { TSubscriberItem } from "./State";
+import { TRecord } from "./config/types";
 
-export type TProps = {
-  [key: string]: unknown;
-};
+export type TProps = TRecord;
 
 export type TEventResult = {
   detail: unknown;
@@ -42,7 +41,7 @@ export class Component extends HTMLElement {
   protected _listeners: TListener[] = [];
 
   public props: TProps;
-  private _props: TProps = {};
+  private _props: TProps | any[] = {};
   private _events: TEvent[] = [];
 
   constructor(
@@ -55,7 +54,7 @@ export class Component extends HTMLElement {
   // генерация события (event)
   protected createEvent = (
     eventName: string,
-    eventProps: CustomEvent
+    eventProps: TRecord | any
   ): void => {
     // ивенты установленные через атрибуты
     this._events.forEach((event: TEvent) => {
@@ -95,7 +94,7 @@ export class Component extends HTMLElement {
 
   // добавление Event.listener
   protected addListener(
-    node: HTMLElement,
+    node: HTMLElement | DocumentType | any,
     event: string,
     callBack: (e: unknown) => void
   ): void {
@@ -161,9 +160,11 @@ export class Component extends HTMLElement {
         // check props on object/array
         const args = propsValue.match(/(\[\S+\])|(\(\S+\))/gi);
         if (args) {
-          /* eslint-disable */
-          const _propsValue = propsValue.match(/^[a-z0-9_-]+/gi)![0];
-          node.props[propsName] = eval("this[_propsValue]" + args.join(""));
+          window["_propsValue"] = <string>propsValue.match(/^[a-z0-9_-]+/gi)[0];
+          node.props[propsName] = eval(
+            "this[window._propsValue]" + args.join("")
+          );
+          delete window["_propsValue"];
         } else {
           node.props[propsName] = this[propsValue];
         }
