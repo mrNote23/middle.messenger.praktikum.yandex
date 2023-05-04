@@ -6,7 +6,7 @@ import "./AudioAttachment.scss";
 export class AudioAttachment extends Component {
   private _audio: HTMLAudioElement;
   private _playing = false;
-  private _timer: number;
+  private _timer: NodeJS.Timer;
   private _duration: number;
   private _currentTime = 0;
   private _slider = 0;
@@ -32,13 +32,13 @@ export class AudioAttachment extends Component {
     }
   }
 
-  audioControl = () => {
+  audioControl = async () => {
     if (this._playing) {
       this._audio.pause();
       this._playing = false;
       this._timer && clearInterval(this._timer);
     } else {
-      this._audio.play();
+      await this._audio.play();
       this._playing = true;
       this._timer = setInterval(this._seekUpdate.bind(this), 1000);
     }

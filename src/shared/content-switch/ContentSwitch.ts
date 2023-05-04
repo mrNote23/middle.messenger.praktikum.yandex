@@ -13,9 +13,9 @@ export class ContentSwitch extends Component {
     super();
   }
 
-  propsChanged(prop, oldValue, newValue) {
+  propsChanged(prop: string, oldValue: unknown, newValue: unknown) {
     if (prop === "path" && oldValue !== newValue) {
-      this._fill(newValue);
+      this._fill(<string>newValue);
     }
   }
 

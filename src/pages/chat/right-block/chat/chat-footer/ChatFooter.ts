@@ -78,13 +78,13 @@ export class ChatFooter extends Component {
     reader.onload = (): void => {
       media.props.src = reader.result;
       media.props.fileName = this._attach?.name;
-      this.querySelector(".attach-container").appendChild(media);
-      this.querySelector(".message-attach").classList.remove("hidden");
+      this.querySelector(".attach-container")?.appendChild(media);
+      this.querySelector(".message-attach")?.classList.remove("hidden");
     };
     reader.readAsDataURL(this._attach);
 
     media.props.fileName = this._attach.name;
-    this.querySelector(".attach-container").appendChild(media);
-    this.querySelector(".message-attach").classList.remove("hidden");
+    this.querySelector(".attach-container")?.appendChild(media);
+    this.querySelector(".message-attach")?.classList.remove("hidden");
   };
 }

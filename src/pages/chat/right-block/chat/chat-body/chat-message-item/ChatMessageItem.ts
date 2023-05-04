@@ -9,7 +9,7 @@ import { ADMIN } from "../../../../../../core/config/types";
 
 export class ChatMessageItem extends Component {
   private _message: IChatMessageItem;
-  private _adminId: number;
+  private readonly _adminId: number;
   private _dividerDate = "";
 
   constructor() {
@@ -27,10 +27,13 @@ export class ChatMessageItem extends Component {
             (this.previousElementSibling as Component).props.message.time
           ).getDay()
         ) {
-          this._dividerDate = dateConvert(this.props.message.time, "D-M-Y");
+          this._dividerDate = dateConvert(
+            <Date>this.props.message.time,
+            "D-M-Y"
+          );
         }
       } else {
-        this._dividerDate = dateConvert(this.props.message.time, "D-M-Y");
+        this._dividerDate = dateConvert(<Date>this.props.message.time, "D-M-Y");
       }
 
       this._message = {

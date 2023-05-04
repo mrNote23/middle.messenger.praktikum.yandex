@@ -20,7 +20,7 @@ export const RenameChat = (): void => {
 
   const modalWindow = new ModalWindow(
     "Rename chat",
-    view({ chatTitle: currentChat.title }),
+    view({ chatTitle: <string>currentChat.title }),
     {
       formFields,
       formValidated,

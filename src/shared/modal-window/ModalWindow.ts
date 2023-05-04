@@ -36,13 +36,13 @@ export class ModalWindowComponent extends Component {
   }
 
   clickAway = (e: MouseEvent) => {
-    if (e.target["className"] === "modal-content") {
+    if (e?.target["className"] === "modal-content") {
       this.remove();
     }
   };
 
   closeModal = (e: MouseEvent) => {
-    if (e.target["closest"](".close-modal")) {
+    if (e?.target["closest"](".close-modal")) {
       this.remove();
     }
   };

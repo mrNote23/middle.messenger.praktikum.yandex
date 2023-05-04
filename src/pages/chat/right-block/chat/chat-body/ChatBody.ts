@@ -10,7 +10,7 @@ customElements.define("chat-message-item", ChatMessageItem);
 
 export class ChatBody extends Component {
   messages: IChatMessageItem[] | string;
-  private _adminId: number;
+  // private _adminId: number;
   private _notSelected = true;
   private _container: Component;
 
@@ -32,7 +32,7 @@ export class ChatBody extends Component {
         this._notSelected = false;
       }
       this.messages = messages;
-      this._adminId = State.extract(ADMIN).id | null;
+      // this._adminId = State.extract(ADMIN).id | null;
       this.render({
         messages: this.messages,
         notSelected: this._notSelected,

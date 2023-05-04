@@ -9,6 +9,7 @@ import { AuthController } from "../../../../../core/controllers/AuthController";
 import { AdminController } from "../../../../../core/controllers/AdminController";
 import { ADMIN } from "../../../../../core/config/types";
 import Router from "../../../../../core/Router";
+import { InputFileSystem } from "copy-webpack-plugin/types/utils";
 
 export class AdminProfile extends Component {
   admin: IUser | null;
@@ -30,13 +31,13 @@ export class AdminProfile extends Component {
     this.error = this.querySelector(".profile-error");
   };
 
-  changeAvatar = (e: unknown) => {
+  changeAvatar = (e: InputFileSystem) => {
     if (e.target.files) {
       AdminController.changeAdminAvatar(e.target.files[0]);
     }
   };
 
-  errorProfile = (e) => {
+  errorProfile = (e: { [key: string]: string }) => {
     this.error.textContent = e.reason;
     this.error.style.display = "block";
   };
@@ -84,7 +85,7 @@ export class AdminProfile extends Component {
     newObj: object
   ): boolean => {
     let res = true;
-    fields.forEach((field) => {
+    fields.forEach((field: string) => {
       if (oldObj[field] !== newObj[field]) {
         res = false;
       }
