@@ -389,6 +389,19 @@ cd chat-app
 npm install
 ```
 
+### Проверки ESLint, StyleLint
+
+```text
+npm run lint:eslint
+npm run lint:stylelint
+```
+
+### Тесты (Mocha)
+
+```text
+npm run test
+```
+
 ### Сборка проекта (WebPack)
 
 ```text
@@ -401,15 +414,4 @@ npm run build
 npm start
 ```
 
-### Проверки ESLint, StyleLint
 
-```text
-npm run lint:eslint
-npm run lint:stylelint
-```
-
-### Запуск тестов Mocha
-
-```text
-npm run test
-```
