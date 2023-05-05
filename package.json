@@ -12,7 +12,7 @@
     "lint:stylelint":"stylelint **/*.scss",
     "test":"ts-mocha",
     "check":"tsc --noEmit",
-    "precommit":"npm-run-all --parallel @lint:eslint @lint:stylelint"
+    "prepare":"husky install"
   },
   "repository":{
     "type":"git",
