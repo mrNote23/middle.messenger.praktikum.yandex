@@ -4,6 +4,7 @@ import { TFormValidatorConfig } from "../../../shared/form-validator/FormValidat
 import { formFields } from "./formFields";
 import { AuthController } from "../../../core/controllers/AuthController";
 import "../auth.scss";
+import { TError } from "../../../core/config/types";
 
 export class RegisterPage extends Component {
   formFields: TFormValidatorConfig;
@@ -15,7 +16,7 @@ export class RegisterPage extends Component {
     this.className = "wrapper";
   }
 
-  registerError = <T>(e: T) => {
+  registerError = (e: TError) => {
     this._error.textContent = e.reason;
     this._error.style.display = "block";
   };

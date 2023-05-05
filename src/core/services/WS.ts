@@ -1,12 +1,12 @@
 import State from "../State";
 import { API_WS_URL } from "../API/endpoints";
 import { MessagesController } from "../controllers/MessagesController";
-import { ADMIN, STATES, TOKEN } from "../config/types";
+import { ADMIN, STATES, TEventTarget, TOKEN } from "../config/types";
 
 class WS {
   private _connection: WebSocket;
   private _token: string;
-  private _pingPong: number;
+  private _pingPong: any;
   private _userId: number;
   private _chatId: number;
 
@@ -70,7 +70,7 @@ class WS {
     console.log(e);
   }
 
-  private _close<T>(e: T): void {
+  private _close(e: TEventTarget): void {
     if (e.code === 1006) {
       setTimeout(() => {
         this._connect(false);
@@ -86,7 +86,7 @@ class WS {
     try {
       clearInterval(this._pingPong);
       this._connection.close(1000);
-    } catch (e: ErrorEvent) {
+    } catch (e: any) {
       console.log(e);
     }
   }

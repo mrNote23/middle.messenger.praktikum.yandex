@@ -1,20 +1,6 @@
 import { HTTPTransport } from "../services/HTTPTransport";
 import { AUTH_ENDPOINTS } from "./endpoints";
-import { IUser } from "../config/interfaces";
-
-type TLoginData = {
-  login: string;
-  password: string;
-};
-
-type TRegisterData = {
-  first_name: string;
-  second_name: string;
-  login: string;
-  email: string;
-  password: string;
-  phone: string;
-};
+import { TLoginData, TRegisterData } from "../config/types";
 
 class AuthApi {
   http: HTTPTransport;
@@ -23,19 +9,19 @@ class AuthApi {
     this.http = new HTTPTransport("/auth");
   }
 
-  login(data: TLoginData): Promise<HTTPTransport> {
+  login(data: TLoginData): Promise<any> {
     return this.http.post(AUTH_ENDPOINTS.LOGIN, data);
   }
 
-  register(data: TRegisterData): Promise<HTTPTransport> {
+  register(data: TRegisterData): Promise<any> {
     return this.http.post(AUTH_ENDPOINTS.REGISTER, data);
   }
 
-  logout(): Promise<HTTPTransport> {
+  logout(): Promise<any> {
     return this.http.post(AUTH_ENDPOINTS.LOGOUT);
   }
 
-  profile(): Promise<IUser> {
+  profile(): Promise<any> {
     return this.http.get(AUTH_ENDPOINTS.PROFILE);
   }
 }

@@ -7,7 +7,7 @@ import { IUser } from "../../../../../core/config/interfaces";
 import "./AdminProfile.scss";
 import { AuthController } from "../../../../../core/controllers/AuthController";
 import { AdminController } from "../../../../../core/controllers/AdminController";
-import { ADMIN } from "../../../../../core/config/types";
+import { ADMIN, TEventTarget, TRecord } from "../../../../../core/config/types";
 import Router from "../../../../../core/Router";
 
 export class AdminProfile extends Component {
@@ -30,13 +30,13 @@ export class AdminProfile extends Component {
     this.error = this.querySelector(".profile-error");
   };
 
-  changeAvatar = (e: unknown) => {
+  changeAvatar = (e: TEventTarget) => {
     if (e.target.files) {
       AdminController.changeAdminAvatar(e.target.files[0]);
     }
   };
 
-  errorProfile = (e: unknown) => {
+  errorProfile = (e: { [key: string]: string }) => {
     this.error.textContent = e.reason;
     this.error.style.display = "block";
   };
@@ -80,11 +80,11 @@ export class AdminProfile extends Component {
 
   _compareFields = (
     fields: string[],
-    oldObj: object,
-    newObj: object
+    oldObj: TRecord,
+    newObj: TRecord
   ): boolean => {
     let res = true;
-    fields.forEach((field) => {
+    fields.forEach((field: string) => {
       if (oldObj[field] !== newObj[field]) {
         res = false;
       }
@@ -93,8 +93,8 @@ export class AdminProfile extends Component {
   };
 
   btnLogout = (): void => {
-    Confirm({ title: "Are you sure?", text: "Exit from chat?" }, () => {
-      AuthController.logout();
+    Confirm({ title: "Are you sure?", text: "Exit from chat?" }, async () => {
+      await AuthController.logout();
     });
   };
 

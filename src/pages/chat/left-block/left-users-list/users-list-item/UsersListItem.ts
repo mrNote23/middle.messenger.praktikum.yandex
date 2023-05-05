@@ -11,8 +11,8 @@ export class UsersListItem extends Component {
 
   propsChanged() {
     if (this.props) {
-      this.render(<IUser>this.props.user);
-      this._onChangeUser(<IUser>State.extract(STATES.CURRENT_USER));
+      this.render(this.props.user);
+      this._onChangeUser(State.extract(STATES.CURRENT_USER));
     }
   }
 

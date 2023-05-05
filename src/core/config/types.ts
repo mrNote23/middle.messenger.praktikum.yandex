@@ -24,3 +24,29 @@ export enum RIGHTMODE {
   USER_PROFILE = "/userProfile",
   CHAT_PROFILE = "/chatProfile",
 }
+
+export type TRecord = { [key: string]: any };
+
+export type TError = { reason: string };
+
+export type TEventTarget = {
+  target?: HTMLInputElement | HTMLButtonElement | HTMLElement | any;
+  key?: string;
+  code?: number;
+};
+
+export type TNode = HTMLElement & TRecord;
+
+export type TLoginData = {
+  login: string;
+  password: string;
+};
+
+export type TRegisterData = {
+  first_name: string;
+  second_name: string;
+  login: string;
+  email: string;
+  password: string;
+  phone: string;
+};

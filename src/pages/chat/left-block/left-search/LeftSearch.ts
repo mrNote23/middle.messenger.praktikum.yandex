@@ -1,13 +1,14 @@
 import view from "./LeftSearch.hbs";
 import { Component } from "../../../../core/Component";
 import "./LeftSearch.scss";
+import { TEventTarget } from "../../../../core/config/types";
 
 export class LeftSearch extends Component {
   constructor() {
     super(view);
   }
 
-  onSearch = <T>(e: T): void => {
+  onSearch = (e: TEventTarget): void => {
     console.log(`Search: ${e.target.value}`);
   };
 

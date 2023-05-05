@@ -62,17 +62,28 @@
   - отправка файлов в чат;
   - просмотр/прослушивание для аудио/видео/фото сообщений;
 
+### Спринт 4 / 4 [(PR)](https://github.com/mrNote23/middle.messenger.praktikum.yandex/pull/5)
+
+- Изменены эндпоинты в соответствии с заданием
+  - /chats -> /messenger
+  - /login -> /sign-in
+  - /register -> /sign-up
+  - /profile -> /settings
+- Parcel заменен на WebPack
+
 ## СТЭК
 
 - HTML
 - Typescript
 - Javascript
 - Handlebars
-- Parcel
+- WebPack
 - SASS
 - PostCSS
 - ESLint
 - StyleLint
+- Mocha
+- Chai
 
 # Структура приложения (DOM)
 
@@ -370,7 +381,7 @@ cd chat-app
 npm install
 ```
 
-### Сборка проекта (Parcel)
+### Сборка проекта (WebPack)
 
 ```text
 npm run build
@@ -387,4 +398,10 @@ npm start
 ```text
 npm run lint:eslint
 npm run lint:stylelint
+```
+
+### Запуск тестов Mocha
+
+```text
+npm run test
 ```

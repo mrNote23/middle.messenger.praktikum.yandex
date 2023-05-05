@@ -1,15 +1,15 @@
-import { IChat, IUser } from "../config/interfaces";
+import { IUser } from "../config/interfaces";
 import State from "../State";
 import ChatApi from "../API/ChatApi";
 import { RES_URL } from "../API/endpoints";
 import { OnMobile } from "../../utils/on-mobile";
-import { ADMIN, RIGHTMODE, STATES, TOKEN } from "../config/types";
+import { ADMIN, RIGHTMODE, STATES, TOKEN, TRecord } from "../config/types";
 import Router from "../Router";
 
 export class ChatController {
   static addChat(title: string): void {
     ChatApi.add(title)
-      .then((res: IChat) => {
+      .then((res: any) => {
         const tmp = {
           id: res.id,
           title,
@@ -41,7 +41,7 @@ export class ChatController {
           State.dispatch(STATES.CHAT_MESSAGES, []);
           State.dispatch(STATES.CHAT_USERS, []);
           State.dispatch(STATES.CHATS_LIST, []);
-          Router.go("/chats");
+          Router.go("/messenger");
         }
         State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
       })
@@ -50,7 +50,7 @@ export class ChatController {
 
   static changeChatAvatar(chatId: number, avatar: File): void {
     ChatApi.avatar(chatId, avatar)
-      .then((res: IChat) => {
+      .then((res: any) => {
         let tmp = {
           ...State.extract(STATES.CURRENT_CHAT),
           avatar: `${RES_URL}/${res.avatar}`,
@@ -70,7 +70,7 @@ export class ChatController {
 
   static loadChatsList = (): void => {
     ChatApi.list()
-      .then((list: IChat[]) => {
+      .then((list: any) => {
         State.dispatch(
           STATES.CHATS_LIST,
           list.map((elm) => {
@@ -102,7 +102,7 @@ export class ChatController {
         Router.go("/404");
       }
       State.dispatch(STATES.CHAT_MESSAGES, "loading");
-      ChatApi.users(chat.id).then((res: IUser[]) => {
+      ChatApi.users(chat.id).then((res: any) => {
         State.dispatch(
           STATES.CHAT_USERS,
           this._prepareUsersList(
@@ -121,7 +121,7 @@ export class ChatController {
         userNull && State.dispatch(STATES.CURRENT_USER, null);
 
         ChatApi.token(chat.id)
-          .then((res) => {
+          .then((res: TRecord) => {
             State.dispatch(TOKEN, res.token);
           })
           .catch(() => false);

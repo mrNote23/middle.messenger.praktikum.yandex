@@ -16,7 +16,7 @@ export const dateConvert = (
   const minute = elm.getMinutes().toString();
   const seconds = elm.getSeconds().toString();
 
-  const par = {
+  const par: { [key: string]: string } = {
     Y: (year.length > 1 ? "" : "0") + year,
     M: (month.length > 1 ? "" : "0") + month,
     D: (date.length > 1 ? "" : "0") + date,
@@ -26,7 +26,7 @@ export const dateConvert = (
   };
 
   return mask.replace(/[\S\s]/gi, (item) => {
-    if (par[item]) {
+    if (par[item] !== undefined) {
       return par[item];
     } else {
       return item;

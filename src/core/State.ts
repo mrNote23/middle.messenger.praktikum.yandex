@@ -1,7 +1,8 @@
 type TStoreHolder = {
   store: { [key: string]: StoreNode };
-  storeNode: StoreNode;
 };
+
+type TValue = any;
 
 export type TSubscriberItem = {
   varName: string;
@@ -9,11 +10,11 @@ export type TSubscriberItem = {
 };
 
 class StoreNode {
-  value: unknown = null;
+  value: TValue = null;
   subscribers: { [key: string]: (val: unknown) => void };
   onceSubscribers: { [key: string]: (val: unknown) => void };
 
-  constructor(val = null) {
+  constructor(val: TValue = null) {
     this.value = val;
     this.subscribers = {};
     this.onceSubscribers = {};
@@ -87,12 +88,11 @@ class State {
   constructor() {
     this.storeHolder = {
       store: {},
-      storeNode: StoreNode,
     };
   }
 
   // получение значения параметра
-  extract = (varName: string): unknown => {
+  extract = (varName: string): TValue => {
     if (varName && this.storeHolder.store[varName]) {
       return this.storeHolder.store[varName].value;
     } else {
@@ -101,7 +101,7 @@ class State {
   };
 
   // установка значения параметра
-  dispatch = <T>(varName: string, val: T): void => {
+  dispatch = (varName: string, val: TValue): void => {
     if (varName && this.storeHolder.store[varName]) {
       this.storeHolder.store[varName].setter = val;
     } else {
@@ -110,10 +110,7 @@ class State {
   };
 
   // подписка на изменение параметра
-  subscribe = (
-    varName: string,
-    cb: (val: unknown) => void
-  ): TSubscriberItem => {
+  subscribe = (varName: string, cb: (val: TValue) => void): TSubscriberItem => {
     if (varName && this.storeHolder.store[varName]) {
       return {
         varName: varName,
@@ -127,7 +124,7 @@ class State {
   // одноразовая подписка на изменение параметра
   onceSubscribe = (
     varName: string,
-    cb: (val: unknown) => void
+    cb: (val: TValue) => void
   ): TSubscriberItem => {
     if (varName && this.storeHolder.store[varName]) {
       return {
@@ -150,7 +147,7 @@ class State {
   };
 
   // сохранение параметра
-  store = (varName: string | null = null, val: unknown): boolean => {
+  store = (varName: string | null = null, val: TValue): boolean => {
     if (!varName) {
       throw new Error(`State.Store: wrong variable '${varName}'`);
     } else {
