@@ -11,6 +11,7 @@ export class LoginPage extends Component {
   private _error: HTMLElement;
 
   constructor() {
+    console.log();
     super(view);
     this.formFields = formFields;
     this.className = "wrapper";

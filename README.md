@@ -69,6 +69,7 @@
   - /login -> /sign-in
   - /register -> /sign-up
   - /profile -> /settings
+- Parcel заменен на WebPack
 
 ## СТЭК
 
@@ -76,7 +77,7 @@
 - Typescript
 - Javascript
 - Handlebars
-- Parcel
+- WebPack
 - SASS
 - PostCSS
 - ESLint
@@ -380,7 +381,7 @@ cd chat-app
 npm install
 ```
 
-### Сборка проекта (Parcel)
+### Сборка проекта (WebPack)
 
 ```text
 npm run build

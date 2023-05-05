@@ -1,69 +1,57 @@
 {
-  "name":"chat-app",
-  "version":"1.2.0",
-  "description":"### Сервис обмена текстовыми сообщениями в сети в режиме реального времени.",
-  "private":true,
-  "scripts":{
-    "dev":"npx parcel ./src/index.html --no-cache",
-    "start":"node ./server.js",
-    "build":"npx parcel build ./src/index.html --no-source-maps",
-    "lint":"eslint . && stylelint **/*.scss",
-    "lint:eslint":"eslint . --ext .ts",
-    "lint:stylelint":"stylelint **/*.scss",
-    "test":"ts-mocha",
-    "check":"tsc --noEmit"
+  "name": "chat-app",
+  "version": "1.2.0",
+  "description": "### Сервис обмена текстовыми сообщениями в сети в режиме реального времени.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cross-env MODE_ENV=development npx webpack serve",
+    "build": "cross-env MODE_ENV=production npx webpack build",
+    "start": "cross-env MODE_ENV=production npx webpack build && node ./server.js",
+    "lint": "eslint . && stylelint **/*.scss",
+    "lint:eslint": "eslint . --ext .ts",
+    "lint:stylelint": "stylelint **/*.scss",
+    "test": "ts-mocha",
+    "check": "tsc --noEmit"
   },
-  "alias":{
-    "@hbs-helpers":"./src/utils/hbs-helpers.js"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrNote23/middle.messenger.praktikum.yandex.git"
   },
-  "staticFiles":[
-    {
-      "staticPath":"src/assets/images",
-      "staticOutPath":"images"
-    },
-    {
-      "staticPath":"_redirects"
-    }
-  ],
-  "repository":{
-    "type":"git",
-    "url":"git+https://github.com/mrNote23/middle.messenger.praktikum.yandex.git"
+  "keywords": [],
+  "author": "Andrey Suvorov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mrNote23/middle.messenger.praktikum.yandex/issues"
   },
-  "keywords":[],
-  "author":"Andrey Suvorov",
-  "license":"ISC",
-  "bugs":{
-    "url":"https://github.com/mrNote23/middle.messenger.praktikum.yandex/issues"
+  "homepage": "https://github.com/mrNote23/middle.messenger.praktikum.yandex#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "@typescript-eslint/parser": "^5.58.0",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.7.3",
+    "css-minimizer-webpack-plugin": "^5.0.0",
+    "eslint": "^8.38.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "handlebars": "^4.7.7",
+    "handlebars-loader": "^1.7.3",
+    "html-webpack-plugin": "^5.5.1",
+    "mini-css-extract-plugin": "^2.7.5",
+    "postcss-loader": "^7.3.0",
+    "postcss-preset-env": "^8.3.2",
+    "sass-loader": "^13.2.2",
+    "style-loader": "^3.3.2",
+    "stylelint": "^15.4.0",
+    "stylelint-config-standard-scss": "^7.0.1",
+    "terser-webpack-plugin": "^5.3.7",
+    "ts-loader": "^9.4.2",
+    "typescript": "^5.0.4",
+    "webpack": "^5.82.0",
+    "webpack-cli": "^5.0.2",
+    "webpack-dev-server": "^4.13.3"
   },
-  "homepage":"https://github.com/mrNote23/middle.messenger.praktikum.yandex#readme",
-  "devDependencies":{
-    "@parcel/transformer-sass":"^2.8.3",
-    "@parcel/validator-typescript":"^2.8.3",
-    "@typescript-eslint/eslint-plugin":"^5.58.0",
-    "@typescript-eslint/parser":"^5.58.0",
-    "babel-loader":"^9.1.2",
-    "clean-webpack-plugin":"^4.0.0",
-    "copy-webpack-plugin":"^11.0.0",
-    "css-loader":"^6.7.3",
-    "eslint":"^8.38.0",
-    "eslint-config-airbnb":"^19.0.4",
-    "handlebars":"^4.7.7",
-    "handlebars-loader":"^1.7.3",
-    "html-webpack-plugin":"^5.5.1",
-    "parcel":"^2.8.3",
-    "parcel-reporter-clean-dist":"^1.0.4",
-    "parcel-reporter-static-files-copy":"^1.5.0",
-    "parcel-transformer-hbs":"^1.0.4",
-    "style-loader":"^3.3.2",
-    "stylelint":"^15.4.0",
-    "stylelint-config-standard-scss":"^7.0.1",
-    "ts-loader":"^9.4.2",
-    "typescript":"^5.0.4",
-    "webpack":"^5.82.0",
-    "webpack-cli":"^5.0.2",
-    "webpack-dev-server":"^4.13.3"
-  },
-  "dependencies":{
-    "express":"^4.18.2"
+  "dependencies": {
+    "express": "^4.18.2"
   }
 }
