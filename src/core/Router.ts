@@ -59,6 +59,14 @@ class Router {
     }
   }
 
+  back() {
+    this.history.back();
+  }
+
+  forward() {
+    this.history.forward();
+  }
+
   _findRoute = (path: Array<string>): TRoute | null => {
     if (this._routes.length) {
       const route: TRoute = this._routes.find(

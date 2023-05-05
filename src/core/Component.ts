@@ -17,7 +17,7 @@ import { TRecord } from "./config/types";
 export type TProps = TRecord;
 
 export type TEventResult = {
-  detail: unknown;
+  detail: any;
 };
 export type TEvent = {
   eventName: string;
@@ -51,6 +51,15 @@ export class Component extends HTMLElement {
     this.props = this._makePropsProxy(this, this._props);
   }
 
+  // для тестирования ивентов
+  public testEvent = (eventName: string, eventProps: any) => {
+    this._events.forEach((event: TEvent) => {
+      if (event.eventName === eventName) {
+        event.eventHandler({ detail: eventProps });
+      }
+    });
+  };
+
   // генерация события (event)
   protected createEvent = (
     eventName: string,
@@ -67,7 +76,7 @@ export class Component extends HTMLElement {
   };
 
   // render component
-  protected render = (params: TComponentParams | null = null): void => {
+  public render = (params: TComponentParams | null = null): void => {
     this.params = params;
     if (this.view !== null) {
       const html = <string>this.view(params);
@@ -103,7 +112,10 @@ export class Component extends HTMLElement {
   }
 
   // set event handler
-  protected setEvent = (eventName: string, eventHandler: () => void) => {
+  public setEvent = (
+    eventName: string,
+    eventHandler: (e: TEventResult) => void
+  ) => {
     this._events.push(<TEvent>{ eventName, eventHandler });
   };
 
