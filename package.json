@@ -11,7 +11,8 @@
     "lint:eslint":"eslint . --ext .ts",
     "lint:stylelint":"stylelint **/*.scss",
     "test":"ts-mocha",
-    "check":"tsc --noEmit"
+    "check":"tsc --noEmit",
+    "precommit":"npm-run-all --parallel @lint:eslint @lint:stylelint"
   },
   "repository":{
     "type":"git",
@@ -37,6 +38,7 @@
     "handlebars":"4.7.7",
     "handlebars-loader":"1.7.3",
     "html-webpack-plugin":"5.5.1",
+    "husky":"8.0.3",
     "mini-css-extract-plugin":"2.7.5",
     "postcss-loader":"7.3.0",
     "postcss-preset-env":"8.3.2",
