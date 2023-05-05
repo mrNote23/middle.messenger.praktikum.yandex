@@ -20,6 +20,7 @@ export const routes: TRoutes = {
       State.dispatch(STATES.CURRENT_CHAT, null);
       State.dispatch(STATES.LEFT_MODE, LEFTMODE.CHATS);
       State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
+      State.dispatch(STATES.CHAT_MESSAGES, []);
       OnMobile.showLeftPanel();
     },
   },

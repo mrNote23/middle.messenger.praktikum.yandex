@@ -70,6 +70,12 @@
   - /register -> /sign-up
   - /profile -> /settings
 - Parcel заменен на WebPack
+- Настроен Docker
+- Настроен pre-commit (Husky)
+- Покрыты тестами (Mocha)
+  - Router
+  - Component
+  - HTTPTransport
 
 ## СТЭК
 
@@ -78,6 +84,8 @@
 - Javascript
 - Handlebars
 - WebPack
+- Docker
+- Husky
 - SASS
 - PostCSS
 - ESLint
