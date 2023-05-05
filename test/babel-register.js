@@ -17,19 +17,19 @@ global.HTMLElement = class {
 
 global.XMLHttpRequest = class {
   status = 200;
-  onload = () => {};
+  onload = () => null;
 
-  setRequestHeader(headers) {}
+  setRequestHeader = (headers) => null;
 
-  getResponseHeader(header) {
+  getResponseHeader = (header) => {
     return "no headers";
-  }
+  };
 
-  open(method, url) {}
+  open = (method, url) => null;
 
-  send(data) {
+  send = (data) => {
     this.status = 200;
     this.response = "OK";
     this.onload();
-  }
+  };
 };

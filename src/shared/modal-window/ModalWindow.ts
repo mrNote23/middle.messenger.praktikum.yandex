@@ -7,7 +7,7 @@ export class ModalWindow {
   node: TNode;
 
   constructor(title = "", content = "", args: object | null = null) {
-    this.node = document.createElement("modal-window");
+    this.node = <TNode>document.createElement("modal-window");
     this.node.title = title;
     this.node.innerHTML = content;
     if (args) {

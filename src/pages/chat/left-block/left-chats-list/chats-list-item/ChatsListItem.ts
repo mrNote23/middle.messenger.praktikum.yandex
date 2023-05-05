@@ -3,7 +3,7 @@ import { Component } from "../../../../../core/Component";
 import { IChat } from "../../../../../core/config/interfaces";
 import { dateConvert } from "../../../../../utils/date-convert";
 import State from "../../../../../core/State";
-import { STATES, TRecord } from "../../../../../core/config/types";
+import { STATES } from "../../../../../core/config/types";
 
 export class ChatsListItem extends Component {
   private _chat: IChat;
@@ -14,7 +14,7 @@ export class ChatsListItem extends Component {
 
   propsChanged() {
     if (this.props) {
-      this._chat = this.props.chat;
+      this._chat = this.props.chat as IChat;
       if (this._chat.last_message) {
         this._chat.last_message = {
           ...this._chat.last_message,
@@ -25,8 +25,8 @@ export class ChatsListItem extends Component {
               : dateConvert(this._chat.last_message.time, "h:i"),
         };
       }
-      this.render(<TRecord>this._chat);
-      this._onChangeChat(State.extract(STATES.CURRENT_CHAT));
+      this.render(this._chat);
+      this._onChangeChat(State.extract(STATES.CURRENT_CHAT) as IChat);
     }
   }
 
@@ -42,7 +42,7 @@ export class ChatsListItem extends Component {
     if (chat instanceof Object && this._chat) {
       if (this._chat.id === chat.id) {
         this._chat = chat;
-        this.render(<TRecord>this._chat);
+        this.render(this._chat);
         this.classList.add("active");
       } else {
         this.classList.remove("active");

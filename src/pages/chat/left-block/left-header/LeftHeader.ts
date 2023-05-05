@@ -32,7 +32,10 @@ export class LeftHeader extends Component {
     } else {
       document
         .getElementById("mode-chats")
-        .setAttribute("href", `/chat/${State.extract(STATES.CURRENT_CHAT).id}`);
+        .setAttribute(
+          "href",
+          `/chat/${(State.extract(STATES.CURRENT_CHAT) as IChat).id}`
+        );
       document.getElementById("mode-users")?.classList.add("active");
       document.getElementById("mode-chats")?.classList.remove("active");
     }

@@ -25,7 +25,7 @@ export enum RIGHTMODE {
   CHAT_PROFILE = "/chatProfile",
 }
 
-export type TRecord = { [key: string]: any };
+export type TRecord = { [key: string]: unknown };
 
 export type TError = { reason: string };
 

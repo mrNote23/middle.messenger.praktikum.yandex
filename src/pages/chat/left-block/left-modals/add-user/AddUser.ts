@@ -8,7 +8,7 @@ import "./AddUser.scss";
 import { TEventTarget } from "../../../../../core/config/types";
 
 class AddUserComponent extends Component {
-  private _timeout: any;
+  private _timeout = undefined;
   private _users: IUser[];
   private _user: IUser;
   private _inputValue = "";
@@ -32,8 +32,8 @@ class AddUserComponent extends Component {
       return;
     }
     this._timeout = setTimeout(() => {
-      UserController.searchUser(e.target.value).then((res: IUser[]) => {
-        this._users = res.map((elm) => {
+      UserController.searchUser(e.target.value).then((res) => {
+        this._users = (res as IUser[]).map((elm) => {
           return {
             ...elm,
             avatar: elm.avatar

@@ -1,5 +1,5 @@
 import UserApi from "../API/UserApi";
-import { IUser } from "../config/interfaces";
+import { IChat, IUser } from "../config/interfaces";
 import ChatApi from "../API/ChatApi";
 import State from "../State";
 import { OnMobile } from "../../utils/on-mobile";
@@ -7,24 +7,24 @@ import { RIGHTMODE, STATES } from "../config/types";
 import Router from "../Router";
 
 export class UserController {
-  static searchUser(login: string): Promise<IUser[]> {
+  static searchUser(login: string): Promise<unknown> {
     return UserApi.search(login);
   }
 
   static addUser(user: IUser): void {
-    ChatApi.addUsers(State.extract(STATES.CURRENT_CHAT).id, [user.id]).then(
-      () => {
-        const tmp = JSON.parse(
-          JSON.stringify(State.extract(STATES.CHAT_USERS))
-        );
-        tmp[user.id] = user;
-        State.dispatch(STATES.CHAT_USERS, tmp);
-      }
-    );
+    ChatApi.addUsers((State.extract(STATES.CURRENT_CHAT) as IChat).id, [
+      user.id,
+    ]).then(() => {
+      const tmp = JSON.parse(JSON.stringify(State.extract(STATES.CHAT_USERS)));
+      tmp[user.id] = user;
+      State.dispatch(STATES.CHAT_USERS, tmp);
+    });
   }
 
   static deleteUser(userId: number): void {
-    ChatApi.deleteUsers(State.extract(STATES.CURRENT_CHAT).id, [userId])
+    ChatApi.deleteUsers((State.extract(STATES.CURRENT_CHAT) as IChat).id, [
+      userId,
+    ])
       .then(() => {
         const tmp = JSON.parse(
           JSON.stringify(State.extract(STATES.CHAT_USERS))

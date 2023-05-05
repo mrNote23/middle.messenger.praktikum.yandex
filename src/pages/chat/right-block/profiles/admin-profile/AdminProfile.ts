@@ -80,8 +80,8 @@ export class AdminProfile extends Component {
 
   _compareFields = (
     fields: string[],
-    oldObj: TRecord,
-    newObj: TRecord
+    oldObj: TRecord | IUser,
+    newObj: TRecord | IUser
   ): boolean => {
     let res = true;
     fields.forEach((field: string) => {

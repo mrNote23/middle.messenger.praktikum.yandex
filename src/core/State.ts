@@ -2,7 +2,7 @@ type TStoreHolder = {
   store: { [key: string]: StoreNode };
 };
 
-type TValue = any;
+type TValue = unknown;
 
 export type TSubscriberItem = {
   varName: string;

@@ -9,19 +9,19 @@ class AuthApi {
     this.http = new HTTPTransport("/auth");
   }
 
-  login(data: TLoginData): Promise<any> {
+  login(data: TLoginData): Promise<unknown> {
     return this.http.post(AUTH_ENDPOINTS.LOGIN, data);
   }
 
-  register(data: TRegisterData): Promise<any> {
+  register(data: TRegisterData): Promise<unknown> {
     return this.http.post(AUTH_ENDPOINTS.REGISTER, data);
   }
 
-  logout(): Promise<any> {
+  logout(): Promise<unknown> {
     return this.http.post(AUTH_ENDPOINTS.LOGOUT);
   }
 
-  profile(): Promise<any> {
+  profile(): Promise<unknown> {
     return this.http.get(AUTH_ENDPOINTS.PROFILE);
   }
 }

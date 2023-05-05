@@ -17,16 +17,12 @@ import { TRecord } from "./config/types";
 export type TProps = TRecord;
 
 export type TEventResult = {
-  detail: any;
+  detail: unknown;
 };
 export type TEvent = {
   eventName: string;
   eventHandler: (e: TEventResult) => void;
 };
-
-type TComponentParams = {
-  [key: string]: unknown;
-} | null;
 
 type TListener = {
   node: HTMLElement;
@@ -35,24 +31,22 @@ type TListener = {
 };
 
 export class Component extends HTMLElement {
-  protected params: TComponentParams | null = null;
+  protected params: object | null = null;
 
   protected _subscriptions: TSubscriberItem[] = [];
   protected _listeners: TListener[] = [];
 
   public props: TProps;
-  private _props: TProps | any[] = {};
+  private _props: TProps = {};
   private _events: TEvent[] = [];
 
-  constructor(
-    public view: ((params: TComponentParams) => string) | null = null
-  ) {
+  constructor(public view: ((params: unknown) => string) | null = null) {
     super();
     this.props = this._makePropsProxy(this, this._props);
   }
 
   // для тестирования ивентов
-  public testEvent = (eventName: string, eventProps: any) => {
+  public testEvent = (eventName: string, eventProps: unknown) => {
     this._events.forEach((event: TEvent) => {
       if (event.eventName === eventName) {
         event.eventHandler({ detail: eventProps });
@@ -63,7 +57,7 @@ export class Component extends HTMLElement {
   // генерация события (event)
   protected createEvent = (
     eventName: string,
-    eventProps: TRecord | any
+    eventProps: TRecord | unknown
   ): void => {
     // ивенты установленные через атрибуты
     this._events.forEach((event: TEvent) => {
@@ -76,10 +70,10 @@ export class Component extends HTMLElement {
   };
 
   // render component
-  public render = (params: TComponentParams | null = null): void => {
+  public render = (params: object | null = null): void => {
     this.params = params;
     if (this.view !== null) {
-      const html = <string>this.view(params);
+      const html = this.view(params);
       this.innerHTML = html;
       const attrs = this._parseAttributes(html);
       if (attrs) {
@@ -103,11 +97,11 @@ export class Component extends HTMLElement {
 
   // добавление Event.listener
   protected addListener(
-    node: HTMLElement | DocumentType | any,
+    node: HTMLElement | DocumentType | unknown,
     event: string,
     callBack: (e: unknown) => void
   ): void {
-    node.addEventListener(event, callBack);
+    (node as HTMLElement).addEventListener(event, callBack);
     this._listeners.push(<TListener>{ node, event, callBack });
   }
 
@@ -133,7 +127,7 @@ export class Component extends HTMLElement {
   // Proxy для доступа к пропсам компонента
   private _makePropsProxy(component: Component, props: TProps): TProps {
     return new Proxy(props, {
-      get(target: Component, prop: string) {
+      get(target: TProps, prop: string) {
         return target[prop];
       },
       set(target: TProps, prop: string, value: unknown) {
