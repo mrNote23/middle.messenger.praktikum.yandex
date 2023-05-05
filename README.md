@@ -8,6 +8,8 @@
 
 Доступно на [Netlify](https://andreys.netlify.app/)
 
+Доступно на [Render](https://andreys-chat.onrender.com)
+
 <a href="https://andreys.netlify.app/" target="_blank" rel="noopener noreferrer">
  <img src="https://i.ibb.co/2kXYxTk/desktop-chat.jpg" alt="chat application" draggable="false" >
 </a>
@@ -71,6 +73,7 @@
   - /profile -> /settings
 - Parcel заменен на WebPack
 - Настроен Docker
+  - Приложение опубликовано на render.com
 - Настроен pre-commit (Husky)
 - Покрыты тестами (Mocha)
   - Router
