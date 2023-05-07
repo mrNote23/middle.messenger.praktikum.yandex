@@ -3,23 +3,23 @@ import State from "../State";
 import ChatApi from "../API/ChatApi";
 import { RES_URL } from "../API/endpoints";
 import { OnMobile } from "../../utils/on-mobile";
-import { ADMIN, RIGHTMODE, STATES, TOKEN } from "../config/types";
+import { ADMIN, RIGHTMODE, STATES, TOKEN, TRecord } from "../config/types";
 import Router from "../Router";
 
 export class ChatController {
   static addChat(title: string): void {
     ChatApi.add(title)
-      .then((res: IChat) => {
+      .then((res: unknown) => {
         const tmp = {
-          id: res.id,
+          id: (res as IChat).id,
           title,
           avatar: "/images/no-avatar.jpg",
-          created_by: State.extract(ADMIN).id,
+          created_by: (State.extract(ADMIN) as IUser).id,
           unread_count: 0,
           last_message: null,
         };
         State.dispatch(STATES.CHATS_LIST, [
-          ...State.extract(STATES.CHATS_LIST),
+          ...(State.extract(STATES.CHATS_LIST) as IChat[]),
           tmp,
         ]);
         Router.go(`/chat/${tmp.id}`);
@@ -30,7 +30,7 @@ export class ChatController {
   static deleteChat(chatId: number): void {
     ChatApi.delete(chatId)
       .then(() => {
-        const tmp = State.extract(STATES.CHATS_LIST).filter(
+        const tmp = (State.extract(STATES.CHATS_LIST) as IChat[]).filter(
           (elm) => elm.id !== chatId
         );
         State.dispatch(STATES.CHATS_LIST, tmp);
@@ -41,7 +41,7 @@ export class ChatController {
           State.dispatch(STATES.CHAT_MESSAGES, []);
           State.dispatch(STATES.CHAT_USERS, []);
           State.dispatch(STATES.CHATS_LIST, []);
-          Router.go("/chats");
+          Router.go("/messenger");
         }
         State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
       })
@@ -50,30 +50,32 @@ export class ChatController {
 
   static changeChatAvatar(chatId: number, avatar: File): void {
     ChatApi.avatar(chatId, avatar)
-      .then((res: IChat) => {
-        let tmp = {
-          ...State.extract(STATES.CURRENT_CHAT),
-          avatar: `${RES_URL}/${res.avatar}`,
+      .then((res: unknown) => {
+        const tmpChat = {
+          ...(State.extract(STATES.CURRENT_CHAT) as IChat),
+          avatar: `${RES_URL}/${(res as IChat).avatar}`,
         };
-        State.dispatch(STATES.CURRENT_CHAT, tmp);
-        tmp = [...State.extract(STATES.CHATS_LIST)].map((elm) => {
+        State.dispatch(STATES.CURRENT_CHAT, tmpChat);
+        const tmpChatsList = [
+          ...(State.extract(STATES.CHATS_LIST) as IChat[]),
+        ].map((elm) => {
           if (elm.id === chatId) {
-            return { ...elm, avatar: `${RES_URL}/${res.avatar}` };
+            return { ...elm, avatar: `${RES_URL}/${(res as IChat).avatar}` };
           } else {
             return elm;
           }
         });
-        State.dispatch(STATES.CHATS_LIST, tmp);
+        State.dispatch(STATES.CHATS_LIST, tmpChatsList);
       })
       .catch(() => false);
   }
 
   static loadChatsList = (): void => {
     ChatApi.list()
-      .then((list: IChat[]) => {
+      .then((list: unknown) => {
         State.dispatch(
           STATES.CHATS_LIST,
-          list.map((elm) => {
+          (list as IChat[]).map((elm) => {
             return {
               ...elm,
               avatar: elm.avatar
@@ -93,20 +95,20 @@ export class ChatController {
   ): void => {
     if (
       !State.extract(STATES.CURRENT_CHAT) ||
-      +chatId !== State.extract(STATES.CURRENT_CHAT).id
+      +chatId !== (State.extract(STATES.CURRENT_CHAT) as IChat).id
     ) {
-      const chat = State.extract(STATES.CHATS_LIST).filter(
+      const chat = (State.extract(STATES.CHATS_LIST) as IChat[]).filter(
         (elm) => elm.id === +chatId
       )[0];
       if (!chat) {
         Router.go("/404");
       }
       State.dispatch(STATES.CHAT_MESSAGES, "loading");
-      ChatApi.users(chat.id).then((res: IUser[]) => {
+      ChatApi.users(chat.id).then((res: unknown) => {
         State.dispatch(
           STATES.CHAT_USERS,
           this._prepareUsersList(
-            res.map((elm) => {
+            (res as IUser[]).map((elm) => {
               return {
                 ...elm,
                 avatar: elm.avatar
@@ -121,7 +123,7 @@ export class ChatController {
         userNull && State.dispatch(STATES.CURRENT_USER, null);
 
         ChatApi.token(chat.id)
-          .then((res) => {
+          .then((res: TRecord) => {
             State.dispatch(TOKEN, res.token);
           })
           .catch(() => false);

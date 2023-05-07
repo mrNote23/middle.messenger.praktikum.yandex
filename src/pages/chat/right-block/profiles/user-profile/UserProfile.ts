@@ -29,7 +29,7 @@ export class UserProfile extends Component {
     if (this._user) {
       this.render({
         ...this._user,
-        canDelete: this._user.id !== State.extract(ADMIN).id,
+        canDelete: this._user.id !== (State.extract(ADMIN) as IUser).id,
         chatTitle: this._currentChat.title,
         chatAvatar: this._currentChat.avatar,
       });

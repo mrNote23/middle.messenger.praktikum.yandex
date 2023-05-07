@@ -1,6 +1,9 @@
 import view from "./ChatMessageItem.hbs";
 import { Component } from "../../../../../../core/Component";
-import { IChatMessageItem } from "../../../../../../core/config/interfaces";
+import {
+  IChatMessageItem,
+  IUser,
+} from "../../../../../../core/config/interfaces";
 import { dateConvert } from "../../../../../../utils/date-convert";
 import { RES_URL } from "../../../../../../core/API/endpoints";
 import { mediaContainer } from "../../../../../../utils/media-container";
@@ -9,12 +12,12 @@ import { ADMIN } from "../../../../../../core/config/types";
 
 export class ChatMessageItem extends Component {
   private _message: IChatMessageItem;
-  private _adminId: number;
+  private readonly _adminId: number;
   private _dividerDate = "";
 
   constructor() {
     super(view);
-    this._adminId = State.extract(ADMIN).id;
+    this._adminId = (State.extract(ADMIN) as IUser).id;
   }
 
   propsChanged() {
@@ -22,26 +25,36 @@ export class ChatMessageItem extends Component {
       this._dividerDate = "";
       if (this.previousElementSibling) {
         if (
-          new Date(this.props.message.time).getDay() !==
+          new Date((this.props.message as IChatMessageItem).time).getDay() !==
           new Date(
-            (this.previousElementSibling as Component).props.message.time
+            (
+              (this.previousElementSibling as Component).props
+                .message as IChatMessageItem
+            ).time
           ).getDay()
         ) {
-          this._dividerDate = dateConvert(this.props.message.time, "D-M-Y");
+          this._dividerDate = dateConvert(
+            (this.props.message as IChatMessageItem).time,
+            "D-M-Y"
+          );
         }
       } else {
-        this._dividerDate = dateConvert(this.props.message.time, "D-M-Y");
+        this._dividerDate = dateConvert(
+          (this.props.message as IChatMessageItem).time,
+          "D-M-Y"
+        );
       }
 
       this._message = {
         ...(<IChatMessageItem>this.props.message),
-        time: dateConvert(this.props.message.time, "h:i"),
+        time: dateConvert((this.props.message as IChatMessageItem).time, "h:i"),
       };
 
       if (this._message.type === "message") {
         this.render({
           ...this._message,
-          isAdmin: this._adminId === this.props.message.user_id,
+          isAdmin:
+            this._adminId === (this.props.message as IChatMessageItem).user_id,
           dividerDate: this._dividerDate,
         });
       } else if (this._message.type === "file" && this._message.file) {
@@ -55,7 +68,8 @@ export class ChatMessageItem extends Component {
         this.render({
           ...this._message,
           content: "",
-          isAdmin: this._adminId === this.props.message.user_id,
+          isAdmin:
+            this._adminId === (this.props.message as IChatMessageItem).user_id,
           dividerDate: this._dividerDate,
         });
 

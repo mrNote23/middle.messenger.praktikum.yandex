@@ -27,14 +27,17 @@ export class LeftHeader extends Component {
   private _changedMode = (val: string): void => {
     this._leftMode = val;
     if (val === LEFTMODE.CHATS) {
-      document.getElementById("mode-users").classList.remove("active");
-      document.getElementById("mode-chats").classList.add("active");
+      document.getElementById("mode-users")?.classList.remove("active");
+      document.getElementById("mode-chats")?.classList.add("active");
     } else {
       document
         .getElementById("mode-chats")
-        .setAttribute("href", `/chat/${State.extract(STATES.CURRENT_CHAT).id}`);
-      document.getElementById("mode-users").classList.add("active");
-      document.getElementById("mode-chats").classList.remove("active");
+        .setAttribute(
+          "href",
+          `/chat/${(State.extract(STATES.CURRENT_CHAT) as IChat).id}`
+        );
+      document.getElementById("mode-users")?.classList.add("active");
+      document.getElementById("mode-chats")?.classList.remove("active");
     }
   };
 
@@ -43,9 +46,9 @@ export class LeftHeader extends Component {
       document
         .getElementById("mode-users")
         .setAttribute("href", `/users/${val.id}`);
-      document.getElementById("mode-users").classList.remove("d-none");
+      document.getElementById("mode-users")?.classList.remove("d-none");
     } else {
-      document.getElementById("mode-users").classList.add("d-none");
+      document.getElementById("mode-users")?.classList.add("d-none");
     }
   };
 }

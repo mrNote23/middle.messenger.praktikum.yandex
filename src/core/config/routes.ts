@@ -10,16 +10,17 @@ import Router, { TRoutes } from "../Router";
 export const routes: TRoutes = {
   root: {
     path: "/",
-    redirect: "/chats",
+    redirect: "/messenger",
   },
 
   chatsList: {
-    path: "/chats",
+    path: "/messenger",
     content: "<chat-page></chat-page>",
     cb: () => {
       State.dispatch(STATES.CURRENT_CHAT, null);
       State.dispatch(STATES.LEFT_MODE, LEFTMODE.CHATS);
       State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.CHAT);
+      State.dispatch(STATES.CHAT_MESSAGES, []);
       OnMobile.showLeftPanel();
     },
   },
@@ -120,17 +121,17 @@ export const routes: TRoutes = {
   },
 
   login: {
-    path: "/login",
+    path: "/sign-in",
     content: "<login-page></login-page>",
   },
 
   register: {
-    path: "/register",
+    path: "/sign-up",
     content: "<register-page></register-page>",
   },
 
   profile: {
-    path: "/profile",
+    path: "/settings",
     content: "<chat-page></chat-page>",
     cb: () => {
       State.dispatch(STATES.RIGHT_MODE, RIGHTMODE.ADMIN_PROFILE);

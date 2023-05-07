@@ -12,18 +12,17 @@
 */
 
 import State, { TSubscriberItem } from "./State";
+import { TRecord } from "./config/types";
 
-export type TProps = {
-  [key: string]: unknown;
+export type TProps = TRecord;
+
+export type TEventResult = {
+  detail: unknown;
 };
-
 export type TEvent = {
-  [key: string]: () => void;
+  eventName: string;
+  eventHandler: (e: TEventResult) => void;
 };
-
-type TComponentParams = {
-  [key: string]: unknown;
-} | null;
 
 type TListener = {
   node: HTMLElement;
@@ -32,7 +31,7 @@ type TListener = {
 };
 
 export class Component extends HTMLElement {
-  protected params: TComponentParams | null = null;
+  protected params: object | null = null;
 
   protected _subscriptions: TSubscriberItem[] = [];
   protected _listeners: TListener[] = [];
@@ -41,21 +40,28 @@ export class Component extends HTMLElement {
   private _props: TProps = {};
   private _events: TEvent[] = [];
 
-  constructor(
-    public view: ((params: TComponentParams) => string) | null = null
-  ) {
+  constructor(public view: ((params: unknown) => string) | null = null) {
     super();
     this.props = this._makePropsProxy(this, this._props);
   }
 
+  // для тестирования ивентов
+  public testEvent = (eventName: string, eventProps: unknown) => {
+    this._events.forEach((event: TEvent) => {
+      if (event.eventName === eventName) {
+        event.eventHandler({ detail: eventProps });
+      }
+    });
+  };
+
   // генерация события (event)
   protected createEvent = (
     eventName: string,
-    eventProps: CustomEvent
+    eventProps: TRecord | unknown
   ): void => {
     // ивенты установленные через атрибуты
     this._events.forEach((event: TEvent) => {
-      if (<string>event.eventName === eventName) {
+      if (event.eventName === eventName) {
         event.eventHandler({ detail: eventProps });
       }
     });
@@ -64,14 +70,14 @@ export class Component extends HTMLElement {
   };
 
   // render component
-  protected render = (params: TComponentParams | null = null): void => {
+  public render = (params: object | null = null): void => {
     this.params = params;
     if (this.view !== null) {
       const html = this.view(params);
       this.innerHTML = html;
       const attrs = this._parseAttributes(html);
       if (attrs) {
-        this.querySelectorAll(attrs.join(",")).forEach((node) => {
+        this.querySelectorAll(attrs.join(",")).forEach((node: Component) => {
           this._addPropsAndEvents(node);
         });
       }
@@ -90,17 +96,20 @@ export class Component extends HTMLElement {
   }
 
   // добавление Event.listener
-  protected addListener<TListener>(
-    node: HTMLElement,
+  protected addListener(
+    node: HTMLElement | DocumentType | unknown,
     event: string,
     callBack: (e: unknown) => void
   ): void {
-    node.addEventListener(event, callBack);
+    (node as HTMLElement).addEventListener(event, callBack);
     this._listeners.push(<TListener>{ node, event, callBack });
   }
 
   // set event handler
-  protected setEvent = (eventName: string, eventHandler: () => void) => {
+  public setEvent = (
+    eventName: string,
+    eventHandler: (e: TEventResult) => void
+  ) => {
     this._events.push(<TEvent>{ eventName, eventHandler });
   };
 
@@ -118,7 +127,7 @@ export class Component extends HTMLElement {
   // Proxy для доступа к пропсам компонента
   private _makePropsProxy(component: Component, props: TProps): TProps {
     return new Proxy(props, {
-      get(target: Component, prop: string) {
+      get(target: TProps, prop: string) {
         return target[prop];
       },
       set(target: TProps, prop: string, value: unknown) {
@@ -157,9 +166,11 @@ export class Component extends HTMLElement {
         // check props on object/array
         const args = propsValue.match(/(\[\S+\])|(\(\S+\))/gi);
         if (args) {
-          /* eslint-disable */
-          const _propsValue = propsValue.match(/^[a-z0-9_-]+/gi)![0];
-          node.props[propsName] = eval("this[_propsValue]" + args.join(""));
+          window["_propsValue"] = <string>propsValue.match(/^[a-z0-9_-]+/gi)[0];
+          node.props[propsName] = eval(
+            "this[window._propsValue]" + args.join("")
+          );
+          delete window["_propsValue"];
         } else {
           node.props[propsName] = this[propsValue];
         }

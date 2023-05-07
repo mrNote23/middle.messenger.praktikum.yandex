@@ -11,10 +11,10 @@ export class MessagesController {
   private static _tmpMessages = [];
 
   static newMessage(message: TMessage): void {
-    const user = State.extract(STATES.CHAT_USERS)[message.user_id];
+    const user = State.extract(STATES.CHAT_USERS)[<string>message.user_id];
     const mess = {
       ...message,
-      avatar: State.extract(STATES.CHAT_USERS)[message.user_id].avatar,
+      avatar: State.extract(STATES.CHAT_USERS)[<string>message.user_id].avatar,
       display_name: user.display_name,
     };
     State.dispatch(NEW_MESSAGE, mess);
@@ -53,8 +53,9 @@ export class MessagesController {
     preparedUsers
   ): TMessage[] {
     return messages.map((mess: TMessage) => {
-      mess["display_name"] = preparedUsers[mess["user_id"]].display_name;
-      mess["avatar"] = preparedUsers[mess["user_id"]].avatar;
+      mess["display_name"] =
+        preparedUsers[<string>mess["user_id"]].display_name;
+      mess["avatar"] = preparedUsers[<string>mess["user_id"]].avatar;
       return mess;
     });
   }

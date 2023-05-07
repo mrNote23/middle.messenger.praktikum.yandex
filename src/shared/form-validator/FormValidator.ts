@@ -1,4 +1,5 @@
 import { Component } from "../../core/Component";
+import { TEventTarget, TRecord } from "../../core/config/types";
 
 export enum MATCH {
   PHONE = "phone", // телефон в формате +78217348374, '+' - не обязателен
@@ -79,23 +80,23 @@ export class FormValidator extends Component {
     this._form["onreset"] = this._formReset;
   };
 
-  private _hideError<T>(e: T): void {
+  private _hideError(e: TEventTarget): void {
     e.target.hideError();
   }
 
-  private _showError<T>(e: T): void {
+  private _showError(e: TEventTarget): void {
     e.target.showError();
   }
 
-  private _formReset = <T>(e: T): void => {
+  private _formReset = (e: SubmitEvent): void => {
     e.preventDefault();
     this.createEvent("validated", false);
   };
 
-  private _formSubmit = <T>(e: T): void => {
+  private _formSubmit = (e: SubmitEvent): void => {
     e.preventDefault();
     let valid = true;
-    const result: object = {};
+    const result: TRecord = {};
     for (const field in this._config) {
       result[field] = this._form[field]["value"];
       if (!this._form[field]["valid"]) {
@@ -111,13 +112,15 @@ export class FormValidator extends Component {
     }
   };
 
-  private _onChange = <T>(e: T): void => {
+  private _onChange = (e: TEventTarget): void => {
     const field = e.target;
     let error = false;
 
     // Первая буква должна быть заглавной
     if (this._config[field.name].firstUC) {
-      field.value = field.value.replace(/(^|\s)\S$/g, (u) => u.toUpperCase());
+      field.value = field.value.replace(/(^|\s)\S$/g, (u: string) =>
+        u.toUpperCase()
+      );
     }
 
     // очистка фильтром

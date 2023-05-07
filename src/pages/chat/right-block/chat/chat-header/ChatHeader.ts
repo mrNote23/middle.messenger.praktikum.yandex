@@ -64,6 +64,8 @@ export class ChatHeader extends Component {
   };
 
   openChatProfile = (): void => {
-    Router.go(`/chat-profile/${State.extract(STATES.CURRENT_CHAT).id}`);
+    Router.go(
+      `/chat-profile/${(State.extract(STATES.CURRENT_CHAT) as IChat).id}`
+    );
   };
 }

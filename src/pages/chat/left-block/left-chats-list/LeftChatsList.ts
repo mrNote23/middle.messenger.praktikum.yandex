@@ -40,9 +40,7 @@ export class LeftChatsList extends Component {
     if (this.chatsList !== null) {
       this._listEmpty = !(this.chatsList.length > 0);
       this.render({
-        chatsList: this.chatsList.map((elm, index: number) => {
-          return { ...elm, index };
-        }),
+        chatsList: this.chatsList,
         currentChatId: this._currentChat ? this._currentChat.id : null,
         listEmpty: this._listEmpty,
       });

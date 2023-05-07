@@ -1,12 +1,13 @@
 import State from "../State";
 import { API_WS_URL } from "../API/endpoints";
 import { MessagesController } from "../controllers/MessagesController";
-import { ADMIN, STATES, TOKEN } from "../config/types";
+import { ADMIN, STATES, TEventTarget, TOKEN } from "../config/types";
+import { IChat, IUser } from "../config/interfaces";
 
 class WS {
   private _connection: WebSocket;
   private _token: string;
-  private _pingPong: number;
+  private _pingPong = undefined;
   private _userId: number;
   private _chatId: number;
 
@@ -16,8 +17,8 @@ class WS {
 
   private _changedToken = (token: string | null): void => {
     if (token !== null) {
-      this._userId = <number>State.extract(ADMIN).id;
-      this._chatId = <number>State.extract(STATES.CURRENT_CHAT).id;
+      this._userId = (State.extract(ADMIN) as IUser).id;
+      this._chatId = (State.extract(STATES.CURRENT_CHAT) as IChat).id;
       this._token = token;
       if (this._connection) {
         this._disconnect();
@@ -70,7 +71,7 @@ class WS {
     console.log(e);
   }
 
-  private _close<T>(e: T): void {
+  private _close(e: TEventTarget): void {
     if (e.code === 1006) {
       setTimeout(() => {
         this._connect(false);
@@ -86,7 +87,7 @@ class WS {
     try {
       clearInterval(this._pingPong);
       this._connection.close(1000);
-    } catch (e: ErrorEvent) {
+    } catch (e) {
       console.log(e);
     }
   }

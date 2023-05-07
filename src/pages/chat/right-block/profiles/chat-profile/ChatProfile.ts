@@ -4,7 +4,7 @@ import { Component } from "../../../../../core/Component";
 import { IChat } from "../../../../../core/config/interfaces";
 import { RenameChat } from "./rename-chat/RenameChat";
 import { ChatController } from "../../../../../core/controllers/ChatController";
-import { STATES } from "../../../../../core/config/types";
+import { STATES, TEventTarget } from "../../../../../core/config/types";
 import Router from "../../../../../core/Router";
 import "./ChatProfile.scss";
 
@@ -24,7 +24,7 @@ export class ChatProfile extends Component {
     this.render({ ...this._chat });
   };
 
-  changeAvatar = <T>(e: T): void => {
+  changeAvatar = (e: TEventTarget): void => {
     if (e.target.files) {
       ChatController.changeChatAvatar(this._chat.id, e.target.files[0]);
     }

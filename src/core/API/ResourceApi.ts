@@ -8,7 +8,7 @@ class ResourceApi {
     this.http = new HTTPTransport("/resources");
   }
 
-  upload(file: File): Promise<HTTPTransport> {
+  upload(file: File): Promise<Response> {
     const tmp = new FormData();
     tmp.append("resource", file);
     return this.http.post(RESOURCE_ENDPOINTS.UPLOAD, tmp);

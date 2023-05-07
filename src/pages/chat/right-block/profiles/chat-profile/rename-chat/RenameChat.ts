@@ -4,6 +4,7 @@ import State from "../../../../../../core/State";
 import { TFormValidatorConfig } from "../../../../../../shared/form-validator/FormValidator";
 import "./RenameChat.scss";
 import { STATES } from "../../../../../../core/config/types";
+import { IChat } from "../../../../../../core/config/interfaces";
 
 export const RenameChat = (): void => {
   const formFields: TFormValidatorConfig = {
@@ -16,7 +17,7 @@ export const RenameChat = (): void => {
     },
   };
 
-  const currentChat = State.extract(STATES.CURRENT_CHAT);
+  const currentChat = <IChat>State.extract(STATES.CURRENT_CHAT);
 
   const modalWindow = new ModalWindow(
     "Rename chat",

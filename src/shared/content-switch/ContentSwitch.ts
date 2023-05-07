@@ -1,4 +1,5 @@
 import { Component } from "../../core/Component";
+import { TRoute } from "../../core/Router";
 
 export type TSwitchRoute = {
   path: string;
@@ -12,9 +13,9 @@ export class ContentSwitch extends Component {
     super();
   }
 
-  propsChanged(prop, oldValue, newValue) {
+  propsChanged(prop: string, oldValue: unknown, newValue: unknown) {
     if (prop === "path" && oldValue !== newValue) {
-      this._fill(newValue);
+      this._fill(<string>newValue);
     }
   }
 
@@ -42,7 +43,7 @@ export class ContentSwitch extends Component {
 
   private _findRoute = (path: string): TSwitchRoute | null => {
     if (this.props.routes) {
-      return this.props.routes.find((elm) => {
+      return (this.props.routes as TSwitchRoute[]).find((elm: TRoute) => {
         if (elm.path === path) {
           return elm;
         }

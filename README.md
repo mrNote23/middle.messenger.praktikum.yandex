@@ -8,6 +8,8 @@
 
 Доступно на [Netlify](https://andreys.netlify.app/)
 
+Доступно на [Render](https://andreys-chat.onrender.com)
+
 <a href="https://andreys.netlify.app/" target="_blank" rel="noopener noreferrer">
  <img src="https://i.ibb.co/2kXYxTk/desktop-chat.jpg" alt="chat application" draggable="false" >
 </a>
@@ -62,17 +64,37 @@
   - отправка файлов в чат;
   - просмотр/прослушивание для аудио/видео/фото сообщений;
 
+### Спринт 4 / 4 [(PR)](https://github.com/mrNote23/middle.messenger.praktikum.yandex/pull/5)
+
+- Изменены эндпоинты в соответствии с заданием
+  - /chats -> /messenger
+  - /login -> /sign-in
+  - /register -> /sign-up
+  - /profile -> /settings
+- Parcel заменен на WebPack
+- Настроен Docker
+  - Приложение опубликовано на render.com
+- Настроен pre-commit (Husky)
+- Покрыты тестами (Mocha)
+  - Router
+  - Component
+  - HTTPTransport
+
 ## СТЭК
 
 - HTML
 - Typescript
 - Javascript
 - Handlebars
-- Parcel
+- WebPack
+- Docker
+- Husky
 - SASS
 - PostCSS
 - ESLint
 - StyleLint
+- Mocha
+- Chai
 
 # Структура приложения (DOM)
 
@@ -370,7 +392,20 @@ cd chat-app
 npm install
 ```
 
-### Сборка проекта (Parcel)
+### Проверки ESLint, StyleLint
+
+```text
+npm run lint:eslint
+npm run lint:stylelint
+```
+
+### Тесты (Mocha)
+
+```text
+npm run test
+```
+
+### Сборка проекта (WebPack)
 
 ```text
 npm run build
@@ -382,9 +417,4 @@ npm run build
 npm start
 ```
 
-### Проверки ESLint, StyleLint
 
-```text
-npm run lint:eslint
-npm run lint:stylelint
-```

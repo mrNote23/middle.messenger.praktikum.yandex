@@ -7,9 +7,9 @@ import { ADMIN } from "../config/types";
 export class AdminController {
   static changeAdminAvatar(avatar: File): void {
     UserApi.avatar(avatar)
-      .then((res) => {
+      .then((res: IUser) => {
         const tmp = {
-          ...State.extract(ADMIN),
+          ...(State.extract(ADMIN) as IUser),
           avatar: `${RES_URL}/${res.avatar}`,
         };
         State.dispatch(ADMIN, tmp);
@@ -23,7 +23,7 @@ export class AdminController {
     cbOk: () => void
   ): void {
     UserApi.profile(data)
-      .then((res) => {
+      .then((res: IUser) => {
         State.dispatch(ADMIN, {
           ...res,
           role: "admin",

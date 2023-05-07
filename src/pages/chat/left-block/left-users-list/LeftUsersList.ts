@@ -1,6 +1,6 @@
 import view from "./LeftUsersList.hbs";
 import { Component } from "../../../../core/Component";
-import { IChatUsers } from "../../../../core/config/interfaces";
+import { IChat, IChatUsers } from "../../../../core/config/interfaces";
 import { UsersListItem } from "./users-list-item/UsersListItem";
 import { STATES } from "../../../../core/config/types";
 import Router from "../../../../core/Router";
@@ -26,6 +26,8 @@ export class LeftUsersList extends Component {
   };
 
   selectUser = (id: CustomEvent) => {
-    Router.go(`/user/${State.extract(STATES.CURRENT_CHAT).id}/${id.detail}`);
+    Router.go(
+      `/user/${(State.extract(STATES.CURRENT_CHAT) as IChat).id}/${id.detail}`
+    );
   };
 }
